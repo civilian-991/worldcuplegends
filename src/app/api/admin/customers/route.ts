@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkAdmin } from '@/lib/admin'
 
+interface ProfileRow {
+  id: string
+  email: string
+  first_name: string | null
+  last_name: string | null
+  phone: string | null
+  avatar_url: string | null
+  role: string
+  created_at: string
+  updated_at: string
+}
+
+interface OrderRow {
+  total: number
+  created_at: string
+}
+
 export async function GET(request: NextRequest) {
   const { supabase, isAdmin } = await checkAdmin()
 
@@ -31,18 +48,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  const customersList = (customers || []) as ProfileRow[]
+
   // Get order stats for each customer
   const customersWithStats = await Promise.all(
-    (customers || []).map(async (customer) => {
+    customersList.map(async (customer) => {
       const { data: orders } = await supabase
         .from('orders')
         .select('total, created_at')
         .eq('user_id', customer.id)
         .eq('payment_status', 'paid')
 
-      const totalOrders = orders?.length || 0
-      const totalSpent = orders?.reduce((sum, order) => sum + order.total, 0) || 0
-      const lastOrderAt = orders?.length ? orders[orders.length - 1].created_at : null
+      const ordersList = (orders || []) as OrderRow[]
+      const totalOrders = ordersList.length
+      const totalSpent = ordersList.reduce((sum, order) => sum + Number(order.total), 0)
+      const lastOrderAt = ordersList.length ? ordersList[ordersList.length - 1].created_at : null
 
       return {
         ...customer,
