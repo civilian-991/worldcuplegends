@@ -1,6 +1,20 @@
 import { NextResponse } from 'next/server'
 import { checkAdmin } from '@/lib/admin'
 
+interface OrderRow {
+  total: number
+  status: string
+  payment_status: string
+  created_at: string
+}
+
+interface OrderItemRow {
+  product_id: number | null
+  product_name: string
+  quantity: number
+  price: number
+}
+
 export async function GET() {
   const { supabase, isAdmin } = await checkAdmin()
 
@@ -17,7 +31,7 @@ export async function GET() {
     return NextResponse.json({ error: ordersError.message }, { status: 500 })
   }
 
-  const ordersList = orders || []
+  const ordersList = (orders || []) as OrderRow[]
   const paidOrders = ordersList.filter(o => o.payment_status === 'paid')
   const totalRevenue = paidOrders.reduce((sum, o) => sum + Number(o.total), 0)
   const totalOrders = ordersList.length
@@ -48,8 +62,10 @@ export async function GET() {
     .from('order_items')
     .select('product_id, product_name, quantity, price')
 
+  const itemsList = (orderItems || []) as OrderItemRow[]
   const productSales: Record<number, { name: string; quantity: number; revenue: number }> = {}
-  ;(orderItems || []).forEach(item => {
+
+  itemsList.forEach(item => {
     if (item.product_id) {
       if (!productSales[item.product_id]) {
         productSales[item.product_id] = { name: item.product_name, quantity: 0, revenue: 0 }
