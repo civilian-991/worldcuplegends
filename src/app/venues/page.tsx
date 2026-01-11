@@ -150,14 +150,22 @@ export default function VenuesPage() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="glass rounded-2xl overflow-hidden group cursor-pointer card-hover"
               >
-                {/* Image Placeholder */}
-                <div className="relative h-48 bg-gradient-to-br from-gold-600/20 to-night-800">
+                {/* Venue Image */}
+                <div className="relative h-48 bg-gradient-to-br from-gold-600/20 to-night-800 overflow-hidden">
+                  {venue.image && (
+                    <img
+                      src={venue.image}
+                      alt={venue.name}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-night-900 to-transparent" />
                   <div className="absolute top-4 right-4">
-                    <span className="text-4xl">{venue.country}</span>
+                    <span className="text-4xl drop-shadow-lg">{venue.country}</span>
                   </div>
                   <div className="absolute bottom-4 left-4">
-                    <span className="px-3 py-1 bg-gold-500/20 text-gold-400 text-sm rounded-full">
+                    <span className="px-3 py-1 bg-gold-500/20 backdrop-blur-sm text-gold-400 text-sm rounded-full">
                       {venue.capacity} capacity
                     </span>
                   </div>

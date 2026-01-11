@@ -82,14 +82,15 @@ export default function NewsArticlePage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative h-64 md:h-96 rounded-3xl overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold-600/30 to-night-800">
-              <div
-                className="absolute inset-0 opacity-30"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23D4AF37' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-                }}
+            {article.image && (
+              <img
+                src={article.image}
+                alt={article.title}
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
-            </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-br from-gold-600/30 to-night-800 -z-10" />
           </motion.div>
         </div>
       </section>
@@ -212,7 +213,15 @@ export default function NewsArticlePage() {
                 <Link href={`/news/${related.id}`}>
                   <div className="group cursor-pointer">
                     <div className="relative h-48 rounded-xl overflow-hidden mb-4">
-                      <div className="absolute inset-0 bg-gradient-to-br from-gold-600/20 to-night-800" />
+                      {related.image && (
+                        <img
+                          src={related.image}
+                          alt={related.title}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-br from-gold-600/20 to-night-800 -z-10" />
                       <div className="absolute inset-0 bg-gradient-to-t from-night-900 to-transparent" />
                       <div className="absolute top-4 left-4">
                         <span className="px-3 py-1 bg-gold-500/20 text-gold-400 text-xs font-semibold rounded-full">

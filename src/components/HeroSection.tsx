@@ -31,35 +31,15 @@ export default function HeroSection() {
         style={{ y }}
         className="absolute inset-0"
       >
+        {/* Hero Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: 'url(/banners/hero-home.png)' }}
+        />
+
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-night-900/80 via-night-900/50 to-night-900 z-10" />
         <div className="absolute inset-0 bg-gradient-to-r from-night-900/80 via-transparent to-night-900/80 z-10" />
-
-        {/* Stadium Background Pattern */}
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage: `
-              radial-gradient(ellipse 100% 50% at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
-              radial-gradient(ellipse 80% 40% at 20% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-              radial-gradient(ellipse 80% 40% at 80% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 50%)
-            `,
-          }}
-        />
-
-        {/* Animated Grid Lines */}
-        <div className="absolute inset-0 opacity-10">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `
-                linear-gradient(90deg, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
-                linear-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px)
-              `,
-              backgroundSize: '100px 100px',
-            }}
-          />
-        </div>
       </motion.div>
 
       {/* Stadium Lights Effect */}

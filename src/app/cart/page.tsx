@@ -77,16 +77,26 @@ export default function CartPage() {
                   className="glass rounded-2xl p-6 flex gap-6"
                 >
                   {/* Product Image */}
-                  <div className="w-32 h-32 rounded-xl bg-gradient-to-br from-gold-500/20 to-night-800 flex items-center justify-center flex-shrink-0">
-                    <span className="text-4xl">
-                      {item.product.category === 'Jerseys' ? '👕' :
-                       item.product.category === 'T-Shirts' ? '👔' :
-                       item.product.category === 'Outerwear' ? '🧥' :
-                       item.product.category === 'Shorts' ? '🩳' :
-                       item.product.category === 'Accessories' ? '🧢' :
-                       item.product.category === 'Equipment' ? '⚽' :
-                       item.product.category === 'Collectibles' ? '🏆' : '🛍️'}
-                    </span>
+                  <div className="w-32 h-32 rounded-xl bg-gradient-to-br from-gold-500/20 to-night-800 flex-shrink-0 overflow-hidden">
+                    {item.product.images?.[0] ? (
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-4xl">
+                          {item.product.category === 'Jerseys' ? '👕' :
+                           item.product.category === 'T-Shirts' ? '👔' :
+                           item.product.category === 'Outerwear' ? '🧥' :
+                           item.product.category === 'Shorts' ? '🩳' :
+                           item.product.category === 'Accessories' ? '🧢' :
+                           item.product.category === 'Equipment' ? '⚽' :
+                           item.product.category === 'Collectibles' ? '🏆' : '🛍️'}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Product Info */}

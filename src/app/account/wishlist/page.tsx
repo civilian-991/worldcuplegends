@@ -70,16 +70,26 @@ export default function AccountWishlistPage() {
             >
               {/* Product Image */}
               <Link href={`/shop/${product.id}`}>
-                <div className="relative h-48 bg-gradient-to-br from-gold-500/10 to-night-800 flex items-center justify-center">
-                  <span className="text-6xl opacity-50 group-hover:scale-110 transition-transform">
-                    {product.category === 'Jerseys' ? '👕' :
-                     product.category === 'T-Shirts' ? '👔' :
-                     product.category === 'Outerwear' ? '🧥' :
-                     product.category === 'Shorts' ? '🩳' :
-                     product.category === 'Accessories' ? '🧢' :
-                     product.category === 'Equipment' ? '⚽' :
-                     product.category === 'Collectibles' ? '🏆' : '🛍️'}
-                  </span>
+                <div className="relative h-48 bg-gradient-to-br from-gold-500/10 to-night-800 overflow-hidden">
+                  {product.images?.[0] ? (
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-6xl opacity-50 group-hover:scale-110 transition-transform">
+                        {product.category === 'Jerseys' ? '👕' :
+                         product.category === 'T-Shirts' ? '👔' :
+                         product.category === 'Outerwear' ? '🧥' :
+                         product.category === 'Shorts' ? '🩳' :
+                         product.category === 'Accessories' ? '🧢' :
+                         product.category === 'Equipment' ? '⚽' :
+                         product.category === 'Collectibles' ? '🏆' : '🛍️'}
+                      </span>
+                    </div>
+                  )}
 
                   {/* Remove Button */}
                   <button
