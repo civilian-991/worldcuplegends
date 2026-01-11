@@ -254,26 +254,26 @@ function ProductCard({
         <div className="relative overflow-hidden rounded-2xl glass">
           {/* Image */}
           <div className="relative h-64 bg-gradient-to-br from-gold-500/10 to-night-800 overflow-hidden">
-            {/* Placeholder Pattern */}
-            <div
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              }}
-            />
-
-            {/* Product Icon */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-6xl opacity-50 group-hover:scale-110 transition-transform">
-                {product.category === 'Jerseys' ? '👕' :
-                 product.category === 'T-Shirts' ? '👔' :
-                 product.category === 'Outerwear' ? '🧥' :
-                 product.category === 'Shorts' ? '🩳' :
-                 product.category === 'Accessories' ? '🧢' :
-                 product.category === 'Equipment' ? '⚽' :
-                 product.category === 'Collectibles' ? '🏆' : '🛍️'}
-              </span>
-            </div>
+            {/* Product Image */}
+            {product.images?.[0] ? (
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-6xl opacity-50 group-hover:scale-110 transition-transform">
+                  {product.category === 'Jerseys' ? '👕' :
+                   product.category === 'T-Shirts' ? '👔' :
+                   product.category === 'Outerwear' ? '🧥' :
+                   product.category === 'Shorts' ? '🩳' :
+                   product.category === 'Accessories' ? '🧢' :
+                   product.category === 'Equipment' ? '⚽' :
+                   product.category === 'Collectibles' ? '🏆' : '🛍️'}
+                </span>
+              </div>
+            )}
 
             {/* Badges */}
             <div className="absolute top-4 left-4 flex flex-col gap-2">

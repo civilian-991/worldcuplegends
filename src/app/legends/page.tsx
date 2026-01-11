@@ -202,25 +202,33 @@ function LegendCard({
       className="relative group cursor-pointer"
     >
       <div className="relative overflow-hidden rounded-2xl glass">
-        {/* Card Header with Jersey Number */}
+        {/* Card Header with Legend Image */}
         <div className="relative h-48 bg-gradient-to-br from-gold-500/20 to-night-800 overflow-hidden">
-          {/* Jersey Number Background */}
-          <span
-            className="absolute -right-4 -top-4 text-[140px] font-bold text-gold-500/10 leading-none"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            {legend.jerseyNumber}
-          </span>
+          {/* Legend Image */}
+          {legend.image ? (
+            <img
+              src={legend.image}
+              alt={legend.name}
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <span
+              className="absolute -right-4 -top-4 text-[140px] font-bold text-gold-500/10 leading-none"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              {legend.jerseyNumber}
+            </span>
+          )}
 
           {/* Country Flag */}
           <div className="absolute top-4 left-4">
-            <span className="text-3xl">{flags[legend.countryCode] || '🏳️'}</span>
+            <span className="text-3xl drop-shadow-lg">{flags[legend.countryCode] || '🏳️'}</span>
           </div>
 
           {/* Rating Badge */}
           <div className="absolute top-4 right-4">
             <span
-              className={`inline-block px-3 py-1 rounded-full text-sm font-bold ${
+              className={`inline-block px-3 py-1 rounded-full text-sm font-bold backdrop-blur-sm ${
                 legend.rating >= 97
                   ? 'bg-gold-500/30 text-gold-400 border border-gold-500/50'
                   : legend.rating >= 95
@@ -234,7 +242,7 @@ function LegendCard({
 
           {/* Position */}
           <div className="absolute bottom-4 left-4">
-            <span className="px-3 py-1 bg-night-900/80 rounded-full text-xs text-white/70">
+            <span className="px-3 py-1 bg-night-900/80 backdrop-blur-sm rounded-full text-xs text-white/70">
               {legend.position}
             </span>
           </div>
