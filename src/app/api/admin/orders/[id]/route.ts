@@ -1,32 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { checkAdmin } from '@/lib/admin'
 import { sendShippingNotification } from '@/lib/email'
-
-async function checkAdmin(supabase: Awaited<ReturnType<typeof createClient>>) {
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return null
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') return null
-
-  return user
-}
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const supabase = await createClient()
+  const { supabase, isAdmin } = await checkAdmin()
   const { id } = await params
 
-  const admin = await checkAdmin(supabase)
-  if (!admin) {
+  if (!isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -34,8 +17,7 @@ export async function GET(
     .from('orders')
     .select(`
       *,
-      order_items (*),
-      profile:profiles (first_name, last_name, email)
+      order_items (*)
     `)
     .eq('id', id)
     .single()
@@ -51,11 +33,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const supabase = await createClient()
+  const { supabase, isAdmin } = await checkAdmin()
   const { id } = await params
 
-  const admin = await checkAdmin(supabase)
-  if (!admin) {
+  if (!isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -79,7 +60,7 @@ export async function PATCH(
   }
 
   // Send shipping notification if status changed to shipped
-  if (status === 'shipped' && tracking_number) {
+  if (status === 'shipped' && tracking_number && order) {
     const shippingAddress = order.shipping_address as {
       firstName: string
       lastName: string

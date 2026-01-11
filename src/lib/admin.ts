@@ -1,0 +1,20 @@
+import { createClient } from '@/lib/supabase/server'
+
+export async function checkAdmin() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) return { supabase, user: null, isAdmin: false }
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (error || !profile || profile.role !== 'admin') {
+    return { supabase, user: null, isAdmin: false }
+  }
+
+  return { supabase, user, isAdmin: true }
+}
