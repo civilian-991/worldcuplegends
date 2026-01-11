@@ -305,6 +305,80 @@ const images: ImageSpec[] = [
     folder: 'teams',
     prompt: 'Portugal national football team badge logo, red and green colors, clean design, transparent style background'
   },
+
+  // NEWS ARTICLE IMAGES
+  {
+    filename: 'goals.jpg',
+    folder: 'news',
+    prompt: 'Epic football moment, striker celebrating goal with arms raised, stadium crowd cheering, dramatic golden hour lighting, cinematic sports photography, black and gold color grading'
+  },
+  {
+    filename: 'exhibition.jpg',
+    folder: 'news',
+    prompt: 'Brazil vs Argentina football rivalry, two teams facing each other on pitch, stadium atmosphere, dramatic lighting, blue and yellow vs white and sky blue jerseys, epic sports photography'
+  },
+  {
+    filename: 'zidane-interview.jpg',
+    folder: 'news',
+    prompt: 'Professional sports interview setting, elegant man in suit, dark studio background with dramatic lighting, gold accent lighting, cinematic portrait style'
+  },
+  {
+    filename: 'tournament.jpg',
+    folder: 'news',
+    prompt: 'World Cup trophy on podium with stadium background, golden trophy gleaming, confetti falling, dramatic celebration atmosphere, cinematic sports photography'
+  },
+  {
+    filename: 'number10.jpg',
+    folder: 'news',
+    prompt: 'Football jersey with number 10, artistic shot of classic playmaker jersey, dramatic lighting, black background with gold accents, premium sports photography'
+  },
+  {
+    filename: 'training.jpg',
+    folder: 'news',
+    prompt: 'Professional football training session, players practicing on green pitch, morning light, premium sports facility, dynamic action shot, cinematic sports photography'
+  },
+
+  // VENUE IMAGES
+  {
+    filename: 'metlife.jpg',
+    folder: 'venues',
+    prompt: 'MetLife Stadium aerial view at night, NFL stadium with lights on, New Jersey, dramatic night sky, wide angle sports venue photography'
+  },
+  {
+    filename: 'sofi.jpg',
+    folder: 'venues',
+    prompt: 'SoFi Stadium Los Angeles exterior at sunset, modern architecture with curved roof, dramatic sky, premium sports venue photography'
+  },
+  {
+    filename: 'rosebowl.jpg',
+    folder: 'venues',
+    prompt: 'Rose Bowl Stadium Pasadena aerial view, historic football stadium surrounded by mountains, golden hour lighting, iconic sports venue'
+  },
+  {
+    filename: 'azteca.jpg',
+    folder: 'venues',
+    prompt: 'Estadio Azteca Mexico City, legendary football stadium packed with fans, dramatic atmosphere, iconic Mexican venue, sports photography'
+  },
+  {
+    filename: 'att.jpg',
+    folder: 'venues',
+    prompt: 'AT&T Stadium Arlington Texas interior, massive video screen, retractable roof open, modern NFL stadium, dramatic sports venue photography'
+  },
+  {
+    filename: 'hardrock.jpg',
+    folder: 'venues',
+    prompt: 'Hard Rock Stadium Miami aerial view, NFL stadium with unique canopy design, Florida sunset, premium sports venue photography'
+  },
+  {
+    filename: 'lumen.jpg',
+    folder: 'venues',
+    prompt: 'Lumen Field Seattle at night, NFL stadium with city skyline, dramatic lighting, Pacific Northwest atmosphere, sports venue photography'
+  },
+  {
+    filename: 'bmo.jpg',
+    folder: 'venues',
+    prompt: 'BMO Field Toronto soccer stadium, Canadian venue with Toronto skyline, sunset lighting, MLS stadium, sports venue photography'
+  },
 ];
 
 async function ensureDir(dir: string) {
@@ -383,6 +457,8 @@ async function main() {
   await ensureDir('public/legends');
   await ensureDir('public/teams');
   await ensureDir('public/banners');
+  await ensureDir('public/news');
+  await ensureDir('public/venues');
 
   let success = 0;
   let failed = 0;
