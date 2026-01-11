@@ -9,22 +9,27 @@ export async function GET() {
   }
 
   // Get order statistics
-  const { data: orders } = await supabase
+  const { data: orders, error: ordersError } = await supabase
     .from('orders')
     .select('total, status, payment_status, created_at')
 
-  const paidOrders = orders?.filter(o => o.payment_status === 'paid') || []
-  const totalRevenue = paidOrders.reduce((sum, o) => sum + o.total, 0)
-  const totalOrders = orders?.length || 0
+  if (ordersError) {
+    return NextResponse.json({ error: ordersError.message }, { status: 500 })
+  }
+
+  const ordersList = orders || []
+  const paidOrders = ordersList.filter(o => o.payment_status === 'paid')
+  const totalRevenue = paidOrders.reduce((sum, o) => sum + Number(o.total), 0)
+  const totalOrders = ordersList.length
   const averageOrderValue = paidOrders.length > 0 ? totalRevenue / paidOrders.length : 0
 
   // Order status breakdown
   const statusCounts = {
-    pending: orders?.filter(o => o.status === 'pending').length || 0,
-    processing: orders?.filter(o => o.status === 'processing').length || 0,
-    shipped: orders?.filter(o => o.status === 'shipped').length || 0,
-    delivered: orders?.filter(o => o.status === 'delivered').length || 0,
-    cancelled: orders?.filter(o => o.status === 'cancelled').length || 0,
+    pending: ordersList.filter(o => o.status === 'pending').length,
+    processing: ordersList.filter(o => o.status === 'processing').length,
+    shipped: ordersList.filter(o => o.status === 'shipped').length,
+    delivered: ordersList.filter(o => o.status === 'delivered').length,
+    cancelled: ordersList.filter(o => o.status === 'cancelled').length,
   }
 
   // Get customer count
@@ -44,13 +49,13 @@ export async function GET() {
     .select('product_id, product_name, quantity, price')
 
   const productSales: Record<number, { name: string; quantity: number; revenue: number }> = {}
-  orderItems?.forEach(item => {
+  ;(orderItems || []).forEach(item => {
     if (item.product_id) {
       if (!productSales[item.product_id]) {
         productSales[item.product_id] = { name: item.product_name, quantity: 0, revenue: 0 }
       }
       productSales[item.product_id].quantity += item.quantity
-      productSales[item.product_id].revenue += item.price * item.quantity
+      productSales[item.product_id].revenue += Number(item.price) * item.quantity
     }
   })
 
@@ -71,7 +76,7 @@ export async function GET() {
     })
     monthlyRevenue.push({
       month: date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
-      revenue: monthOrders.reduce((sum, o) => sum + o.total, 0),
+      revenue: monthOrders.reduce((sum, o) => sum + Number(o.total), 0),
     })
   }
 

@@ -1,6 +1,14 @@
 import { createClient } from '@/lib/supabase/server'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '@/types/database'
 
-export async function checkAdmin() {
+type TypedSupabaseClient = SupabaseClient<Database>
+
+export async function checkAdmin(): Promise<{
+  supabase: TypedSupabaseClient
+  user: { id: string; email?: string } | null
+  isAdmin: boolean
+}> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
