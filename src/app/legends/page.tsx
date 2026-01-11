@@ -174,7 +174,7 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
     >
       <Link href={`/legends/${legend.id}`}>
         <div
-          className="relative h-[220px] rounded-lg overflow-hidden cursor-pointer group"
+          className="relative h-[280px] rounded-lg overflow-hidden cursor-pointer group"
           style={{ background: colors.bg }}
         >
           {/* Content Container */}
@@ -194,9 +194,9 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
               </div>
 
               {/* Jersey Number */}
-              <div>
+              <div className="mt-auto">
                 <span
-                  className="text-6xl font-black"
+                  className="text-7xl font-black leading-none"
                   style={{
                     fontFamily: 'var(--font-display)',
                     color: colors.accent,
@@ -208,7 +208,7 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
               </div>
 
               {/* Flag at bottom */}
-              <div className="absolute bottom-6 left-6">
+              <div className="mt-4">
                 <span className="text-2xl">{flags[legend.countryCode] || '🏳️'}</span>
               </div>
             </div>
