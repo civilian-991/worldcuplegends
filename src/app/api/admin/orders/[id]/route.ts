@@ -50,7 +50,7 @@ export async function PATCH(
 
   const { data: order, error } = await supabase
     .from('orders')
-    .update(updateData)
+    .update(updateData as never)
     .eq('id', id)
     .select('*, order_items (*)')
     .single()
@@ -60,17 +60,14 @@ export async function PATCH(
   }
 
   // Send shipping notification if status changed to shipped
-  if (status === 'shipped' && tracking_number && order) {
-    const shippingAddress = order.shipping_address as {
-      firstName: string
-      lastName: string
-      email: string
-    }
+  const orderData = order as { id: string; shipping_address: { firstName: string; lastName: string; email: string } } | null
+  if (status === 'shipped' && tracking_number && orderData) {
+    const shippingAddress = orderData.shipping_address
 
     await sendShippingNotification(
       shippingAddress.email,
       `${shippingAddress.firstName} ${shippingAddress.lastName}`,
-      order.id,
+      orderData.id,
       tracking_number
     )
   }

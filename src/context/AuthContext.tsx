@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { User as SupabaseUser } from '@supabase/supabase-js';
+import { User as SupabaseUser, AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 export interface User {
   id: string;
@@ -101,7 +101,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return [];
     }
 
-    return data.map((addr) => ({
+    interface AddressRow {
+      id: string
+      label: string
+      first_name: string
+      last_name: string
+      street: string
+      city: string
+      state: string
+      zip_code: string
+      country: string
+      phone: string | null
+      is_default: boolean
+    }
+    return (data as AddressRow[]).map((addr) => ({
       id: addr.id,
       label: addr.label,
       firstName: addr.first_name,
@@ -156,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: AuthChangeEvent, session: Session | null) => {
         if (event === 'SIGNED_IN' && session?.user) {
           const profile = await fetchProfile(session.user);
           if (profile) {

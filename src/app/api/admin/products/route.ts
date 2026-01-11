@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       tags: body.tags || [],
       legend: body.legend,
       team: body.team,
-    })
+    } as never)
     .select()
     .single()
 
