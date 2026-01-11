@@ -1,6 +1,18 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to avoid errors during build when API key is not set
+let resendClient: Resend | null = null
+
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY not configured - emails will not be sent')
+    return null
+  }
+  if (!resendClient) {
+    resendClient = new Resend(process.env.RESEND_API_KEY)
+  }
+  return resendClient
+}
 
 interface OrderEmailData {
   orderId: string
@@ -25,6 +37,11 @@ interface OrderEmailData {
 }
 
 export async function sendOrderConfirmationEmail(data: OrderEmailData) {
+  const resend = getResend()
+  if (!resend) {
+    return { success: false, error: 'Email service not configured' }
+  }
+
   const itemsList = data.items
     .map((item) => `${item.name} x${item.quantity} - $${item.price.toFixed(2)}`)
     .join('\n')
@@ -82,6 +99,11 @@ export async function sendOrderConfirmationEmail(data: OrderEmailData) {
 }
 
 export async function sendWelcomeEmail(email: string, firstName: string) {
+  const resend = getResend()
+  if (!resend) {
+    return { success: false, error: 'Email service not configured' }
+  }
+
   try {
     const result = await resend.emails.send({
       from: 'World Legends Cup <welcome@worldlegendscup.com>',
@@ -122,6 +144,11 @@ export async function sendWelcomeEmail(email: string, firstName: string) {
 }
 
 export async function sendNewsletterWelcome(email: string) {
+  const resend = getResend()
+  if (!resend) {
+    return { success: false, error: 'Email service not configured' }
+  }
+
   try {
     const result = await resend.emails.send({
       from: 'World Legends Cup <newsletter@worldlegendscup.com>',
@@ -172,6 +199,11 @@ export async function sendNewsletterWelcome(email: string) {
 }
 
 export async function sendContactConfirmation(email: string, firstName: string, subject: string) {
+  const resend = getResend()
+  if (!resend) {
+    return { success: false, error: 'Email service not configured' }
+  }
+
   try {
     const result = await resend.emails.send({
       from: 'World Legends Cup <support@worldlegendscup.com>',
@@ -211,6 +243,11 @@ export async function sendShippingNotification(
   orderId: string,
   trackingNumber: string
 ) {
+  const resend = getResend()
+  if (!resend) {
+    return { success: false, error: 'Email service not configured' }
+  }
+
   try {
     const result = await resend.emails.send({
       from: 'World Legends Cup <shipping@worldlegendscup.com>',
