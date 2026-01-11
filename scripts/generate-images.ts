@@ -140,81 +140,81 @@ const images: ImageSpec[] = [
     prompt: 'Professional product photo of black sports backpack with gold accents and logo, athletic style, on dark background, e-commerce style, centered'
   },
 
-  // LEGENDS - F1-Style Player Portraits (upper body, professional sports photography)
+  // LEGENDS - F1-Style Player Portraits (head to waist, showing jersey/kit)
   {
     filename: 'pele.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Brazilian football legend, upper body shot from chest up, wearing yellow Brazil national team jersey, confident expression looking slightly to the side, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Brazilian football legend, HEAD TO WAIST shot showing full torso, wearing iconic yellow Brazil national team jersey with green trim and number 10, arms relaxed at sides, confident proud stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style showing full racing suit, 4k quality, jersey clearly visible'
   },
   {
     filename: 'maradona.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Argentine football legend with curly dark hair, upper body shot from chest up, wearing Argentina blue and white striped jersey, intense passionate expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Argentine football legend with curly dark hair, HEAD TO WAIST shot showing full torso, wearing Argentina blue and white vertical striped jersey with number 10, arms crossed or at sides, passionate intense expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'messi.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, modern Argentine football star with short beard, upper body shot from chest up, wearing Argentina light blue and white jersey, calm focused expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, modern Argentine football star with short beard, HEAD TO WAIST shot showing full torso, wearing Argentina light blue and white striped jersey with number 10, relaxed confident pose, calm focused expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'ronaldo.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Portuguese football superstar with athletic build and short dark hair, upper body shot from chest up, wearing Portugal red jersey, confident determined expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Portuguese football superstar with athletic muscular build, HEAD TO WAIST shot showing full torso, wearing Portugal red jersey with number 7, powerful confident stance with arms at sides, determined expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'r9.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Brazilian striker legend from early 2000s, upper body shot from chest up, wearing Brazil yellow jersey number 9, confident smile, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Brazilian striker legend from 2002 World Cup, HEAD TO WAIST shot showing full torso, wearing Brazil yellow jersey with number 9, confident athletic stance, slight smile, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'zidane.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, French football maestro with bald head, upper body shot from chest up, wearing France blue jersey, calm elegant expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, French football maestro with bald head, HEAD TO WAIST shot showing full torso, wearing France blue jersey with number 10, elegant composed stance, calm expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'beckenbauer.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, German football legend defender with classic 1970s hairstyle, upper body shot from chest up, wearing Germany white jersey, composed authoritative expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, German football legend defender with classic 1970s hairstyle, HEAD TO WAIST shot showing full torso, wearing Germany white jersey with number 5, authoritative commanding stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'cruyff.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Dutch football total football pioneer with 1970s long hair, upper body shot from chest up, wearing Netherlands orange jersey, intelligent thoughtful expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Dutch football pioneer with 1970s long hair, HEAD TO WAIST shot showing full torso, wearing Netherlands bright orange jersey with number 14, intelligent thoughtful expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'platini.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, French football playmaker from 1980s with wavy hair, upper body shot from chest up, wearing France blue jersey, sophisticated elegant expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, French football playmaker from 1980s with wavy hair, HEAD TO WAIST shot showing full torso, wearing France blue jersey with number 10, sophisticated elegant stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'baggio.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Italian football artist with iconic ponytail hairstyle, upper body shot from chest up, wearing Italy azzurri blue jersey, artistic soulful expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Italian football artist with iconic ponytail hairstyle, HEAD TO WAIST shot showing full torso, wearing Italy azzurri blue jersey with number 10, artistic soulful expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'maldini.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Italian football defender legend with classic good looks, upper body shot from chest up, wearing Italy blue jersey, strong dignified expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Italian football defender legend with classic good looks, HEAD TO WAIST shot showing full torso, wearing Italy blue jersey with number 3, strong dignified stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'muller.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, German striker legend from 1970s, upper body shot from chest up, wearing Germany white jersey, sharp focused expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, German striker legend Gerd Muller from 1970s, HEAD TO WAIST shot showing full torso, wearing Germany white jersey with number 13, sharp focused expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'cr7.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Portuguese football superstar with chiseled features and styled hair, upper body shot from chest up, wearing red jersey number 7, confident powerful expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Portuguese football superstar with chiseled athletic physique, HEAD TO WAIST shot showing full torso, wearing Portugal red jersey with number 7, confident powerful pose with hands on hips, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'ronaldinho.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, Brazilian football magician with long curly hair and iconic big smile, upper body shot from chest up, wearing Brazil yellow jersey, joyful charismatic expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, Brazilian football magician with long curly hair and iconic big smile showing teeth, HEAD TO WAIST shot showing full torso, wearing Brazil yellow jersey with number 10, joyful charismatic pose, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'henry.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait photo, French striker legend with athletic build, upper body shot from chest up, wearing France blue jersey, cool composed expression, clean dark gradient studio background, dramatic rim lighting, high-end sports photography style like F1 driver portraits, 4k quality'
+    prompt: 'Professional sports portrait, French striker legend Thierry Henry with athletic build, HEAD TO WAIST shot showing full torso, wearing France blue jersey with number 12, cool composed confident stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
 
   // BANNERS
