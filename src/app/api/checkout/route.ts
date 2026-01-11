@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 
 interface CartItem {
   productId: number
@@ -90,6 +90,12 @@ export async function POST(request: NextRequest) {
 
     // Get current user (optional - guest checkout allowed)
     const { data: { user } } = await supabase.auth.getUser()
+
+    // Get Stripe client
+    const stripe = getStripe()
+    if (!stripe) {
+      return NextResponse.json({ error: 'Payment service not configured' }, { status: 503 })
+    }
 
     // Create Stripe PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({

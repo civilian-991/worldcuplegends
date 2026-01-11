@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase/server'
 import { sendOrderConfirmationEmail } from '@/lib/email'
 import Stripe from 'stripe'
@@ -10,6 +10,11 @@ export async function POST(request: NextRequest) {
 
   if (!signature) {
     return NextResponse.json({ error: 'No signature' }, { status: 400 })
+  }
+
+  const stripe = getStripe()
+  if (!stripe) {
+    return NextResponse.json({ error: 'Payment service not configured' }, { status: 503 })
   }
 
   let event: Stripe.Event
