@@ -3,24 +3,32 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 
 export default function ForgotPasswordPage() {
+  const { resetPassword } = useAuth();
   const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const result = await resetPassword(email);
 
     setIsLoading(false);
-    setIsSubmitted(true);
-    showToast('Reset link sent to your email', 'success');
+
+    if (result.success) {
+      setIsSubmitted(true);
+      showToast('Reset link sent to your email', 'success');
+    } else {
+      setError(result.error || 'Failed to send reset link');
+    }
   };
 
   if (isSubmitted) {
@@ -99,6 +107,16 @@ export default function ForgotPasswordPage() {
         {/* Form */}
         <div className="glass rounded-2xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm"
+              >
+                {error}
+              </motion.div>
+            )}
+
             <div>
               <label className="text-white/50 text-sm mb-2 block">Email Address</label>
               <input

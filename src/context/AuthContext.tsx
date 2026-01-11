@@ -1,6 +1,8 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 export interface User {
   id: string;
@@ -9,6 +11,7 @@ export interface User {
   lastName: string;
   avatar?: string;
   phone?: string;
+  role?: string;
   createdAt: string;
 }
 
@@ -30,15 +33,18 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (data: RegisterData) => Promise<boolean>;
-  logout: () => void;
-  updateProfile: (data: Partial<User>) => void;
+  isAdmin: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (data: RegisterData) => Promise<{ success: boolean; error?: string }>;
+  logout: () => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<{ success: boolean; error?: string }>;
+  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   addresses: Address[];
-  addAddress: (address: Omit<Address, 'id'>) => void;
-  updateAddress: (id: string, address: Partial<Address>) => void;
-  deleteAddress: (id: string) => void;
-  setDefaultAddress: (id: string) => void;
+  addAddress: (address: Omit<Address, 'id'>) => Promise<{ success: boolean; error?: string }>;
+  updateAddress: (id: string, address: Partial<Address>) => Promise<{ success: boolean; error?: string }>;
+  deleteAddress: (id: string) => Promise<{ success: boolean; error?: string }>;
+  setDefaultAddress: (id: string) => Promise<{ success: boolean; error?: string }>;
+  refreshUser: () => Promise<void>;
 }
 
 interface RegisterData {
@@ -50,166 +56,359 @@ interface RegisterData {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock user for demo
-const mockUser: User = {
-  id: 'user-001',
-  email: 'demo@wlc2026.com',
-  firstName: 'John',
-  lastName: 'Legend',
-  phone: '+1 (555) 123-4567',
-  createdAt: '2025-11-15T10:00:00Z',
-};
-
-const mockAddresses: Address[] = [
-  {
-    id: 'addr-001',
-    label: 'Home',
-    firstName: 'John',
-    lastName: 'Legend',
-    street: '123 Football Avenue',
-    city: 'New York',
-    state: 'NY',
-    zipCode: '10001',
-    country: 'United States',
-    phone: '+1 (555) 123-4567',
-    isDefault: true,
-  },
-  {
-    id: 'addr-002',
-    label: 'Office',
-    firstName: 'John',
-    lastName: 'Legend',
-    street: '456 Stadium Road',
-    city: 'Los Angeles',
-    state: 'CA',
-    zipCode: '90001',
-    country: 'United States',
-    phone: '+1 (555) 987-6543',
-    isDefault: false,
-  },
-];
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check for saved session
-    const savedUser = localStorage.getItem('wlc-user');
-    const savedAddresses = localStorage.getItem('wlc-addresses');
+  const supabase = createClient();
 
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-        setAddresses(savedAddresses ? JSON.parse(savedAddresses) : mockAddresses);
-      } catch (e) {
-        console.error('Failed to parse user:', e);
+  // Fetch user profile from database
+  const fetchProfile = useCallback(async (supabaseUser: SupabaseUser) => {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', supabaseUser.id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching profile:', error);
+      return null;
+    }
+
+    return {
+      id: profile.id,
+      email: profile.email,
+      firstName: profile.first_name || '',
+      lastName: profile.last_name || '',
+      avatar: profile.avatar_url || undefined,
+      phone: profile.phone || undefined,
+      role: profile.role || 'customer',
+      createdAt: profile.created_at,
+    };
+  }, [supabase]);
+
+  // Fetch addresses from database
+  const fetchAddresses = useCallback(async (userId: string) => {
+    const { data, error } = await supabase
+      .from('addresses')
+      .select('*')
+      .eq('user_id', userId)
+      .order('is_default', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching addresses:', error);
+      return [];
+    }
+
+    return data.map((addr) => ({
+      id: addr.id,
+      label: addr.label,
+      firstName: addr.first_name,
+      lastName: addr.last_name,
+      street: addr.street,
+      city: addr.city,
+      state: addr.state,
+      zipCode: addr.zip_code,
+      country: addr.country,
+      phone: addr.phone || '',
+      isDefault: addr.is_default,
+    }));
+  }, [supabase]);
+
+  // Refresh user data
+  const refreshUser = useCallback(async () => {
+    const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+
+    if (supabaseUser) {
+      const profile = await fetchProfile(supabaseUser);
+      if (profile) {
+        setUser(profile);
+        const addrs = await fetchAddresses(supabaseUser.id);
+        setAddresses(addrs);
       }
+    } else {
+      setUser(null);
+      setAddresses([]);
     }
-    setIsLoading(false);
-  }, []);
+  }, [supabase, fetchProfile, fetchAddresses]);
 
+  // Initialize auth state
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('wlc-user', JSON.stringify(user));
-      localStorage.setItem('wlc-addresses', JSON.stringify(addresses));
-    }
-  }, [user, addresses]);
+    const initAuth = async () => {
+      setIsLoading(true);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
 
-    // Demo: accept any email/password
-    if (email && password) {
-      const loggedInUser = {
-        ...mockUser,
-        email,
-        id: `user-${Date.now()}`,
-      };
-      setUser(loggedInUser);
-      setAddresses(mockAddresses);
-      localStorage.setItem('wlc-user', JSON.stringify(loggedInUser));
-      localStorage.setItem('wlc-addresses', JSON.stringify(mockAddresses));
-      return true;
-    }
-    return false;
-  };
+      if (supabaseUser) {
+        const profile = await fetchProfile(supabaseUser);
+        if (profile) {
+          setUser(profile);
+          const addrs = await fetchAddresses(supabaseUser.id);
+          setAddresses(addrs);
+        }
+      }
 
-  const register = async (data: RegisterData): Promise<boolean> => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const newUser: User = {
-      id: `user-${Date.now()}`,
-      email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      createdAt: new Date().toISOString(),
+      setIsLoading(false);
     };
 
-    setUser(newUser);
-    setAddresses([]);
-    localStorage.setItem('wlc-user', JSON.stringify(newUser));
-    return true;
+    initAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          const profile = await fetchProfile(session.user);
+          if (profile) {
+            setUser(profile);
+            const addrs = await fetchAddresses(session.user.id);
+            setAddresses(addrs);
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setAddresses([]);
+        }
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase, fetchProfile, fetchAddresses]);
+
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
   };
 
-  const logout = () => {
+  const register = async (data: RegisterData) => {
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          first_name: data.firstName,
+          last_name: data.lastName,
+        },
+      },
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     setAddresses([]);
-    localStorage.removeItem('wlc-user');
-    localStorage.removeItem('wlc-addresses');
   };
 
-  const updateProfile = (data: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...data };
-      setUser(updatedUser);
+  const updateProfile = async (data: Partial<User>) => {
+    if (!user) {
+      return { success: false, error: 'Not authenticated' };
     }
+
+    const updateData: Record<string, unknown> = {};
+    if (data.firstName !== undefined) updateData.first_name = data.firstName;
+    if (data.lastName !== undefined) updateData.last_name = data.lastName;
+    if (data.phone !== undefined) updateData.phone = data.phone;
+    if (data.avatar !== undefined) updateData.avatar_url = data.avatar;
+
+    const { error } = await supabase
+      .from('profiles')
+      .update(updateData)
+      .eq('id', user.id);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    setUser((prev) => (prev ? { ...prev, ...data } : null));
+    return { success: true };
   };
 
-  const addAddress = (address: Omit<Address, 'id'>) => {
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const addAddress = async (address: Omit<Address, 'id'>) => {
+    if (!user) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    // If setting as default, update other addresses first
+    if (address.isDefault) {
+      await supabase
+        .from('addresses')
+        .update({ is_default: false })
+        .eq('user_id', user.id);
+    }
+
+    const { data, error } = await supabase
+      .from('addresses')
+      .insert({
+        user_id: user.id,
+        label: address.label,
+        first_name: address.firstName,
+        last_name: address.lastName,
+        street: address.street,
+        city: address.city,
+        state: address.state,
+        zip_code: address.zipCode,
+        country: address.country,
+        phone: address.phone,
+        is_default: address.isDefault || addresses.length === 0,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
     const newAddress: Address = {
-      ...address,
-      id: `addr-${Date.now()}`,
+      id: data.id,
+      label: data.label,
+      firstName: data.first_name,
+      lastName: data.last_name,
+      street: data.street,
+      city: data.city,
+      state: data.state,
+      zipCode: data.zip_code,
+      country: data.country,
+      phone: data.phone || '',
+      isDefault: data.is_default,
     };
 
-    // If this is the first address or marked as default, update others
-    if (address.isDefault || addresses.length === 0) {
+    if (newAddress.isDefault) {
       setAddresses((prev) => [
+        newAddress,
         ...prev.map((a) => ({ ...a, isDefault: false })),
-        { ...newAddress, isDefault: true },
       ]);
     } else {
       setAddresses((prev) => [...prev, newAddress]);
     }
+
+    return { success: true };
   };
 
-  const updateAddress = (id: string, data: Partial<Address>) => {
+  const updateAddress = async (id: string, data: Partial<Address>) => {
+    if (!user) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    const updateData: Record<string, unknown> = {};
+    if (data.label !== undefined) updateData.label = data.label;
+    if (data.firstName !== undefined) updateData.first_name = data.firstName;
+    if (data.lastName !== undefined) updateData.last_name = data.lastName;
+    if (data.street !== undefined) updateData.street = data.street;
+    if (data.city !== undefined) updateData.city = data.city;
+    if (data.state !== undefined) updateData.state = data.state;
+    if (data.zipCode !== undefined) updateData.zip_code = data.zipCode;
+    if (data.country !== undefined) updateData.country = data.country;
+    if (data.phone !== undefined) updateData.phone = data.phone;
+    if (data.isDefault !== undefined) updateData.is_default = data.isDefault;
+
+    const { error } = await supabase
+      .from('addresses')
+      .update(updateData)
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
     setAddresses((prev) =>
       prev.map((addr) => (addr.id === id ? { ...addr, ...data } : addr))
     );
+
+    return { success: true };
   };
 
-  const deleteAddress = (id: string) => {
+  const deleteAddress = async (id: string) => {
+    if (!user) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    const addressToDelete = addresses.find((a) => a.id === id);
+
+    const { error } = await supabase
+      .from('addresses')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
     setAddresses((prev) => {
       const filtered = prev.filter((addr) => addr.id !== id);
       // If we deleted the default, make the first one default
-      if (filtered.length > 0 && !filtered.some((a) => a.isDefault)) {
+      if (filtered.length > 0 && addressToDelete?.isDefault) {
+        // Update in database
+        supabase
+          .from('addresses')
+          .update({ is_default: true })
+          .eq('id', filtered[0].id);
         filtered[0].isDefault = true;
       }
       return filtered;
     });
+
+    return { success: true };
   };
 
-  const setDefaultAddress = (id: string) => {
+  const setDefaultAddress = async (id: string) => {
+    if (!user) {
+      return { success: false, error: 'Not authenticated' };
+    }
+
+    // First, set all addresses to non-default
+    await supabase
+      .from('addresses')
+      .update({ is_default: false })
+      .eq('user_id', user.id);
+
+    // Then set the selected one as default
+    const { error } = await supabase
+      .from('addresses')
+      .update({ is_default: true })
+      .eq('id', id)
+      .eq('user_id', user.id);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
     setAddresses((prev) =>
       prev.map((addr) => ({
         ...addr,
         isDefault: addr.id === id,
       }))
     );
+
+    return { success: true };
   };
 
   return (
@@ -218,15 +417,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isLoading,
         isAuthenticated: !!user,
+        isAdmin: user?.role === 'admin',
         login,
         register,
         logout,
         updateProfile,
+        resetPassword,
         addresses,
         addAddress,
         updateAddress,
         deleteAddress,
         setDefaultAddress,
+        refreshUser,
       }}
     >
       {children}

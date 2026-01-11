@@ -32,12 +32,12 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const success = await login(formData.email, formData.password);
-      if (success) {
+      const result = await login(formData.email, formData.password);
+      if (result.success) {
         showToast('Welcome back!', 'success');
         router.push('/account');
       } else {
-        setError('Invalid email or password');
+        setError(result.error || 'Invalid email or password');
       }
     } catch {
       setError('An error occurred. Please try again.');

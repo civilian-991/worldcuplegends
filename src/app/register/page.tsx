@@ -53,18 +53,18 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const success = await register({
+      const result = await register({
         email: formData.email,
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName,
       });
 
-      if (success) {
-        showToast('Account created successfully!', 'success');
-        router.push('/account');
+      if (result.success) {
+        showToast('Account created! Please check your email to verify.', 'success');
+        router.push('/login');
       } else {
-        setError('Failed to create account');
+        setError(result.error || 'Failed to create account');
       }
     } catch {
       setError('An error occurred. Please try again.');
