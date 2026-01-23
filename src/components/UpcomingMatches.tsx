@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { matches } from '@/data/legends';
+import Flag from '@/components/Flag';
 
 const upcomingMatches = matches.slice(0, 4);
 
@@ -80,7 +81,11 @@ export default function UpcomingMatches() {
               <div className="flex items-center justify-between mb-6">
                 {/* Home Team */}
                 <div className="flex items-center gap-4 flex-1">
-                  <span className="text-4xl">{match.homeFlag}</span>
+                  {match.homeCountryCode === 'TBD' ? (
+                    <span className="text-4xl">🏆</span>
+                  ) : (
+                    <Flag countryCode={match.homeCountryCode} size="xl" />
+                  )}
                   <div>
                     <p className="text-white font-semibold text-lg">{match.homeTeam}</p>
                     {match.homeScore !== undefined && (
@@ -112,7 +117,11 @@ export default function UpcomingMatches() {
                       </p>
                     )}
                   </div>
-                  <span className="text-4xl">{match.awayFlag}</span>
+                  {match.awayCountryCode === 'TBD' ? (
+                    <span className="text-4xl">🏆</span>
+                  ) : (
+                    <Flag countryCode={match.awayCountryCode} size="xl" />
+                  )}
                 </div>
               </div>
 

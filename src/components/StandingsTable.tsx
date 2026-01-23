@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { legends } from '@/data/legends';
+import Flag from '@/components/Flag';
 
 const topLegends = [...legends].sort((a, b) => b.rating - a.rating).slice(0, 6);
 
@@ -109,7 +110,7 @@ export default function StandingsTable() {
 
               {/* Country - Hidden on mobile */}
               <div className="hidden md:flex col-span-2 items-center gap-2">
-                <span className="text-2xl">{getFlag(legend.countryCode)}</span>
+                <Flag countryCode={legend.countryCode} size="lg" />
                 <span className="text-white/70 text-sm">{legend.country}</span>
               </div>
 
@@ -148,19 +149,4 @@ export default function StandingsTable() {
       </div>
     </section>
   );
-}
-
-function getFlag(countryCode: string): string {
-  const flags: Record<string, string> = {
-    BR: '🇧🇷',
-    AR: '🇦🇷',
-    FR: '🇫🇷',
-    DE: '🇩🇪',
-    IT: '🇮🇹',
-    NL: '🇳🇱',
-    PT: '🇵🇹',
-    ES: '🇪🇸',
-    GB: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-  };
-  return flags[countryCode] || '🏳️';
 }

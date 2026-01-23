@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { teams, type Team } from '@/data/legends';
+import Flag from '@/components/Flag';
 
 export default function TeamsPage() {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
@@ -63,7 +64,9 @@ export default function TeamsPage() {
                     className="glass rounded-xl p-6 text-center group cursor-pointer hover:bg-gold-500/5 transition-colors"
                     onClick={() => setSelectedTeam(team)}
                   >
-                    <span className="text-5xl block mb-3">{team.flag}</span>
+                    <div className="flex justify-center mb-3">
+                      <Flag countryCode={team.countryCode} size="xl" />
+                    </div>
                     <h3
                       className="text-white font-bold text-lg group-hover:text-gold-400 transition-colors"
                       style={{ fontFamily: 'var(--font-display)' }}
@@ -103,7 +106,7 @@ export default function TeamsPage() {
                   {/* Header */}
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                      <span className="text-6xl">{team.flag}</span>
+                      <Flag countryCode={team.countryCode} size="xl" />
                       <div>
                         <h3
                           className="text-white text-2xl font-bold group-hover:text-gold-400 transition-colors"
@@ -212,7 +215,7 @@ export default function TeamsPage() {
 
                 {/* Header */}
                 <div className="flex items-center gap-6 mb-8">
-                  <span className="text-8xl">{selectedTeam.flag}</span>
+                  <Flag countryCode={selectedTeam.countryCode} size="xl" className="w-20 h-14" />
                   <div>
                     <h2
                       className="text-4xl font-bold text-white"

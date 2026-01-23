@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { legends, type Legend } from '@/data/legends';
 import Link from 'next/link';
+import Flag from '@/components/Flag';
 
 const eras = ['All Eras', '60s-70s', '70s', '80s', '90s-00s', '2000s', '2010s-20s'];
 
@@ -145,18 +146,6 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
     GB: { bg: 'linear-gradient(135deg, #1a2744 0%, #0d1522 100%)', accent: '#012169' }, // England blue
   };
 
-  const flags: Record<string, string> = {
-    BR: '🇧🇷',
-    AR: '🇦🇷',
-    FR: '🇫🇷',
-    DE: '🇩🇪',
-    IT: '🇮🇹',
-    NL: '🇳🇱',
-    PT: '🇵🇹',
-    ES: '🇪🇸',
-    GB: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-  };
-
   // Split name into first and last
   const nameParts = legend.name.split(' ');
   const firstName = nameParts[0];
@@ -209,7 +198,7 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
 
               {/* Flag at bottom */}
               <div className="mt-4">
-                <span className="text-2xl">{flags[legend.countryCode] || '🏳️'}</span>
+                <Flag countryCode={legend.countryCode} size="lg" />
               </div>
             </div>
 

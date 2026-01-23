@@ -341,6 +341,8 @@ export interface Match {
   awayTeam: string;
   homeFlag: string;
   awayFlag: string;
+  homeCountryCode: string;
+  awayCountryCode: string;
   date: string;
   time: string;
   venue: string;
@@ -357,6 +359,8 @@ export const matches: Match[] = [
     awayTeam: "Germany",
     homeFlag: "🇧🇷",
     awayFlag: "🇩🇪",
+    homeCountryCode: "BR",
+    awayCountryCode: "DE",
     date: "2026-06-15",
     time: "20:00",
     venue: "MetLife Stadium, New Jersey",
@@ -371,6 +375,8 @@ export const matches: Match[] = [
     awayTeam: "France",
     homeFlag: "🇦🇷",
     awayFlag: "🇫🇷",
+    homeCountryCode: "AR",
+    awayCountryCode: "FR",
     date: "2026-06-16",
     time: "18:00",
     venue: "SoFi Stadium, Los Angeles",
@@ -382,6 +388,8 @@ export const matches: Match[] = [
     awayTeam: "Spain",
     homeFlag: "🇮🇹",
     awayFlag: "🇪🇸",
+    homeCountryCode: "IT",
+    awayCountryCode: "ES",
     date: "2026-06-17",
     time: "21:00",
     venue: "AT&T Stadium, Dallas",
@@ -393,6 +401,8 @@ export const matches: Match[] = [
     awayTeam: "England",
     homeFlag: "🇳🇱",
     awayFlag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+    homeCountryCode: "NL",
+    awayCountryCode: "GB",
     date: "2026-06-18",
     time: "19:00",
     venue: "Hard Rock Stadium, Miami",
@@ -404,6 +414,8 @@ export const matches: Match[] = [
     awayTeam: "Argentina",
     homeFlag: "🇧🇷",
     awayFlag: "🇦🇷",
+    homeCountryCode: "BR",
+    awayCountryCode: "AR",
     date: "2026-07-01",
     time: "20:00",
     venue: "MetLife Stadium, New Jersey",
@@ -415,6 +427,8 @@ export const matches: Match[] = [
     awayTeam: "France",
     homeFlag: "🇩🇪",
     awayFlag: "🇫🇷",
+    homeCountryCode: "DE",
+    awayCountryCode: "FR",
     date: "2026-07-02",
     time: "20:00",
     venue: "Rose Bowl, Pasadena",
@@ -426,6 +440,8 @@ export const matches: Match[] = [
     awayTeam: "TBD",
     homeFlag: "🏆",
     awayFlag: "🏆",
+    homeCountryCode: "TBD",
+    awayCountryCode: "TBD",
     date: "2026-07-19",
     time: "19:00",
     venue: "MetLife Stadium, New Jersey",

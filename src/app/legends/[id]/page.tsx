@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { legends } from '@/data/legends';
+import Flag from '@/components/Flag';
 
 export default function LegendDetailPage() {
   const params = useParams();
@@ -34,18 +35,6 @@ export default function LegendDetailPage() {
     PT: '#006600',
     ES: '#c60b1e',
     GB: '#012169',
-  };
-
-  const flags: Record<string, string> = {
-    BR: '🇧🇷',
-    AR: '🇦🇷',
-    FR: '🇫🇷',
-    DE: '🇩🇪',
-    IT: '🇮🇹',
-    NL: '🇳🇱',
-    PT: '🇵🇹',
-    ES: '🇪🇸',
-    GB: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
   };
 
   const teamColor = teamColors[legend.countryCode] || '#d4af37';
@@ -123,7 +112,7 @@ export default function LegendDetailPage() {
               {/* Country & Position */}
               <div className="flex items-center gap-4 mb-8">
                 <div className="flex items-center gap-2">
-                  <span className="text-3xl">{flags[legend.countryCode] || '🏳️'}</span>
+                  <Flag countryCode={legend.countryCode} size="xl" />
                   <span className="text-white/70 text-lg">{legend.country}</span>
                 </div>
                 <div className="w-px h-6 bg-white/20" />
@@ -306,7 +295,7 @@ export default function LegendDetailPage() {
                             {(related.name.split(' ').slice(1).join(' ') || related.name).toUpperCase()}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-sm">{flags[related.countryCode]}</span>
+                            <Flag countryCode={related.countryCode} size="sm" />
                             <span className="text-white/40 text-xs">{related.rating}</span>
                           </div>
                         </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { matches, type Match } from '@/data/legends';
+import Flag from '@/components/Flag';
 
 const stages = ['All', 'Group A', 'Group B', 'Group C', 'Group D', 'Semi-Final', 'Final'];
 
@@ -137,10 +138,10 @@ export default function SchedulePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { name: 'MetLife Stadium', city: 'New Jersey', country: '🇺🇸', capacity: '82,500' },
-              { name: 'SoFi Stadium', city: 'Los Angeles', country: '🇺🇸', capacity: '70,240' },
-              { name: 'Rose Bowl', city: 'Pasadena', country: '🇺🇸', capacity: '88,438' },
-              { name: 'Estadio Azteca', city: 'Mexico City', country: '🇲🇽', capacity: '87,523' },
+              { name: 'MetLife Stadium', city: 'New Jersey', countryCode: 'US', capacity: '82,500' },
+              { name: 'SoFi Stadium', city: 'Los Angeles', countryCode: 'US', capacity: '70,240' },
+              { name: 'Rose Bowl', city: 'Pasadena', countryCode: 'US', capacity: '88,438' },
+              { name: 'Estadio Azteca', city: 'Mexico City', countryCode: 'MX', capacity: '87,523' },
             ].map((venue, index) => (
               <motion.div
                 key={venue.name}
@@ -150,7 +151,9 @@ export default function SchedulePage() {
                 transition={{ delay: index * 0.1 }}
                 className="glass rounded-xl p-6 text-center"
               >
-                <span className="text-4xl block mb-4">{venue.country}</span>
+                <div className="flex justify-center mb-4">
+                  <Flag countryCode={venue.countryCode} size="xl" />
+                </div>
                 <h3 className="text-white font-semibold text-lg mb-1">{venue.name}</h3>
                 <p className="text-white/50 text-sm mb-2">{venue.city}</p>
                 <p className="text-gold-400 text-sm">Capacity: {venue.capacity}</p>
@@ -211,7 +214,11 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
                   </p>
                 )}
               </div>
-              <span className="text-4xl md:text-5xl">{match.homeFlag}</span>
+              {match.homeCountryCode === 'TBD' ? (
+                <span className="text-4xl md:text-5xl">🏆</span>
+              ) : (
+                <Flag countryCode={match.homeCountryCode} size="xl" />
+              )}
             </div>
 
             {/* VS / Score */}
@@ -232,7 +239,11 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
 
             {/* Away Team */}
             <div className="flex-1 flex items-center gap-4">
-              <span className="text-4xl md:text-5xl">{match.awayFlag}</span>
+              {match.awayCountryCode === 'TBD' ? (
+                <span className="text-4xl md:text-5xl">🏆</span>
+              ) : (
+                <Flag countryCode={match.awayCountryCode} size="xl" />
+              )}
               <div>
                 <p className="text-white font-semibold text-lg md:text-xl">{match.awayTeam}</p>
                 {match.awayScore !== undefined && (

@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import { teams } from '@/data/legends';
+import Flag from '@/components/Flag';
 
 export default function TeamCarousel() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +69,7 @@ export default function TeamCarousel() {
             <div className="p-6">
               {/* Flag and Name */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-5xl">{team.flag}</span>
+                <Flag countryCode={team.countryCode} size="xl" />
                 <div>
                   <h3
                     className="text-white text-2xl font-bold group-hover:text-gold-400 transition-colors"
