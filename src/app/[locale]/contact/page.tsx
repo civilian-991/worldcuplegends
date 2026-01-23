@@ -1,8 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export default function ContactPage() {
+  const t = useTranslations('contact');
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       {/* Hero Section */}
@@ -16,16 +20,15 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">Get in Touch</p>
+            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">{t('preTitle')}</p>
             <h1
               className="text-5xl md:text-7xl font-bold text-white mb-6"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              CONTACT <span className="text-gradient-gold">US</span>
+              {t('pageTitle')} <span className="text-gradient-gold">{t('pageTitleHighlight')}</span>
             </h1>
             <p className="text-white/60 text-xl max-w-2xl">
-              Have questions about the World Legends Cup? We&apos;re here to help.
-              Reach out to our team for assistance.
+              {t('heroDescription')}
             </p>
           </motion.div>
         </div>
@@ -46,56 +49,56 @@ export default function ContactPage() {
                 className="text-3xl font-bold text-white mb-8"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                SEND US A MESSAGE
+                {t('form.title')}
               </h2>
 
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-white/50 text-sm mb-2">First Name</label>
+                    <label className="block text-white/50 text-sm mb-2">{t('form.firstName')}</label>
                     <input
                       type="text"
                       className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
-                      placeholder="John"
+                      placeholder={t('form.firstNamePlaceholder')}
                     />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-sm mb-2">Last Name</label>
+                    <label className="block text-white/50 text-sm mb-2">{t('form.lastName')}</label>
                     <input
                       type="text"
                       className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
-                      placeholder="Doe"
+                      placeholder={t('form.lastNamePlaceholder')}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-white/50 text-sm mb-2">Email</label>
+                  <label className="block text-white/50 text-sm mb-2">{t('form.email')}</label>
                   <input
                     type="email"
                     className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
-                    placeholder="john@example.com"
+                    placeholder={t('form.emailPlaceholder')}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/50 text-sm mb-2">Subject</label>
+                  <label className="block text-white/50 text-sm mb-2">{t('form.subject')}</label>
                   <select className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer">
-                    <option value="">Select a topic</option>
-                    <option value="tickets">Tickets & Booking</option>
-                    <option value="media">Media & Press</option>
-                    <option value="partnership">Partnership Inquiries</option>
-                    <option value="general">General Questions</option>
-                    <option value="other">Other</option>
+                    <option value="">{t('form.selectTopic')}</option>
+                    <option value="tickets">{t('form.ticketsBooking')}</option>
+                    <option value="media">{t('form.mediaPress')}</option>
+                    <option value="partnership">{t('form.partnershipInquiries')}</option>
+                    <option value="general">{t('form.generalQuestions')}</option>
+                    <option value="other">{t('form.other')}</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-white/50 text-sm mb-2">Message</label>
+                  <label className="block text-white/50 text-sm mb-2">{t('form.message')}</label>
                   <textarea
                     rows={5}
                     className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors resize-none"
-                    placeholder="Your message..."
+                    placeholder={t('form.messagePlaceholder')}
                   />
                 </div>
 
@@ -105,7 +108,7 @@ export default function ContactPage() {
                   type="submit"
                   className="w-full py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-full hover:from-gold-400 hover:to-gold-500 transition-all"
                 >
-                  Send Message
+                  {t('form.sendMessage')}
                 </motion.button>
               </form>
             </motion.div>
@@ -122,28 +125,28 @@ export default function ContactPage() {
                 className="text-3xl font-bold text-white mb-8"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                CONTACT INFORMATION
+                {t('info.title')}
               </h2>
 
               <div className="space-y-6">
                 {[
                   {
                     icon: '📧',
-                    title: 'Email',
-                    content: 'info@worldlegendscup.com',
-                    sub: 'We respond within 24 hours',
+                    title: t('info.emailTitle'),
+                    content: t('info.emailContent'),
+                    sub: t('info.emailSub'),
                   },
                   {
                     icon: '📞',
-                    title: 'Phone',
-                    content: '+1 (800) WLC-2026',
-                    sub: 'Mon-Fri, 9am-6pm EST',
+                    title: t('info.phoneTitle'),
+                    content: t('info.phoneContent'),
+                    sub: t('info.phoneSub'),
                   },
                   {
                     icon: '📍',
-                    title: 'Headquarters',
-                    content: 'New York, NY',
-                    sub: 'United States',
+                    title: t('info.headquarters'),
+                    content: t('info.headquartersContent'),
+                    sub: t('info.headquartersSub'),
                   },
                 ].map((item) => (
                   <div key={item.title} className="glass rounded-xl p-6 flex items-start gap-4">
@@ -159,7 +162,7 @@ export default function ContactPage() {
 
               {/* Social Links */}
               <div className="pt-8">
-                <p className="text-white/50 text-sm mb-4">Follow us on social media</p>
+                <p className="text-white/50 text-sm mb-4">{t('info.followUs')}</p>
                 <div className="flex gap-4">
                   {['𝕏', '📷', '▶', '♪'].map((icon, i) => (
                     <motion.button
@@ -176,14 +179,13 @@ export default function ContactPage() {
 
               {/* FAQ Link */}
               <div className="glass rounded-xl p-6 mt-8">
-                <h3 className="text-white font-semibold mb-2">Looking for quick answers?</h3>
+                <h3 className="text-white font-semibold mb-2">{t('info.quickAnswers')}</h3>
                 <p className="text-white/50 text-sm mb-4">
-                  Check our FAQ section for commonly asked questions about tickets,
-                  venues, and more.
+                  {t('info.quickAnswersDescription')}
                 </p>
-                <a href="/tickets" className="text-gold-400 hover:text-gold-300 text-sm font-semibold">
-                  View FAQ →
-                </a>
+                <Link href="/faq" className="text-gold-400 hover:text-gold-300 text-sm font-semibold">
+                  {t('info.viewFAQ')} →
+                </Link>
               </div>
             </motion.div>
           </div>

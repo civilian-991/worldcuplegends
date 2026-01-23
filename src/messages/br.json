@@ -199,11 +199,116 @@
     "contactSupport": "Falar com Suporte",
     "emailUs": "Enviar E-mail",
     "categories": {
-      "ordersShipping": "Pedidos e Envio",
-      "returnsExchanges": "Devoluções e Trocas",
-      "productsSizing": "Produtos e Tamanhos",
-      "ticketsEvents": "Ingressos e Eventos",
-      "accountPayment": "Conta e Pagamento"
+      "ordersShipping": {
+        "title": "Pedidos e Envio",
+        "icon": "📦",
+        "items": {
+          "shippingTime": {
+            "question": "Quanto tempo leva o envio?",
+            "answer": "O envio padrão geralmente leva 5-7 dias úteis dentro dos EUA. Opções de envio expresso (2-3 dias úteis) e overnight também estão disponíveis no checkout. Os prazos de envio internacional variam por destino, geralmente 7-14 dias úteis."
+          },
+          "internationalShipping": {
+            "question": "Vocês enviam internacionalmente?",
+            "answer": "Sim! Enviamos para mais de 100 países em todo o mundo. As taxas de envio internacional e prazos de entrega são calculados no checkout com base na sua localização. Por favor, note que taxas alfandegárias e impostos podem ser aplicados."
+          },
+          "trackOrder": {
+            "question": "Como posso rastrear meu pedido?",
+            "answer": "Quando seu pedido for enviado, você receberá um e-mail com seu número de rastreamento e um link para acompanhar seu pacote. Você também pode rastrear seu pedido a qualquer momento visitando nossa página de Rastrear Pedido e inserindo seu ID do pedido."
+          },
+          "lostDamaged": {
+            "question": "E se meu pedido for perdido ou danificado?",
+            "answer": "Garantimos nosso envio! Se seu pacote for perdido ou chegar danificado, entre em contato com nossa equipe de suporte dentro de 48 horas da entrega esperada. Trabalharemos para resolver o problema rapidamente com substituição ou reembolso total."
+          }
+        }
+      },
+      "returnsExchanges": {
+        "title": "Devoluções e Trocas",
+        "icon": "↩️",
+        "items": {
+          "returnPolicy": {
+            "question": "Qual é a política de devolução?",
+            "answer": "Oferecemos uma política de devolução de 30 dias para itens não usados, não lavados e com etiquetas originais. Os itens devem estar na embalagem original. Itens em promoção e camisas personalizadas são venda final."
+          },
+          "startReturn": {
+            "question": "Como inicio uma devolução?",
+            "answer": "Visite nossa página de Devoluções ou o histórico de pedidos da sua conta para iniciar uma devolução. Você receberá uma etiqueta de envio pré-paga (pedidos dos EUA) ou instruções de devolução. Reembolsos são processados dentro de 5-7 dias úteis após recebermos sua devolução."
+          },
+          "exchange": {
+            "question": "Posso trocar um item?",
+            "answer": "Sim! Para trocas, inicie uma devolução do item original e faça um novo pedido do item correto. Isso garante que você receba seu novo item o mais rápido possível. Reembolsaremos sua compra original quando recebermos a devolução."
+          },
+          "refundTime": {
+            "question": "Quando receberei meu reembolso?",
+            "answer": "Reembolsos são processados dentro de 5-7 dias úteis após recebermos sua devolução. O reembolso será creditado ao seu método de pagamento original. Por favor, aguarde 3-5 dias úteis adicionais para seu banco processar o crédito."
+          }
+        }
+      },
+      "productsSizing": {
+        "title": "Produtos e Tamanhos",
+        "icon": "👕",
+        "items": {
+          "findSize": {
+            "question": "Como encontro meu tamanho?",
+            "answer": "Confira nossa página detalhada de Guia de Tamanhos para medidas e dicas de ajuste. Recomendamos medir uma peça similar que você possui e comparar com nossa tabela de tamanhos. Se estiver entre tamanhos, geralmente recomendamos o tamanho maior."
+          },
+          "authentic": {
+            "question": "As camisas são autênticas?",
+            "answer": "Todas as nossas camisas são produtos oficialmente licenciados da World Cup Legends. Elas apresentam bordados autênticos, materiais premium e especificações oficiais de competição. Cada camisa vem com um certificado de autenticidade."
+          },
+          "customize": {
+            "question": "Posso personalizar minha camisa?",
+            "answer": "Sim! Muitas camisas podem ser personalizadas com o nome e número do seu jogador favorito, ou seu próprio nome. Opções de personalização estão disponíveis nas páginas de produtos elegíveis. Por favor, note que itens personalizados são venda final."
+          },
+          "materials": {
+            "question": "Quais materiais são usados?",
+            "answer": "Nossas camisas usam tecido premium que absorve umidade (geralmente 100% poliéster reciclado) com tecnologia avançada de resfriamento. Camisetas e roupas casuais usam uma mistura de algodão e poliéster para conforto. Todos os materiais são de origem ética."
+          }
+        }
+      },
+      "ticketsEvents": {
+        "title": "Ingressos e Eventos",
+        "icon": "🎟️",
+        "items": {
+          "purchaseTickets": {
+            "question": "Como compro ingressos?",
+            "answer": "Ingressos para a World Cup Legends 2026 podem ser comprados diretamente através da nossa página de Ingressos. Oferecemos vários pacotes incluindo ingressos para partidas individuais, passes multi-jogos e experiências VIP."
+          },
+          "transferable": {
+            "question": "Os ingressos são transferíveis?",
+            "answer": "Sim, ingressos podem ser transferidos para outra pessoa através do nosso portal oficial de ingressos. Basta fazer login na sua conta, selecionar os ingressos que deseja transferir e inserir o endereço de e-mail do destinatário."
+          },
+          "cancelled": {
+            "question": "E se um evento for cancelado?",
+            "answer": "Em caso de cancelamento, todos os portadores de ingressos receberão reembolso total automaticamente. Se um evento for adiado, seus ingressos serão válidos para a nova data, ou você pode solicitar um reembolso."
+          },
+          "accessible": {
+            "question": "Há assentos acessíveis?",
+            "answer": "Sim, todos os estádios oferecem opções de assentos acessíveis. Ao comprar ingressos, selecione a opção de acessibilidade para ver os assentos acessíveis disponíveis. Entre em contato com nossa equipe de suporte se precisar de assistência adicional."
+          }
+        }
+      },
+      "accountPayment": {
+        "title": "Conta e Pagamento",
+        "icon": "💳",
+        "items": {
+          "paymentMethods": {
+            "question": "Quais métodos de pagamento vocês aceitam?",
+            "answer": "Aceitamos todos os principais cartões de crédito (Visa, Mastercard, American Express, Discover), PayPal, Apple Pay e Google Pay. Para algumas regiões, também oferecemos opções de parcelamento através de Klarna e Afterpay."
+          },
+          "paymentSecure": {
+            "question": "Minhas informações de pagamento são seguras?",
+            "answer": "Absolutamente. Usamos criptografia SSL padrão da indústria e nunca armazenamos os detalhes completos do seu cartão de crédito. Todas as transações são processadas através de processadores de pagamento compatíveis com PCI."
+          },
+          "createAccount": {
+            "question": "Como crio uma conta?",
+            "answer": "Clique no botão \"Registrar\" na navegação ou durante o checkout. Você precisará fornecer um endereço de e-mail e criar uma senha. Ter uma conta permite rastrear pedidos, salvar endereços e gerenciar sua lista de desejos."
+          },
+          "forgotPassword": {
+            "question": "Esqueci minha senha. O que faço?",
+            "answer": "Clique em \"Esqueci a Senha\" na página de login e insira seu e-mail. Você receberá um link para redefinir sua senha em minutos. Se não vir o e-mail, verifique sua pasta de spam."
+          }
+        }
+      }
     }
   },
   "common": {

@@ -2,23 +2,25 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { products, categories, type Product } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 
-const sortOptions = [
-  { label: 'Featured', value: 'featured' },
-  { label: 'Price: Low to High', value: 'price-asc' },
-  { label: 'Price: High to Low', value: 'price-desc' },
-  { label: 'Highest Rated', value: 'rating' },
-  { label: 'Newest', value: 'newest' },
-];
-
 export default function ShopPage() {
+  const t = useTranslations('shop');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const [searchQuery, setSearchQuery] = useState('');
   const { addToCart, setIsCartOpen } = useCart();
+
+  const sortOptions = [
+    { label: t('sort.featured'), value: 'featured' },
+    { label: t('sort.priceLowHigh'), value: 'price-asc' },
+    { label: t('sort.priceHighLow'), value: 'price-desc' },
+    { label: t('sort.highestRated'), value: 'rating' },
+    { label: t('sort.newest'), value: 'newest' },
+  ];
 
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
@@ -78,16 +80,15 @@ export default function ShopPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">Official Store</p>
+            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">{t('preTitle')}</p>
             <h1
               className="text-5xl md:text-7xl font-bold text-white mb-6"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              LEGENDS <span className="text-gradient-gold">SHOP</span>
+              {t('pageTitle')} <span className="text-gradient-gold">{t('pageTitleHighlight')}</span>
             </h1>
             <p className="text-white/60 text-xl max-w-2xl">
-              Official World Legends Cup merchandise. Jerseys, apparel, and collectibles
-              to celebrate football&apos;s greatest icons.
+              {t('heroDescription')}
             </p>
           </motion.div>
         </div>
@@ -101,7 +102,7 @@ export default function ShopPage() {
             <div className="relative w-full lg:w-80">
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-6 py-3 bg-night-600 border border-gold-500/20 rounded-full text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
@@ -155,7 +156,7 @@ export default function ShopPage() {
           {/* Results Count */}
           <div className="flex items-center justify-between mb-8">
             <p className="text-white/50 text-sm">
-              Showing {filteredProducts.length} products
+              {t('showingProducts', { count: filteredProducts.length })}
             </p>
           </div>
 
@@ -171,6 +172,11 @@ export default function ShopPage() {
                   product={product}
                   index={index}
                   onQuickAdd={() => handleQuickAdd(product)}
+                  translations={{
+                    quickAdd: t('quickAdd'),
+                    featured: t('featured'),
+                    sale: t('sale'),
+                  }}
                 />
               ))}
             </AnimatePresence>
@@ -184,7 +190,7 @@ export default function ShopPage() {
               className="text-center py-20"
             >
               <span className="text-6xl block mb-4">🔍</span>
-              <p className="text-white/50 text-xl">No products found matching your criteria.</p>
+              <p className="text-white/50 text-xl">{t('noResults')}</p>
               <button
                 onClick={() => {
                   setSelectedCategory('all');
@@ -192,7 +198,7 @@ export default function ShopPage() {
                 }}
                 className="mt-4 text-gold-400 hover:text-gold-300 transition-colors"
               >
-                Clear filters
+                {t('clearFilters')}
               </button>
             </motion.div>
           )}
@@ -208,10 +214,10 @@ export default function ShopPage() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              LEGENDS SIGNATURE COLLECTION
+              {t('signatureCollection.title')}
             </h2>
             <p className="text-white/60 mb-8 max-w-2xl mx-auto">
-              Exclusive merchandise featuring signature designs from Pelé, Maradona, Zidane, Messi, and more football legends.
+              {t('signatureCollection.description')}
             </p>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -219,7 +225,7 @@ export default function ShopPage() {
               onClick={() => setSearchQuery('signature')}
               className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-full"
             >
-              Shop Signature Collection
+              {t('signatureCollection.shopButton')}
             </motion.button>
           </div>
         </div>
@@ -232,10 +238,16 @@ function ProductCard({
   product,
   index,
   onQuickAdd,
+  translations,
 }: {
   product: Product;
   index: number;
   onQuickAdd: () => void;
+  translations: {
+    quickAdd: string;
+    featured: string;
+    sale: string;
+  };
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -279,12 +291,12 @@ function ProductCard({
             <div className="absolute top-4 left-4 flex flex-col gap-2">
               {product.featured && (
                 <span className="px-3 py-1 bg-gold-500 text-night-900 text-xs font-bold rounded-full">
-                  FEATURED
+                  {translations.featured}
                 </span>
               )}
               {product.originalPrice && (
                 <span className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
-                  SALE
+                  {translations.sale}
                 </span>
               )}
             </div>
@@ -302,7 +314,7 @@ function ProductCard({
                 }}
                 className="w-full py-3 bg-gold-500 text-night-900 font-bold text-sm rounded-full hover:bg-gold-400 transition-colors"
               >
-                Quick Add to Cart
+                {translations.quickAdd}
               </button>
             </motion.div>
           </div>

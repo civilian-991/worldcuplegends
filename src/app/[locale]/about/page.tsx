@@ -1,24 +1,27 @@
 'use client';
 
 import { motion } from 'framer-motion';
-
-const values = [
-  { icon: '🌍', title: 'Unity', description: 'Bringing together legends from every corner of the world to celebrate the beautiful game.' },
-  { icon: '🏆', title: 'Legacy', description: 'Preserving and honoring the achievements of footballs greatest icons for future generations.' },
-  { icon: '⭐', title: 'Excellence', description: 'Showcasing the highest standards of football artistry and sportsmanship.' },
-  { icon: '❤️', title: 'Passion', description: 'Igniting the love for football that connects billions of fans worldwide.' },
-  { icon: '🤝', title: 'Respect', description: 'Honoring the dedication and sacrifice of players who gave everything to the sport.' },
-  { icon: '💫', title: 'Inspiration', description: 'Motivating the next generation of footballers through the stories of legends.' },
-];
-
-const timeline = [
-  { year: '2023', event: 'World Legends Cup concept announced' },
-  { year: '2024', event: 'Host nations confirmed: USA, Mexico, Canada' },
-  { year: '2025', event: 'Legend selections and team formations begin' },
-  { year: '2026', event: 'Tournament kicks off in June' },
-];
+import { useTranslations } from 'next-intl';
 
 export default function AboutPage() {
+  const t = useTranslations('about');
+
+  const values = [
+    { icon: '🌍', title: t('values.unity.title'), description: t('values.unity.description') },
+    { icon: '🏆', title: t('values.legacy.title'), description: t('values.legacy.description') },
+    { icon: '⭐', title: t('values.excellence.title'), description: t('values.excellence.description') },
+    { icon: '❤️', title: t('values.passion.title'), description: t('values.passion.description') },
+    { icon: '🤝', title: t('values.respect.title'), description: t('values.respect.description') },
+    { icon: '💫', title: t('values.inspiration.title'), description: t('values.inspiration.description') },
+  ];
+
+  const timeline = [
+    { year: '2023', event: t('journey.2023') },
+    { year: '2024', event: t('journey.2024') },
+    { year: '2025', event: t('journey.2025') },
+    { year: '2026', event: t('journey.2026') },
+  ];
+
   return (
     <div className="min-h-screen pt-24 pb-16">
       {/* Hero Section */}
@@ -33,16 +36,15 @@ export default function AboutPage() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">Our Story</p>
+            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">{t('preTitle')}</p>
             <h1
               className="text-5xl md:text-7xl font-bold text-white mb-6"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              ABOUT THE <span className="text-gradient-gold">WORLD LEGENDS CUP</span>
+              {t('pageTitle')} <span className="text-gradient-gold">{t('pageTitleHighlight')}</span>
             </h1>
             <p className="text-white/60 text-xl leading-relaxed">
-              The World Legends Cup is a groundbreaking tournament that brings together the greatest
-              footballers in history for one extraordinary celebration of the beautiful game.
+              {t('heroDescription')}
             </p>
           </motion.div>
         </div>
@@ -62,20 +64,16 @@ export default function AboutPage() {
                 className="text-4xl font-bold text-white mb-6"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                OUR MISSION
+                {t('mission.title')}
               </h2>
               <p className="text-white/60 text-lg leading-relaxed mb-6">
-                To honor and celebrate the achievements of legendary figures of football, fostering
-                a sense of unity, pride, and inspiration across generations.
+                {t('mission.paragraph1')}
               </p>
               <p className="text-white/60 text-lg leading-relaxed mb-6">
-                By showcasing these remarkable players and their contributions, the event aims to
-                inspire future generations, preserve the legacies of the past, and create unforgettable
-                experiences that resonate on a global scale.
+                {t('mission.paragraph2')}
               </p>
               <p className="text-white/60 text-lg leading-relaxed">
-                This is more than a tournament—it&apos;s a tribute to the art of football and the
-                heroes who have shaped its history.
+                {t('mission.paragraph3')}
               </p>
             </motion.div>
 
@@ -93,10 +91,10 @@ export default function AboutPage() {
                     className="text-3xl font-bold text-gold-400 mb-4"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
-                    LEGENDS NEVER DIE
+                    {t('mission.slogan')}
                   </h3>
                   <p className="text-white/60">
-                    Their legacy lives on through the beautiful game
+                    {t('mission.sloganSubtitle')}
                   </p>
                 </div>
               </div>
@@ -118,9 +116,9 @@ export default function AboutPage() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              OUR VALUES
+              {t('values.title')}
             </h2>
-            <p className="text-white/50">The principles that guide everything we do</p>
+            <p className="text-white/50">{t('values.subtitle')}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -157,9 +155,9 @@ export default function AboutPage() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              THE JOURNEY
+              {t('journey.title')}
             </h2>
-            <p className="text-white/50">From concept to reality</p>
+            <p className="text-white/50">{t('journey.subtitle')}</p>
           </motion.div>
 
           <div className="relative">
@@ -207,16 +205,16 @@ export default function AboutPage() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              HOST NATIONS
+              {t('hostNations.title')}
             </h2>
-            <p className="text-white/50">Three nations, one legendary tournament</p>
+            <p className="text-white/50">{t('hostNations.subtitle')}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { flag: '🇺🇸', name: 'United States', venues: 11 },
-              { flag: '🇲🇽', name: 'Mexico', venues: 3 },
-              { flag: '🇨🇦', name: 'Canada', venues: 2 },
+              { flag: '🇺🇸', name: t('hostNations.unitedStates'), venues: 11 },
+              { flag: '🇲🇽', name: t('hostNations.mexico'), venues: 3 },
+              { flag: '🇨🇦', name: t('hostNations.canada'), venues: 2 },
             ].map((nation, index) => (
               <motion.div
                 key={nation.name}
@@ -233,7 +231,7 @@ export default function AboutPage() {
                 >
                   {nation.name.toUpperCase()}
                 </h3>
-                <p className="text-gold-400">{nation.venues} Venues</p>
+                <p className="text-gold-400">{nation.venues} {t('hostNations.venues')}</p>
               </motion.div>
             ))}
           </div>

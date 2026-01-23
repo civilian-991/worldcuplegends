@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
 interface FAQItem {
@@ -15,141 +16,37 @@ interface FAQCategory {
   items: FAQItem[];
 }
 
-const faqData: FAQCategory[] = [
-  {
-    title: 'Orders & Shipping',
-    icon: '📦',
-    items: [
-      {
-        question: 'How long does shipping take?',
-        answer:
-          'Standard shipping typically takes 5-7 business days within the US. Express shipping (2-3 business days) and overnight options are also available at checkout. International shipping times vary by destination, usually 7-14 business days.',
-      },
-      {
-        question: 'Do you ship internationally?',
-        answer:
-          'Yes! We ship to over 100 countries worldwide. International shipping rates and delivery times are calculated at checkout based on your location. Please note that customs duties and taxes may apply.',
-      },
-      {
-        question: 'How can I track my order?',
-        answer:
-          'Once your order ships, you\'ll receive an email with your tracking number and a link to track your package. You can also track your order anytime by visiting our Track Order page and entering your order ID.',
-      },
-      {
-        question: 'What if my order is lost or damaged?',
-        answer:
-          'We stand behind our shipping! If your package is lost or arrives damaged, please contact our support team within 48 hours of expected delivery. We\'ll work to resolve the issue promptly with a replacement or full refund.',
-      },
-    ],
-  },
-  {
-    title: 'Returns & Exchanges',
-    icon: '↩️',
-    items: [
-      {
-        question: 'What is your return policy?',
-        answer:
-          'We offer a 30-day return policy for unworn, unwashed items with original tags attached. Items must be in their original packaging. Sale items and personalized jerseys are final sale.',
-      },
-      {
-        question: 'How do I start a return?',
-        answer:
-          'Visit our Returns page or your account\'s order history to initiate a return. You\'ll receive a prepaid shipping label (US orders) or return instructions. Refunds are processed within 5-7 business days of receiving your return.',
-      },
-      {
-        question: 'Can I exchange an item?',
-        answer:
-          'Yes! For exchanges, start a return for your original item and place a new order for the correct item. This ensures you get your new item as quickly as possible. We\'ll refund your original purchase once we receive the return.',
-      },
-      {
-        question: 'When will I receive my refund?',
-        answer:
-          'Refunds are processed within 5-7 business days after we receive your return. The refund will be credited to your original payment method. Please allow an additional 3-5 business days for your bank to process the credit.',
-      },
-    ],
-  },
-  {
-    title: 'Products & Sizing',
-    icon: '👕',
-    items: [
-      {
-        question: 'How do I find my size?',
-        answer:
-          'Check our detailed Size Guide page for measurements and fitting tips. We recommend measuring a similar garment you own and comparing it to our size chart. If you\'re between sizes, we generally recommend sizing up.',
-      },
-      {
-        question: 'Are the jerseys authentic?',
-        answer:
-          'All our jerseys are officially licensed World Cup Legends merchandise. They feature authentic embroidery, premium materials, and official competition specifications. Each jersey comes with a certificate of authenticity.',
-      },
-      {
-        question: 'Can I customize my jersey?',
-        answer:
-          'Yes! Many jerseys can be customized with your favorite legend\'s name and number, or your own name. Customization options are available on eligible product pages. Please note that customized items are final sale.',
-      },
-      {
-        question: 'What materials are used?',
-        answer:
-          'Our jerseys use premium moisture-wicking fabric (typically 100% recycled polyester) with advanced cooling technology. T-shirts and casual wear use a cotton-poly blend for comfort. All materials are ethically sourced.',
-      },
-    ],
-  },
-  {
-    title: 'Tickets & Events',
-    icon: '🎟️',
-    items: [
-      {
-        question: 'How do I purchase tickets?',
-        answer:
-          'Tickets for the World Cup Legends 2026 can be purchased directly through our Tickets page. We offer various packages including single match tickets, multi-game passes, and VIP experiences.',
-      },
-      {
-        question: 'Are tickets transferable?',
-        answer:
-          'Yes, tickets can be transferred to another person through our official ticket portal. Simply log into your account, select the tickets you wish to transfer, and enter the recipient\'s email address.',
-      },
-      {
-        question: 'What if an event is cancelled?',
-        answer:
-          'In the event of a cancellation, all ticket holders will receive a full refund automatically. If an event is postponed, your tickets will be valid for the rescheduled date, or you can request a refund.',
-      },
-      {
-        question: 'Is there accessible seating?',
-        answer:
-          'Yes, all venues offer accessible seating options. When purchasing tickets, select the accessibility option to view available accessible seats. Contact our support team if you need additional assistance.',
-      },
-    ],
-  },
-  {
-    title: 'Account & Payment',
-    icon: '💳',
-    items: [
-      {
-        question: 'What payment methods do you accept?',
-        answer:
-          'We accept all major credit cards (Visa, Mastercard, American Express, Discover), PayPal, Apple Pay, and Google Pay. For select regions, we also offer buy-now-pay-later options through Klarna and Afterpay.',
-      },
-      {
-        question: 'Is my payment information secure?',
-        answer:
-          'Absolutely. We use industry-standard SSL encryption and never store your full credit card details. All transactions are processed through PCI-compliant payment processors.',
-      },
-      {
-        question: 'How do I create an account?',
-        answer:
-          'Click the "Register" button in the navigation or during checkout. You\'ll need to provide an email address and create a password. Having an account lets you track orders, save addresses, and manage your wishlist.',
-      },
-      {
-        question: 'I forgot my password. What do I do?',
-        answer:
-          'Click "Forgot Password" on the login page and enter your email. You\'ll receive a link to reset your password within minutes. If you don\'t see the email, check your spam folder.',
-      },
-    ],
-  },
-];
+const categoryKeys = [
+  'ordersShipping',
+  'returnsExchanges',
+  'productsSizing',
+  'ticketsEvents',
+  'accountPayment',
+] as const;
+
+const itemKeys: Record<typeof categoryKeys[number], string[]> = {
+  ordersShipping: ['shippingTime', 'internationalShipping', 'trackOrder', 'lostDamaged'],
+  returnsExchanges: ['returnPolicy', 'startReturn', 'exchange', 'refundTime'],
+  productsSizing: ['findSize', 'authentic', 'customize', 'materials'],
+  ticketsEvents: ['purchaseTickets', 'transferable', 'cancelled', 'accessible'],
+  accountPayment: ['paymentMethods', 'paymentSecure', 'createAccount', 'forgotPassword'],
+};
 
 export default function FAQPage() {
-  const [openCategory, setOpenCategory] = useState<string | null>(faqData[0].title);
+  const t = useTranslations('faq');
+
+  const faqData: FAQCategory[] = useMemo(() => {
+    return categoryKeys.map((categoryKey) => ({
+      title: t(`categories.${categoryKey}.title`),
+      icon: t(`categories.${categoryKey}.icon`),
+      items: itemKeys[categoryKey].map((itemKey) => ({
+        question: t(`categories.${categoryKey}.items.${itemKey}.question`),
+        answer: t(`categories.${categoryKey}.items.${itemKey}.answer`),
+      })),
+    }));
+  }, [t]);
+
+  const [openCategory, setOpenCategory] = useState<string | null>(faqData[0]?.title);
   const [openQuestions, setOpenQuestions] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -192,10 +89,10 @@ export default function FAQPage() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              FREQUENTLY ASKED QUESTIONS
+              {t('pageTitle')}
             </h1>
             <p className="text-white/60 max-w-xl mx-auto">
-              Find answers to common questions about orders, shipping, returns, and more.
+              {t('pageSubtitle')}
             </p>
           </motion.div>
         </div>
@@ -222,7 +119,7 @@ export default function FAQPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search for answers..."
+              placeholder={t('searchPlaceholder')}
               className="w-full pl-12 pr-4 py-4 bg-night-800 border border-gold-500/20 rounded-2xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
             />
           </div>
@@ -238,7 +135,7 @@ export default function FAQPage() {
               {filteredFAQs.length === 0 ? (
                 <div className="text-center py-12">
                   <span className="text-4xl block mb-4">🔍</span>
-                  <p className="text-white/50">No results found for &quot;{searchQuery}&quot;</p>
+                  <p className="text-white/50">{t('noResults')} &quot;{searchQuery}&quot;</p>
                 </div>
               ) : (
                 filteredFAQs.map((category) => (
@@ -321,9 +218,9 @@ export default function FAQPage() {
         <div className="max-w-4xl mx-auto">
           <div className="glass rounded-2xl p-8 text-center">
             <span className="text-4xl block mb-4">💬</span>
-            <h2 className="text-2xl font-bold text-white mb-2">Still have questions?</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">{t('stillHaveQuestions')}</h2>
             <p className="text-white/60 mb-6">
-              Our support team is here to help you with any questions or concerns.
+              {t('stillHaveQuestionsDescription')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">
@@ -332,7 +229,7 @@ export default function FAQPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl"
                 >
-                  Contact Support
+                  {t('contactSupport')}
                 </motion.button>
               </Link>
               <a href="mailto:support@worldcuplegends.com">
@@ -341,7 +238,7 @@ export default function FAQPage() {
                   whileTap={{ scale: 0.98 }}
                   className="px-6 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 hover:text-white transition-colors"
                 >
-                  Email Us
+                  {t('emailUs')}
                 </motion.button>
               </a>
             </div>

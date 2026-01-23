@@ -199,11 +199,116 @@
     "contactSupport": "Contact Support",
     "emailUs": "Email Us",
     "categories": {
-      "ordersShipping": "Orders & Shipping",
-      "returnsExchanges": "Returns & Exchanges",
-      "productsSizing": "Products & Sizing",
-      "ticketsEvents": "Tickets & Events",
-      "accountPayment": "Account & Payment"
+      "ordersShipping": {
+        "title": "Orders & Shipping",
+        "icon": "📦",
+        "items": {
+          "shippingTime": {
+            "question": "How long does shipping take?",
+            "answer": "Standard shipping typically takes 5-7 business days within the US. Express shipping (2-3 business days) and overnight options are also available at checkout. International shipping times vary by destination, usually 7-14 business days."
+          },
+          "internationalShipping": {
+            "question": "Do you ship internationally?",
+            "answer": "Yes! We ship to over 100 countries worldwide. International shipping rates and delivery times are calculated at checkout based on your location. Please note that customs duties and taxes may apply."
+          },
+          "trackOrder": {
+            "question": "How can I track my order?",
+            "answer": "Once your order ships, you'll receive an email with your tracking number and a link to track your package. You can also track your order anytime by visiting our Track Order page and entering your order ID."
+          },
+          "lostDamaged": {
+            "question": "What if my order is lost or damaged?",
+            "answer": "We stand behind our shipping! If your package is lost or arrives damaged, please contact our support team within 48 hours of expected delivery. We'll work to resolve the issue promptly with a replacement or full refund."
+          }
+        }
+      },
+      "returnsExchanges": {
+        "title": "Returns & Exchanges",
+        "icon": "↩️",
+        "items": {
+          "returnPolicy": {
+            "question": "What is your return policy?",
+            "answer": "We offer a 30-day return policy for unworn, unwashed items with original tags attached. Items must be in their original packaging. Sale items and personalized jerseys are final sale."
+          },
+          "startReturn": {
+            "question": "How do I start a return?",
+            "answer": "Visit our Returns page or your account's order history to initiate a return. You'll receive a prepaid shipping label (US orders) or return instructions. Refunds are processed within 5-7 business days of receiving your return."
+          },
+          "exchange": {
+            "question": "Can I exchange an item?",
+            "answer": "Yes! For exchanges, start a return for your original item and place a new order for the correct item. This ensures you get your new item as quickly as possible. We'll refund your original purchase once we receive the return."
+          },
+          "refundTime": {
+            "question": "When will I receive my refund?",
+            "answer": "Refunds are processed within 5-7 business days after we receive your return. The refund will be credited to your original payment method. Please allow an additional 3-5 business days for your bank to process the credit."
+          }
+        }
+      },
+      "productsSizing": {
+        "title": "Products & Sizing",
+        "icon": "👕",
+        "items": {
+          "findSize": {
+            "question": "How do I find my size?",
+            "answer": "Check our detailed Size Guide page for measurements and fitting tips. We recommend measuring a similar garment you own and comparing it to our size chart. If you're between sizes, we generally recommend sizing up."
+          },
+          "authentic": {
+            "question": "Are the jerseys authentic?",
+            "answer": "All our jerseys are officially licensed World Cup Legends merchandise. They feature authentic embroidery, premium materials, and official competition specifications. Each jersey comes with a certificate of authenticity."
+          },
+          "customize": {
+            "question": "Can I customize my jersey?",
+            "answer": "Yes! Many jerseys can be customized with your favorite legend's name and number, or your own name. Customization options are available on eligible product pages. Please note that customized items are final sale."
+          },
+          "materials": {
+            "question": "What materials are used?",
+            "answer": "Our jerseys use premium moisture-wicking fabric (typically 100% recycled polyester) with advanced cooling technology. T-shirts and casual wear use a cotton-poly blend for comfort. All materials are ethically sourced."
+          }
+        }
+      },
+      "ticketsEvents": {
+        "title": "Tickets & Events",
+        "icon": "🎟️",
+        "items": {
+          "purchaseTickets": {
+            "question": "How do I purchase tickets?",
+            "answer": "Tickets for the World Cup Legends 2026 can be purchased directly through our Tickets page. We offer various packages including single match tickets, multi-game passes, and VIP experiences."
+          },
+          "transferable": {
+            "question": "Are tickets transferable?",
+            "answer": "Yes, tickets can be transferred to another person through our official ticket portal. Simply log into your account, select the tickets you wish to transfer, and enter the recipient's email address."
+          },
+          "cancelled": {
+            "question": "What if an event is cancelled?",
+            "answer": "In the event of a cancellation, all ticket holders will receive a full refund automatically. If an event is postponed, your tickets will be valid for the rescheduled date, or you can request a refund."
+          },
+          "accessible": {
+            "question": "Is there accessible seating?",
+            "answer": "Yes, all venues offer accessible seating options. When purchasing tickets, select the accessibility option to view available accessible seats. Contact our support team if you need additional assistance."
+          }
+        }
+      },
+      "accountPayment": {
+        "title": "Account & Payment",
+        "icon": "💳",
+        "items": {
+          "paymentMethods": {
+            "question": "What payment methods do you accept?",
+            "answer": "We accept all major credit cards (Visa, Mastercard, American Express, Discover), PayPal, Apple Pay, and Google Pay. For select regions, we also offer buy-now-pay-later options through Klarna and Afterpay."
+          },
+          "paymentSecure": {
+            "question": "Is my payment information secure?",
+            "answer": "Absolutely. We use industry-standard SSL encryption and never store your full credit card details. All transactions are processed through PCI-compliant payment processors."
+          },
+          "createAccount": {
+            "question": "How do I create an account?",
+            "answer": "Click the \"Register\" button in the navigation or during checkout. You'll need to provide an email address and create a password. Having an account lets you track orders, save addresses, and manage your wishlist."
+          },
+          "forgotPassword": {
+            "question": "I forgot my password. What do I do?",
+            "answer": "Click \"Forgot Password\" on the login page and enter your email. You'll receive a link to reset your password within minutes. If you don't see the email, check your spam folder."
+          }
+        }
+      }
     }
   },
   "common": {
