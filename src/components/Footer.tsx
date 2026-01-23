@@ -1,28 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
-
-const footerLinks = {
-  tournament: [
-    { label: 'About', href: '/about' },
-    { label: 'Schedule', href: '/schedule' },
-    { label: 'Venues', href: '/venues' },
-    { label: 'Tickets', href: '/tickets' },
-  ],
-  discover: [
-    { label: 'Legends', href: '/legends' },
-    { label: 'Teams', href: '/teams' },
-    { label: 'News', href: '/news' },
-    { label: 'History', href: '/history' },
-  ],
-  connect: [
-    { label: 'Contact', href: '/contact' },
-    { label: 'Press', href: '/press' },
-    { label: 'Partners', href: '/partners' },
-    { label: 'Careers', href: '/careers' },
-  ],
-};
+import { useTranslations } from 'next-intl';
 
 const socialLinks = [
   { label: 'Twitter', icon: '𝕏' },
@@ -32,6 +12,29 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const t = useTranslations('footer');
+
+  const footerLinks = {
+    tournament: [
+      { label: t('about'), href: '/about' },
+      { label: t('schedule'), href: '/schedule' },
+      { label: t('venues'), href: '/venues' },
+      { label: t('tickets'), href: '/tickets' },
+    ],
+    discover: [
+      { label: t('legends'), href: '/legends' },
+      { label: t('teams'), href: '/teams' },
+      { label: t('news'), href: '/news' },
+      { label: t('history'), href: '/history' },
+    ],
+    connect: [
+      { label: t('contact'), href: '/contact' },
+      { label: t('press'), href: '/press' },
+      { label: t('partners'), href: '/partners' },
+      { label: t('careers'), href: '/careers' },
+    ],
+  };
+
   return (
     <footer className="relative bg-night-800 border-t border-gold-500/10">
       {/* Top Accent Line */}
@@ -55,8 +58,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm mb-8">
-              Celebrating the greatest footballers in history. A tournament that brings together
-              legends from every era to create unforgettable moments.
+              {t('description')}
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -75,7 +77,7 @@ export default function Footer() {
           {/* Links */}
           <div>
             <h4 className="text-gold-400 font-semibold text-sm tracking-wider uppercase mb-4">
-              Tournament
+              {t('tournament')}
             </h4>
             <ul className="space-y-3">
               {footerLinks.tournament.map((link) => (
@@ -93,7 +95,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-gold-400 font-semibold text-sm tracking-wider uppercase mb-4">
-              Discover
+              {t('discover')}
             </h4>
             <ul className="space-y-3">
               {footerLinks.discover.map((link) => (
@@ -111,7 +113,7 @@ export default function Footer() {
 
           <div>
             <h4 className="text-gold-400 font-semibold text-sm tracking-wider uppercase mb-4">
-              Connect
+              {t('connect')}
             </h4>
             <ul className="space-y-3">
               {footerLinks.connect.map((link) => (
@@ -131,17 +133,17 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-sm">
-            © 2026 World Legends Cup. All rights reserved.
+            © {t('copyright')}
           </p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Privacy Policy
+              {t('privacyPolicy')}
             </Link>
             <Link href="/terms" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Terms of Service
+              {t('termsOfService')}
             </Link>
             <Link href="/cookies" className="text-white/40 hover:text-white/60 text-sm transition-colors">
-              Cookies
+              {t('cookies')}
             </Link>
           </div>
         </div>

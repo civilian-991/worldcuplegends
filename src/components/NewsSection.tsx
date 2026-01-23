@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { news } from '@/data/legends';
 
 const featuredNews = news.slice(0, 4);

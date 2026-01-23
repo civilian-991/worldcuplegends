@@ -1,0 +1,241 @@
+{
+  "nav": {
+    "home": "Home",
+    "legends": "Legends",
+    "teams": "Teams",
+    "schedule": "Schedule",
+    "shop": "Shop",
+    "news": "News",
+    "getTickets": "Get Tickets",
+    "worldLegends": "World Legends",
+    "cup2026": "CUP 2026"
+  },
+  "footer": {
+    "description": "Celebrating the greatest footballers in history. A tournament that brings together legends from every era to create unforgettable moments.",
+    "tournament": "Tournament",
+    "discover": "Discover",
+    "connect": "Connect",
+    "about": "About",
+    "schedule": "Schedule",
+    "venues": "Venues",
+    "tickets": "Tickets",
+    "legends": "Legends",
+    "teams": "Teams",
+    "news": "News",
+    "history": "History",
+    "contact": "Contact",
+    "press": "Press",
+    "partners": "Partners",
+    "careers": "Careers",
+    "copyright": "2026 World Legends Cup. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookies": "Cookies"
+  },
+  "home": {
+    "worldLegendsCup": "World Legends Cup 2026",
+    "neverDie": "NEVER DIE",
+    "heroSubtitle": "The greatest footballers in history unite for one legendary tournament.",
+    "hostNations": "USA • Mexico • Canada",
+    "exploreLegends": "Explore Legends",
+    "viewSchedule": "View Schedule",
+    "stats": {
+      "legends": "Legends",
+      "teams": "Teams",
+      "matches": "Matches",
+      "hostNations": "Host Nations"
+    },
+    "quote": "THE MORE DIFFICULT THE VICTORY, THE GREATER THE HAPPINESS IN WINNING.",
+    "quoteAuthor": "PELÉ",
+    "ctaSection": {
+      "preTitle": "Be Part of History",
+      "title": "DON'T MISS THE",
+      "titleHighlight": "GREATEST SHOW",
+      "description": "Witness football legends unite for one extraordinary tournament. Get your tickets now and be part of history.",
+      "getTicketsNow": "Get Tickets Now",
+      "learnMore": "Learn More"
+    }
+  },
+  "legends": {
+    "pageTitle": "LEGENDS",
+    "year": "2026",
+    "pageSubtitle": "Meet the greatest footballers competing in the World Legends Cup 2026",
+    "searchPlaceholder": "Search legends...",
+    "allEras": "All Eras",
+    "noResults": "No legends found matching your criteria.",
+    "clearFilters": "Clear filters"
+  },
+  "about": {
+    "preTitle": "Our Story",
+    "pageTitle": "ABOUT THE",
+    "pageTitleHighlight": "WORLD LEGENDS CUP",
+    "heroDescription": "The World Legends Cup is a groundbreaking tournament that brings together the greatest footballers in history for one extraordinary celebration of the beautiful game.",
+    "mission": {
+      "title": "OUR MISSION",
+      "paragraph1": "To honor and celebrate the achievements of legendary figures of football, fostering a sense of unity, pride, and inspiration across generations.",
+      "paragraph2": "By showcasing these remarkable players and their contributions, the event aims to inspire future generations, preserve the legacies of the past, and create unforgettable experiences that resonate on a global scale.",
+      "paragraph3": "This is more than a tournament—it's a tribute to the art of football and the heroes who have shaped its history.",
+      "slogan": "LEGENDS NEVER DIE",
+      "sloganSubtitle": "Their legacy lives on through the beautiful game"
+    },
+    "values": {
+      "title": "OUR VALUES",
+      "subtitle": "The principles that guide everything we do",
+      "unity": {
+        "title": "Unity",
+        "description": "Bringing together legends from every corner of the world to celebrate the beautiful game."
+      },
+      "legacy": {
+        "title": "Legacy",
+        "description": "Preserving and honoring the achievements of footballs greatest icons for future generations."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "Showcasing the highest standards of football artistry and sportsmanship."
+      },
+      "passion": {
+        "title": "Passion",
+        "description": "Igniting the love for football that connects billions of fans worldwide."
+      },
+      "respect": {
+        "title": "Respect",
+        "description": "Honoring the dedication and sacrifice of players who gave everything to the sport."
+      },
+      "inspiration": {
+        "title": "Inspiration",
+        "description": "Motivating the next generation of footballers through the stories of legends."
+      }
+    },
+    "journey": {
+      "title": "THE JOURNEY",
+      "subtitle": "From concept to reality",
+      "2023": "World Legends Cup concept announced",
+      "2024": "Host nations confirmed: USA, Mexico, Canada",
+      "2025": "Legend selections and team formations begin",
+      "2026": "Tournament kicks off in June"
+    },
+    "hostNations": {
+      "title": "HOST NATIONS",
+      "subtitle": "Three nations, one legendary tournament",
+      "unitedStates": "United States",
+      "mexico": "Mexico",
+      "canada": "Canada",
+      "venues": "Venues"
+    }
+  },
+  "contact": {
+    "preTitle": "Get in Touch",
+    "pageTitle": "CONTACT",
+    "pageTitleHighlight": "US",
+    "heroDescription": "Have questions about the World Legends Cup? We're here to help. Reach out to our team for assistance.",
+    "form": {
+      "title": "SEND US A MESSAGE",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "selectTopic": "Select a topic",
+      "ticketsBooking": "Tickets & Booking",
+      "mediaPress": "Media & Press",
+      "partnershipInquiries": "Partnership Inquiries",
+      "generalQuestions": "General Questions",
+      "other": "Other",
+      "sendMessage": "Send Message",
+      "firstNamePlaceholder": "John",
+      "lastNamePlaceholder": "Doe",
+      "emailPlaceholder": "john@example.com",
+      "messagePlaceholder": "Your message..."
+    },
+    "info": {
+      "title": "CONTACT INFORMATION",
+      "emailTitle": "Email",
+      "emailContent": "info@worldlegendscup.com",
+      "emailSub": "We respond within 24 hours",
+      "phoneTitle": "Phone",
+      "phoneContent": "+1 (800) WLC-2026",
+      "phoneSub": "Mon-Fri, 9am-6pm EST",
+      "headquarters": "Headquarters",
+      "headquartersContent": "New York, NY",
+      "headquartersSub": "United States",
+      "followUs": "Follow us on social media",
+      "quickAnswers": "Looking for quick answers?",
+      "quickAnswersDescription": "Check our FAQ section for commonly asked questions about tickets, venues, and more.",
+      "viewFAQ": "View FAQ"
+    }
+  },
+  "shop": {
+    "preTitle": "Official Store",
+    "pageTitle": "LEGENDS",
+    "pageTitleHighlight": "SHOP",
+    "heroDescription": "Official World Legends Cup merchandise. Jerseys, apparel, and collectibles to celebrate football's greatest icons.",
+    "searchPlaceholder": "Search products...",
+    "showingProducts": "Showing {count} products",
+    "noResults": "No products found matching your criteria.",
+    "clearFilters": "Clear filters",
+    "quickAdd": "Quick Add to Cart",
+    "featured": "FEATURED",
+    "sale": "SALE",
+    "sort": {
+      "featured": "Featured",
+      "priceLowHigh": "Price: Low to High",
+      "priceHighLow": "Price: High to Low",
+      "highestRated": "Highest Rated",
+      "newest": "Newest"
+    },
+    "signatureCollection": {
+      "title": "LEGENDS SIGNATURE COLLECTION",
+      "description": "Exclusive merchandise featuring signature designs from Pelé, Maradona, Zidane, Messi, and more football legends.",
+      "shopButton": "Shop Signature Collection"
+    }
+  },
+  "faq": {
+    "pageTitle": "FREQUENTLY ASKED QUESTIONS",
+    "pageSubtitle": "Find answers to common questions about orders, shipping, returns, and more.",
+    "searchPlaceholder": "Search for answers...",
+    "noResults": "No results found for",
+    "stillHaveQuestions": "Still have questions?",
+    "stillHaveQuestionsDescription": "Our support team is here to help you with any questions or concerns.",
+    "contactSupport": "Contact Support",
+    "emailUs": "Email Us",
+    "categories": {
+      "ordersShipping": "Orders & Shipping",
+      "returnsExchanges": "Returns & Exchanges",
+      "productsSizing": "Products & Sizing",
+      "ticketsEvents": "Tickets & Events",
+      "accountPayment": "Account & Payment"
+    }
+  },
+  "common": {
+    "goals": "Goals",
+    "assists": "Assists",
+    "appearances": "Appearances",
+    "worldCups": "World Cups",
+    "forward": "Forward",
+    "midfielder": "Midfielder",
+    "defender": "Defender",
+    "goalkeeper": "Goalkeeper",
+    "rating": "Rating",
+    "search": "Search",
+    "filter": "Filter",
+    "sortBy": "Sort by",
+    "all": "All",
+    "loading": "Loading...",
+    "error": "Error",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close"
+  },
+  "languageSwitcher": {
+    "language": "Language",
+    "english": "English",
+    "portuguese": "Português"
+  }
+}

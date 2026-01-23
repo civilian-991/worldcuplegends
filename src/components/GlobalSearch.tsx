@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { products } from '@/data/products';
 import { legends } from '@/data/legends';
 import { news } from '@/data/legends';

@@ -1,10 +1,20 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import createIntlMiddleware from 'next-intl/middleware'
+import { routing } from '@/i18n/routing'
+
+const intlMiddleware = createIntlMiddleware(routing)
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  // First, handle i18n routing
+  const intlResponse = intlMiddleware(request)
+
+  // If intl middleware wants to redirect, do that first
+  if (intlResponse.headers.get('x-middleware-rewrite') || intlResponse.status !== 200) {
+    return intlResponse
+  }
+
+  let supabaseResponse = intlResponse
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,6 +28,10 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({
             request,
+          })
+          // Copy intl headers
+          intlResponse.headers.forEach((value, key) => {
+            supabaseResponse.headers.set(key, value)
           })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
@@ -35,27 +49,31 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Get the pathname without the locale prefix for route checking
+  const pathname = request.nextUrl.pathname
+  const localeMatch = pathname.match(/^\/(en|br)/)
+  const locale = localeMatch ? localeMatch[1] : 'en'
+  const pathWithoutLocale = localeMatch ? pathname.replace(/^\/(en|br)/, '') || '/' : pathname
+
   // Protected routes
   const protectedPaths = ['/account', '/checkout']
   const adminPaths = ['/admin']
   const authPaths = ['/login', '/register', '/forgot-password']
 
-  const path = request.nextUrl.pathname
-
   // Check if trying to access protected route without auth
-  if (!user && protectedPaths.some(p => path.startsWith(p))) {
+  if (!user && protectedPaths.some(p => pathWithoutLocale.startsWith(p))) {
     const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    url.searchParams.set('redirect', path)
+    url.pathname = `/${locale}/login`
+    url.searchParams.set('redirect', pathWithoutLocale)
     return NextResponse.redirect(url)
   }
 
   // Check if trying to access admin route
-  if (adminPaths.some(p => path.startsWith(p))) {
+  if (adminPaths.some(p => pathWithoutLocale.startsWith(p))) {
     if (!user) {
       const url = request.nextUrl.clone()
-      url.pathname = '/login'
-      url.searchParams.set('redirect', path)
+      url.pathname = `/${locale}/login`
+      url.searchParams.set('redirect', pathWithoutLocale)
       return NextResponse.redirect(url)
     }
 
@@ -68,15 +86,15 @@ export async function updateSession(request: NextRequest) {
 
     if (profile?.role !== 'admin') {
       const url = request.nextUrl.clone()
-      url.pathname = '/'
+      url.pathname = `/${locale}`
       return NextResponse.redirect(url)
     }
   }
 
   // Redirect authenticated users away from auth pages
-  if (user && authPaths.some(p => path.startsWith(p))) {
+  if (user && authPaths.some(p => pathWithoutLocale.startsWith(p))) {
     const url = request.nextUrl.clone()
-    url.pathname = '/account'
+    url.pathname = `/${locale}/account`
     return NextResponse.redirect(url)
   }
 

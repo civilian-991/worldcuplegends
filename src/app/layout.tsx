@@ -1,13 +1,4 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import CustomCursor from "@/components/CustomCursor";
-import CartSidebar from "@/components/CartSidebar";
-import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
-import { WishlistProvider } from "@/context/WishlistContext";
-import { ToastProvider } from "@/context/ToastContext";
 
 export const metadata: Metadata = {
   title: "World Legends Cup 2026 | Legends Never Die",
@@ -25,25 +16,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className="antialiased" style={{ fontFamily: 'var(--font-body)' }}>
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ToastProvider>
-                <CustomCursor />
-                <Navigation />
-                <main className="min-h-screen">
-                  {children}
-                </main>
-                <Footer />
-                <CartSidebar />
-              </ToastProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
-      </body>
-    </html>
-  );
+  return children;
 }

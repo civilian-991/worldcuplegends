@@ -1,0 +1,241 @@
+{
+  "nav": {
+    "home": "Início",
+    "legends": "Lendas",
+    "teams": "Times",
+    "schedule": "Calendário",
+    "shop": "Loja",
+    "news": "Notícias",
+    "getTickets": "Comprar Ingressos",
+    "worldLegends": "World Legends",
+    "cup2026": "CUP 2026"
+  },
+  "footer": {
+    "description": "Celebrando os maiores jogadores de futebol da história. Um torneio que reúne lendas de todas as épocas para criar momentos inesquecíveis.",
+    "tournament": "Torneio",
+    "discover": "Descubra",
+    "connect": "Conecte",
+    "about": "Sobre",
+    "schedule": "Calendário",
+    "venues": "Estádios",
+    "tickets": "Ingressos",
+    "legends": "Lendas",
+    "teams": "Times",
+    "news": "Notícias",
+    "history": "História",
+    "contact": "Contato",
+    "press": "Imprensa",
+    "partners": "Parceiros",
+    "careers": "Carreiras",
+    "copyright": "2026 World Legends Cup. Todos os direitos reservados.",
+    "privacyPolicy": "Política de Privacidade",
+    "termsOfService": "Termos de Serviço",
+    "cookies": "Cookies"
+  },
+  "home": {
+    "worldLegendsCup": "World Legends Cup 2026",
+    "neverDie": "NEVER DIE",
+    "heroSubtitle": "Os maiores jogadores de futebol da história se unem para um torneio lendário.",
+    "hostNations": "EUA • México • Canadá",
+    "exploreLegends": "Explorar Lendas",
+    "viewSchedule": "Ver Calendário",
+    "stats": {
+      "legends": "Lendas",
+      "teams": "Times",
+      "matches": "Partidas",
+      "hostNations": "Países Sede"
+    },
+    "quote": "QUANTO MAIS DIFÍCIL A VITÓRIA, MAIOR A FELICIDADE DE VENCER.",
+    "quoteAuthor": "PELÉ",
+    "ctaSection": {
+      "preTitle": "Faça Parte da História",
+      "title": "NÃO PERCA O",
+      "titleHighlight": "MAIOR ESPETÁCULO",
+      "description": "Testemunhe lendas do futebol unidas em um torneio extraordinário. Garanta seus ingressos agora e faça parte da história.",
+      "getTicketsNow": "Comprar Ingressos",
+      "learnMore": "Saiba Mais"
+    }
+  },
+  "legends": {
+    "pageTitle": "LENDAS",
+    "year": "2026",
+    "pageSubtitle": "Conheça os maiores jogadores de futebol competindo na World Legends Cup 2026",
+    "searchPlaceholder": "Buscar lendas...",
+    "allEras": "Todas as Épocas",
+    "noResults": "Nenhuma lenda encontrada com os critérios selecionados.",
+    "clearFilters": "Limpar filtros"
+  },
+  "about": {
+    "preTitle": "Nossa História",
+    "pageTitle": "SOBRE A",
+    "pageTitleHighlight": "WORLD LEGENDS CUP",
+    "heroDescription": "A World Legends Cup é um torneio inovador que reúne os maiores jogadores de futebol da história para uma celebração extraordinária do belo jogo.",
+    "mission": {
+      "title": "NOSSA MISSÃO",
+      "paragraph1": "Honrar e celebrar as conquistas das figuras lendárias do futebol, promovendo um senso de unidade, orgulho e inspiração através das gerações.",
+      "paragraph2": "Ao destacar esses jogadores notáveis e suas contribuições, o evento visa inspirar futuras gerações, preservar os legados do passado e criar experiências inesquecíveis que ressoam em escala global.",
+      "paragraph3": "Isso é mais do que um torneio—é uma homenagem à arte do futebol e aos heróis que moldaram sua história.",
+      "slogan": "LENDAS NUNCA MORREM",
+      "sloganSubtitle": "Seu legado vive através do belo jogo"
+    },
+    "values": {
+      "title": "NOSSOS VALORES",
+      "subtitle": "Os princípios que guiam tudo o que fazemos",
+      "unity": {
+        "title": "União",
+        "description": "Reunindo lendas de todos os cantos do mundo para celebrar o belo jogo."
+      },
+      "legacy": {
+        "title": "Legado",
+        "description": "Preservando e honrando as conquistas dos maiores ícones do futebol para as futuras gerações."
+      },
+      "excellence": {
+        "title": "Excelência",
+        "description": "Demonstrando os mais altos padrões de arte e esportividade no futebol."
+      },
+      "passion": {
+        "title": "Paixão",
+        "description": "Acendendo o amor pelo futebol que conecta bilhões de fãs pelo mundo."
+      },
+      "respect": {
+        "title": "Respeito",
+        "description": "Honrando a dedicação e sacrifício dos jogadores que deram tudo pelo esporte."
+      },
+      "inspiration": {
+        "title": "Inspiração",
+        "description": "Motivando a próxima geração de jogadores através das histórias das lendas."
+      }
+    },
+    "journey": {
+      "title": "A JORNADA",
+      "subtitle": "Do conceito à realidade",
+      "2023": "Conceito da World Legends Cup anunciado",
+      "2024": "Países sede confirmados: EUA, México, Canadá",
+      "2025": "Seleção de lendas e formação de times começam",
+      "2026": "Torneio começa em junho"
+    },
+    "hostNations": {
+      "title": "PAÍSES SEDE",
+      "subtitle": "Três nações, um torneio lendário",
+      "unitedStates": "Estados Unidos",
+      "mexico": "México",
+      "canada": "Canadá",
+      "venues": "Estádios"
+    }
+  },
+  "contact": {
+    "preTitle": "Entre em Contato",
+    "pageTitle": "CONTATO",
+    "pageTitleHighlight": "",
+    "heroDescription": "Tem dúvidas sobre a World Legends Cup? Estamos aqui para ajudar. Entre em contato com nossa equipe.",
+    "form": {
+      "title": "ENVIE UMA MENSAGEM",
+      "firstName": "Nome",
+      "lastName": "Sobrenome",
+      "email": "E-mail",
+      "subject": "Assunto",
+      "message": "Mensagem",
+      "selectTopic": "Selecione um assunto",
+      "ticketsBooking": "Ingressos e Reservas",
+      "mediaPress": "Mídia e Imprensa",
+      "partnershipInquiries": "Parcerias",
+      "generalQuestions": "Dúvidas Gerais",
+      "other": "Outro",
+      "sendMessage": "Enviar Mensagem",
+      "firstNamePlaceholder": "João",
+      "lastNamePlaceholder": "Silva",
+      "emailPlaceholder": "joao@exemplo.com",
+      "messagePlaceholder": "Sua mensagem..."
+    },
+    "info": {
+      "title": "INFORMAÇÕES DE CONTATO",
+      "emailTitle": "E-mail",
+      "emailContent": "info@worldlegendscup.com",
+      "emailSub": "Respondemos em até 24 horas",
+      "phoneTitle": "Telefone",
+      "phoneContent": "+1 (800) WLC-2026",
+      "phoneSub": "Seg-Sex, 9h-18h EST",
+      "headquarters": "Sede",
+      "headquartersContent": "Nova York, NY",
+      "headquartersSub": "Estados Unidos",
+      "followUs": "Siga-nos nas redes sociais",
+      "quickAnswers": "Procurando respostas rápidas?",
+      "quickAnswersDescription": "Confira nossa seção de FAQ para perguntas frequentes sobre ingressos, estádios e mais.",
+      "viewFAQ": "Ver FAQ"
+    }
+  },
+  "shop": {
+    "preTitle": "Loja Oficial",
+    "pageTitle": "LOJA",
+    "pageTitleHighlight": "LEGENDS",
+    "heroDescription": "Produtos oficiais da World Legends Cup. Camisas, vestuário e colecionáveis para celebrar os maiores ícones do futebol.",
+    "searchPlaceholder": "Buscar produtos...",
+    "showingProducts": "Exibindo {count} produtos",
+    "noResults": "Nenhum produto encontrado com os critérios selecionados.",
+    "clearFilters": "Limpar filtros",
+    "quickAdd": "Adicionar ao Carrinho",
+    "featured": "DESTAQUE",
+    "sale": "OFERTA",
+    "sort": {
+      "featured": "Destaques",
+      "priceLowHigh": "Preço: Menor para Maior",
+      "priceHighLow": "Preço: Maior para Menor",
+      "highestRated": "Mais Avaliados",
+      "newest": "Mais Recentes"
+    },
+    "signatureCollection": {
+      "title": "COLEÇÃO SIGNATURE LEGENDS",
+      "description": "Produtos exclusivos com designs assinados por Pelé, Maradona, Zidane, Messi e outras lendas do futebol.",
+      "shopButton": "Ver Coleção Signature"
+    }
+  },
+  "faq": {
+    "pageTitle": "PERGUNTAS FREQUENTES",
+    "pageSubtitle": "Encontre respostas para perguntas comuns sobre pedidos, envio, devoluções e mais.",
+    "searchPlaceholder": "Buscar respostas...",
+    "noResults": "Nenhum resultado encontrado para",
+    "stillHaveQuestions": "Ainda tem dúvidas?",
+    "stillHaveQuestionsDescription": "Nossa equipe de suporte está aqui para ajudar com qualquer dúvida ou preocupação.",
+    "contactSupport": "Falar com Suporte",
+    "emailUs": "Enviar E-mail",
+    "categories": {
+      "ordersShipping": "Pedidos e Envio",
+      "returnsExchanges": "Devoluções e Trocas",
+      "productsSizing": "Produtos e Tamanhos",
+      "ticketsEvents": "Ingressos e Eventos",
+      "accountPayment": "Conta e Pagamento"
+    }
+  },
+  "common": {
+    "goals": "Gols",
+    "assists": "Assistências",
+    "appearances": "Jogos",
+    "worldCups": "Copas do Mundo",
+    "forward": "Atacante",
+    "midfielder": "Meio-campista",
+    "defender": "Zagueiro",
+    "goalkeeper": "Goleiro",
+    "rating": "Avaliação",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sortBy": "Ordenar por",
+    "all": "Todos",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Ver",
+    "close": "Fechar"
+  },
+  "languageSwitcher": {
+    "language": "Idioma",
+    "english": "English",
+    "portuguese": "Português"
+  }
+}

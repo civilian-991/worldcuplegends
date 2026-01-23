@@ -1,26 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
+import { useTranslations } from 'next-intl';
 import GlobalSearch from './GlobalSearch';
-
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/legends', label: 'Legends' },
-  { href: '/teams', label: 'Teams' },
-  { href: '/schedule', label: 'Schedule' },
-  { href: '/shop', label: 'Shop' },
-  { href: '/news', label: 'News' },
-];
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { totalItems, setIsCartOpen } = useCart();
+  const t = useTranslations('nav');
+
+  const navItems = [
+    { href: '/', label: t('home') },
+    { href: '/legends', label: t('legends') },
+    { href: '/teams', label: t('teams') },
+    { href: '/schedule', label: t('schedule') },
+    { href: '/shop', label: t('shop') },
+    { href: '/news', label: t('news') },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,9 +55,9 @@ export default function Navigation() {
               </span>
             </motion.div>
             <div className="hidden sm:block">
-              <p className="text-gold-400 text-xs tracking-[0.3em] uppercase">World Legends</p>
+              <p className="text-gold-400 text-xs tracking-[0.3em] uppercase">{t('worldLegends')}</p>
               <p className="text-white text-lg font-semibold tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
-                CUP 2026
+                {t('cup2026')}
               </p>
             </div>
           </Link>
@@ -94,6 +96,9 @@ export default function Navigation() {
             {/* Global Search */}
             <GlobalSearch />
 
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
             {/* Cart Button */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -117,13 +122,16 @@ export default function Navigation() {
                 whileTap={{ scale: 0.98 }}
                 className="px-6 py-2.5 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-semibold text-sm rounded-full hover:from-gold-400 hover:to-gold-500 transition-all glow-gold-sm"
               >
-                Get Tickets
+                {t('getTickets')}
               </motion.button>
             </Link>
           </div>
 
           {/* Mobile Cart & Menu */}
           <div className="lg:hidden flex items-center gap-2">
+            {/* Language Switcher (Mobile) */}
+            <LanguageSwitcher />
+
             {/* Mobile Cart Button */}
             <button
               onClick={() => setIsCartOpen(true)}
@@ -198,14 +206,17 @@ export default function Navigation() {
                   </Link>
                 </motion.div>
               ))}
-              <motion.button
+              <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="mt-8 px-8 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-semibold text-lg rounded-full"
               >
-                Get Tickets
-              </motion.button>
+                <Link href="/tickets" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="mt-8 px-8 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-semibold text-lg rounded-full">
+                    {t('getTickets')}
+                  </button>
+                </Link>
+              </motion.div>
             </motion.nav>
           </motion.div>
         )}
