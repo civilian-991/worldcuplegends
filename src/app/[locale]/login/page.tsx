@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Link, useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -8,6 +9,8 @@ import { useToast } from '@/context/ToastContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/account';
   const { login, isAuthenticated } = useAuth();
   const { showToast } = useToast();
 
@@ -21,7 +24,7 @@ export default function LoginPage() {
 
   // Redirect if already logged in
   if (isAuthenticated) {
-    router.push('/account');
+    router.push(redirectTo);
     return null;
   }
 
@@ -34,7 +37,7 @@ export default function LoginPage() {
       const result = await login(formData.email, formData.password);
       if (result.success) {
         showToast('Welcome back!', 'success');
-        router.push('/account');
+        router.push(redirectTo);
       } else {
         setError(result.error || 'Invalid email or password');
       }
