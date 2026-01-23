@@ -1,14 +1,42 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { news } from '@/data/legends';
+import { getLatestNews, type NewsArticle } from '@/lib/api';
 
-const featuredNews = news.slice(0, 4);
+// Calculate read time based on content length
+function getReadTime(content: string, excerpt: string): string {
+  const words = (content || excerpt || '').split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / 200));
+  return `${minutes} min`;
+}
 
 export default function NewsSection() {
   const t = useTranslations('sections.news');
+  const [featuredNews, setFeaturedNews] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchNews() {
+      const data = await getLatestNews(4);
+      setFeaturedNews(data);
+      setIsLoading(false);
+    }
+    fetchNews();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="py-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-night-800 to-night-700" />
+        <div className="flex items-center justify-center py-20 relative z-10">
+          <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 px-6 relative overflow-hidden">
@@ -106,7 +134,7 @@ export default function NewsSection() {
                     <div className="flex items-center gap-4 text-white/40 text-sm">
                       <span>{article.author}</span>
                       <span>•</span>
-                      <span>{article.readTime} {t('readTime')}</span>
+                      <span>{getReadTime(article.content, article.excerpt)} {t('readTime')}</span>
                     </div>
                   </div>
 

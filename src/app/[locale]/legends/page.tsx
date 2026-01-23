@@ -1,18 +1,30 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { legends, type Legend } from '@/data/legends';
+import { getLegends, type Legend } from '@/lib/api';
 import { Link } from '@/i18n/navigation';
 import Flag from '@/components/Flag';
 
-const eras = ['All Eras', '60s-70s', '70s', '80s', '90s-00s', '2000s', '2010s-20s'];
+const eras = ['All Eras', '60s-70s', '70s', '80s', '90s-00s', '2000s', '2000s-20s', '2010s-20s'];
 
 export default function LegendsPage() {
   const t = useTranslations('legends');
   const [selectedEra, setSelectedEra] = useState('All Eras');
   const [searchQuery, setSearchQuery] = useState('');
+  const [legends, setLegends] = useState<Legend[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchLegends() {
+      setIsLoading(true);
+      const data = await getLegends();
+      setLegends(data);
+      setIsLoading(false);
+    }
+    fetchLegends();
+  }, []);
 
   const filteredLegends = useMemo(() => {
     return legends.filter((legend) => {
@@ -22,7 +34,7 @@ export default function LegendsPage() {
         legend.country.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesEra && matchesSearch;
     });
-  }, [selectedEra, searchQuery]);
+  }, [legends, selectedEra, searchQuery]);
 
   // Sort legends by rating (highest first)
   const sortedLegends = useMemo(() => {
@@ -95,41 +107,50 @@ export default function LegendsPage() {
         </div>
       </section>
 
-      {/* Legends Grid - F1 Style */}
-      <section className="py-8 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          >
-            <AnimatePresence mode="popLayout">
-              {sortedLegends.map((legend, index) => (
-                <LegendCard key={legend.id} legend={legend} index={index} />
-              ))}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* No Results */}
-          {sortedLegends.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center py-20"
-            >
-              <p className="text-white/50 text-xl">{t('noResults')}</p>
-              <button
-                onClick={() => {
-                  setSelectedEra('All Eras');
-                  setSearchQuery('');
-                }}
-                className="mt-4 text-gold-500 hover:text-gold-400 transition-colors"
-              >
-                {t('clearFilters')}
-              </button>
-            </motion.div>
-          )}
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-20">
+          <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
         </div>
-      </section>
+      )}
+
+      {/* Legends Grid - F1 Style */}
+      {!isLoading && (
+        <section className="py-8 px-6">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              layout
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <AnimatePresence mode="popLayout">
+                {sortedLegends.map((legend, index) => (
+                  <LegendCard key={legend.id} legend={legend} index={index} />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+
+            {/* No Results */}
+            {sortedLegends.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <p className="text-white/50 text-xl">{t('noResults')}</p>
+                <button
+                  onClick={() => {
+                    setSelectedEra('All Eras');
+                    setSearchQuery('');
+                  }}
+                  className="mt-4 text-gold-500 hover:text-gold-400 transition-colors"
+                >
+                  {t('clearFilters')}
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { products } from '@/data/products';
-import { legends } from '@/data/legends';
-import { news } from '@/data/legends';
+import { getLegends, getNews, type Legend, type NewsArticle } from '@/lib/api';
 
 interface SearchResult {
   type: 'product' | 'legend' | 'news' | 'page';
@@ -35,7 +34,22 @@ export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [legends, setLegends] = useState<Legend[]>([]);
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load data when search opens
+  const loadSearchData = useCallback(async () => {
+    if (dataLoaded) return;
+    const [legendsData, newsData] = await Promise.all([
+      getLegends(),
+      getNews()
+    ]);
+    setLegends(legendsData);
+    setNews(newsData);
+    setDataLoaded(true);
+  }, [dataLoaded]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,10 +67,13 @@ export default function GlobalSearch() {
   }, []);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+    if (isOpen) {
+      loadSearchData();
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, loadSearchData]);
 
   useEffect(() => {
     if (!query.trim()) {

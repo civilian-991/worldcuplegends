@@ -1,15 +1,45 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
-import { legends } from '@/data/legends';
+import { getLegendById, getLegends, type Legend } from '@/lib/api';
 import Flag from '@/components/Flag';
 
 export default function LegendDetailPage() {
   const params = useParams();
   const legendId = parseInt(params.id as string);
-  const legend = legends.find((l) => l.id === legendId);
+  const [legend, setLegend] = useState<Legend | null>(null);
+  const [relatedLegends, setRelatedLegends] = useState<Legend[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      const legendData = await getLegendById(legendId);
+      setLegend(legendData);
+
+      if (legendData) {
+        // Fetch related legends
+        const allLegends = await getLegends();
+        const related = allLegends
+          .filter(l => l.id !== legendData.id && (l.countryCode === legendData.countryCode || l.era === legendData.era))
+          .slice(0, 4);
+        setRelatedLegends(related);
+      }
+      setIsLoading(false);
+    }
+    fetchData();
+  }, [legendId]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-night-900">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!legend) {
     return (
@@ -17,7 +47,7 @@ export default function LegendDetailPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">Legend Not Found</h1>
           <Link href="/legends" className="text-gold-400 hover:text-gold-300">
-            ← Back to Legends
+            &larr; Back to Legends
           </Link>
         </div>
       </div>
@@ -41,11 +71,6 @@ export default function LegendDetailPage() {
   const nameParts = legend.name.split(' ');
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(' ') || nameParts[0];
-
-  // Get related legends (same country or era)
-  const relatedLegends = legends
-    .filter(l => l.id !== legend.id && (l.countryCode === legend.countryCode || l.era === legend.era))
-    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-night-900">

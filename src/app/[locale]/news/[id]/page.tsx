@@ -1,14 +1,58 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
-import { news } from '@/data/legends';
+import { getNewsById, getNews, type NewsArticle } from '@/lib/api';
 
 export default function NewsArticlePage() {
   const params = useParams();
   const articleId = parseInt(params.id as string);
-  const article = news.find((a) => a.id === articleId);
+  const [article, setArticle] = useState<NewsArticle | null>(null);
+  const [relatedArticles, setRelatedArticles] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      const articleData = await getNewsById(articleId);
+      setArticle(articleData);
+
+      if (articleData) {
+        // Fetch related articles
+        const allNews = await getNews();
+        const related = allNews
+          .filter(a => a.id !== articleData.id && a.category === articleData.category)
+          .slice(0, 3);
+        // If not enough in same category, fill with other articles
+        if (related.length < 3) {
+          const others = allNews
+            .filter(a => a.id !== articleData.id && !related.some(r => r.id === a.id))
+            .slice(0, 3 - related.length);
+          related.push(...others);
+        }
+        setRelatedArticles(related);
+      }
+      setIsLoading(false);
+    }
+    fetchData();
+  }, [articleId]);
+
+  // Calculate read time based on content length
+  const getReadTime = (content: string, excerpt: string) => {
+    const words = (content || excerpt || '').split(/\s+/).length;
+    const minutes = Math.max(1, Math.ceil(words / 200));
+    return `${minutes} min`;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (!article) {
     return (
@@ -16,14 +60,14 @@ export default function NewsArticlePage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">Article Not Found</h1>
           <Link href="/news" className="text-gold-400 hover:text-gold-300">
-            ← Back to News
+            &larr; Back to News
           </Link>
         </div>
       </div>
     );
   }
 
-  const relatedArticles = news.filter((a) => a.id !== articleId).slice(0, 3);
+  const readTime = getReadTime(article.content, article.excerpt);
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -65,9 +109,9 @@ export default function NewsArticlePage() {
                 <span>{article.author}</span>
               </div>
               <span>•</span>
-              <span>{formatDate(article.date)}</span>
+              <span>{formatDate(article.publishedAt)}</span>
               <span>•</span>
-              <span>{article.readTime} read</span>
+              <span>{readTime} read</span>
             </div>
           </motion.div>
         </div>
@@ -108,56 +152,32 @@ export default function NewsArticlePage() {
               {article.excerpt}
             </p>
 
-            <p className="text-white/70 leading-relaxed mb-6">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
+            {article.content ? (
+              <div
+                className="text-white/70 leading-relaxed space-y-6"
+                dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }}
+              />
+            ) : (
+              <>
+                <p className="text-white/70 leading-relaxed mb-6">
+                  This story is part of our coverage of the World Legends Cup 2026, bringing together
+                  the greatest football players from across the decades to compete in a tournament
+                  that celebrates the beautiful game&apos;s rich history.
+                </p>
 
-            <h2
-              className="text-2xl font-bold text-white mt-12 mb-6"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              THE LEGACY CONTINUES
-            </h2>
+                <blockquote className="border-l-4 border-gold-500 pl-6 my-8 italic">
+                  <p className="text-xl text-white/80">
+                    &ldquo;Football is the beautiful game because it brings people together from all
+                    walks of life, united by passion and love for the sport.&rdquo;
+                  </p>
+                </blockquote>
 
-            <p className="text-white/70 leading-relaxed mb-6">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-              fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-              culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-
-            <blockquote className="border-l-4 border-gold-500 pl-6 my-8 italic">
-              <p className="text-xl text-white/80">
-                &ldquo;Football is the beautiful game because it brings people together from all
-                walks of life, united by passion and love for the sport.&rdquo;
-              </p>
-            </blockquote>
-
-            <p className="text-white/70 leading-relaxed mb-6">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-              doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
-              veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-            </p>
-
-            <h2
-              className="text-2xl font-bold text-white mt-12 mb-6"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              LOOKING AHEAD
-            </h2>
-
-            <p className="text-white/70 leading-relaxed mb-6">
-              Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed
-              quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque
-              porro quisquam est, qui dolorem ipsum quia dolor sit amet.
-            </p>
-
-            <p className="text-white/70 leading-relaxed">
-              At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
-              praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias
-              excepturi sint occaecati cupiditate non provident.
-            </p>
+                <p className="text-white/70 leading-relaxed">
+                  Stay tuned for more updates as we bring you exclusive coverage, interviews, and
+                  behind-the-scenes content from the most anticipated football event of the decade.
+                </p>
+              </>
+            )}
           </motion.div>
 
           {/* Share */}
@@ -233,7 +253,7 @@ export default function NewsArticlePage() {
                     <h3 className="text-white font-semibold group-hover:text-gold-400 transition-colors mb-2">
                       {related.title}
                     </h3>
-                    <p className="text-white/50 text-sm">{related.readTime} read</p>
+                    <p className="text-white/50 text-sm">{getReadTime(related.content, related.excerpt)} read</p>
                   </div>
                 </Link>
               </motion.article>

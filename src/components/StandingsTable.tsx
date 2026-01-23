@@ -1,16 +1,38 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { legends } from '@/data/legends';
+import { getLegends, type Legend } from '@/lib/api';
 import Flag from '@/components/Flag';
-
-const topLegends = [...legends].sort((a, b) => b.rating - a.rating).slice(0, 6);
 
 export default function StandingsTable() {
   const t = useTranslations('sections.standings');
   const tc = useTranslations('common');
+  const [topLegends, setTopLegends] = useState<Legend[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchLegends() {
+      const data = await getLegends();
+      // Data is already sorted by rating desc, just take top 6
+      setTopLegends(data.slice(0, 6));
+      setIsLoading(false);
+    }
+    fetchLegends();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="py-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-night-700 to-night-800" />
+        <div className="flex items-center justify-center py-20 relative z-10">
+          <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 px-6 relative overflow-hidden">

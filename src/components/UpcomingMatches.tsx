@@ -1,15 +1,35 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { matches } from '@/data/legends';
+import { getMatches, type Match } from '@/lib/api';
 import Flag from '@/components/Flag';
-
-const upcomingMatches = matches.slice(0, 4);
 
 export default function UpcomingMatches() {
   const t = useTranslations('sections.matches');
+  const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchMatches() {
+      const data = await getMatches();
+      setUpcomingMatches(data.slice(0, 4));
+      setIsLoading(false);
+    }
+    fetchMatches();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section className="py-24 px-6 relative overflow-hidden bg-night-800">
+        <div className="flex items-center justify-center py-20">
+          <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-24 px-6 relative overflow-hidden bg-night-800">

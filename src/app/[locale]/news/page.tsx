@@ -1,21 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
-import { news } from '@/data/legends';
+import { getNews, type NewsArticle } from '@/lib/api';
 
-const categories = ['All', 'History', 'Events', 'Interview', 'Tournament', 'Analysis', 'Exclusive'];
+const categories = ['All', 'History', 'Events', 'Interview', 'Tournament', 'Analysis', 'Exclusive', 'general'];
 
 export default function NewsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      const data = await getNews();
+      setNews(data);
+      setIsLoading(false);
+    }
+    fetchData();
+  }, []);
 
   const filteredNews = selectedCategory === 'All'
     ? news
-    : news.filter((article) => article.category === selectedCategory);
+    : news.filter((article) => article.category.toLowerCase() === selectedCategory.toLowerCase());
 
   const featuredArticle = filteredNews[0];
   const otherArticles = filteredNews.slice(1);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -122,9 +142,7 @@ export default function NewsPage() {
                         <div className="flex items-center gap-4 text-white/40 text-sm mb-6">
                           <span>{featuredArticle.author}</span>
                           <span>•</span>
-                          <span>{featuredArticle.readTime} read</span>
-                          <span>•</span>
-                          <span>{formatDate(featuredArticle.date)}</span>
+                          <span>{formatDate(featuredArticle.publishedAt)}</span>
                         </div>
 
                         <span className="text-gold-400 font-semibold group-hover:gap-3 flex items-center gap-2 transition-all">
@@ -193,9 +211,7 @@ export default function NewsPage() {
                       <div className="flex items-center gap-3 text-white/40 text-xs">
                         <span>{article.author}</span>
                         <span>•</span>
-                        <span>{article.readTime}</span>
-                        <span>•</span>
-                        <span>{formatDate(article.date)}</span>
+                        <span>{formatDate(article.publishedAt)}</span>
                       </div>
                     </div>
                   </div>
@@ -269,6 +285,7 @@ export default function NewsPage() {
 }
 
 function formatDate(dateString: string): string {
+  if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {
     month: 'short',

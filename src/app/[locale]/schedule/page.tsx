@@ -1,18 +1,52 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { matches, type Match } from '@/data/legends';
+import { getMatches, type Match } from '@/lib/api';
 import Flag from '@/components/Flag';
 
 const stages = ['All', 'Group A', 'Group B', 'Group C', 'Group D', 'Semi-Final', 'Final'];
 
+// Map team names to country codes for flag display
+const teamToCountryCode: Record<string, string> = {
+  'Brazil': 'BR',
+  'Germany': 'DE',
+  'Argentina': 'AR',
+  'France': 'FR',
+  'Italy': 'IT',
+  'Netherlands': 'NL',
+  'Spain': 'ES',
+  'England': 'GB',
+  'Portugal': 'PT',
+  'TBD': 'TBD',
+};
+
 export default function SchedulePage() {
   const [selectedStage, setSelectedStage] = useState('All');
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      const data = await getMatches();
+      setMatches(data);
+      setIsLoading(false);
+    }
+    fetchData();
+  }, []);
 
   const filteredMatches = selectedStage === 'All'
     ? matches
     : matches.filter((match) => match.stage === selectedStage);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -115,6 +149,12 @@ export default function SchedulePage() {
               <MatchCard key={match.id} match={match} index={index} />
             ))}
           </div>
+
+          {filteredMatches.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-white/50">No matches found for this stage.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -170,6 +210,9 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
   const isFinal = match.stage === 'Final';
   const isSemiFinal = match.stage === 'Semi-Final';
 
+  const homeCountryCode = teamToCountryCode[match.homeTeam] || 'TBD';
+  const awayCountryCode = teamToCountryCode[match.awayTeam] || 'TBD';
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -195,8 +238,8 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
             >
               {match.stage}
             </span>
-            <p className="text-white/50 text-sm">{formatDate(match.date)}</p>
-            <p className="text-gold-400 text-sm font-semibold">{match.time}</p>
+            <p className="text-white/50 text-sm">{formatDate(match.matchDate)}</p>
+            <p className="text-gold-400 text-sm font-semibold">{match.matchTime}</p>
           </div>
 
           {/* Teams */}
@@ -205,7 +248,7 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
             <div className="flex-1 flex items-center justify-end gap-4">
               <div className="text-right">
                 <p className="text-white font-semibold text-lg md:text-xl">{match.homeTeam}</p>
-                {match.homeScore !== undefined && (
+                {match.homeScore !== undefined && match.homeScore !== null && (
                   <p
                     className="text-3xl font-bold text-gold-400"
                     style={{ fontFamily: 'var(--font-display)' }}
@@ -214,10 +257,10 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
                   </p>
                 )}
               </div>
-              {match.homeCountryCode === 'TBD' ? (
+              {homeCountryCode === 'TBD' ? (
                 <span className="text-4xl md:text-5xl">🏆</span>
               ) : (
-                <Flag countryCode={match.homeCountryCode} size="xl" />
+                <Flag countryCode={homeCountryCode} size="xl" />
               )}
             </div>
 
@@ -239,14 +282,14 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
 
             {/* Away Team */}
             <div className="flex-1 flex items-center gap-4">
-              {match.awayCountryCode === 'TBD' ? (
+              {awayCountryCode === 'TBD' ? (
                 <span className="text-4xl md:text-5xl">🏆</span>
               ) : (
-                <Flag countryCode={match.awayCountryCode} size="xl" />
+                <Flag countryCode={awayCountryCode} size="xl" />
               )}
               <div>
                 <p className="text-white font-semibold text-lg md:text-xl">{match.awayTeam}</p>
-                {match.awayScore !== undefined && (
+                {match.awayScore !== undefined && match.awayScore !== null && (
                   <p
                     className="text-3xl font-bold text-gold-400"
                     style={{ fontFamily: 'var(--font-display)' }}

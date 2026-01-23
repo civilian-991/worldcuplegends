@@ -1,12 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { teams, type Team } from '@/data/legends';
+import { getTeams, getLegends, type Team, type Legend } from '@/lib/api';
 import Flag from '@/components/Flag';
 
 export default function TeamsPage() {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [legends, setLegends] = useState<Legend[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      const [teamsData, legendsData] = await Promise.all([
+        getTeams(),
+        getLegends()
+      ]);
+      setTeams(teamsData);
+      setLegends(legendsData);
+      setIsLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  // Get legends for a team by country code
+  const getTeamLegends = (countryCode: string) => {
+    return legends.filter(l => l.countryCode === countryCode).map(l => l.name);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16">
@@ -86,95 +116,101 @@ export default function TeamsPage() {
 
           {/* All Teams Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {teams.map((team, index) => (
-              <motion.div
-                key={team.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onClick={() => setSelectedTeam(team)}
-                className="relative overflow-hidden rounded-2xl glass cursor-pointer group card-hover"
-              >
-                {/* Color Banner */}
-                <div
-                  className="h-2"
-                  style={{ backgroundColor: team.color }}
-                />
+            {teams.map((team, index) => {
+              const teamLegends = getTeamLegends(team.countryCode);
+              return (
+                <motion.div
+                  key={team.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  onClick={() => setSelectedTeam(team)}
+                  className="relative overflow-hidden rounded-2xl glass cursor-pointer group card-hover"
+                >
+                  {/* Color Banner */}
+                  <div
+                    className="h-2"
+                    style={{ backgroundColor: team.color }}
+                  />
 
-                <div className="p-8">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <Flag countryCode={team.countryCode} size="xl" />
-                      <div>
-                        <h3
-                          className="text-white text-2xl font-bold group-hover:text-gold-400 transition-colors"
+                  <div className="p-8">
+                    {/* Header */}
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-4">
+                        <Flag countryCode={team.countryCode} size="xl" />
+                        <div>
+                          <h3
+                            className="text-white text-2xl font-bold group-hover:text-gold-400 transition-colors"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                          >
+                            {team.name.toUpperCase()}
+                          </h3>
+                          <p className="text-white/50 text-sm">{team.confederation}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p
+                          className="text-4xl font-bold text-gold-400"
                           style={{ fontFamily: 'var(--font-display)' }}
                         >
-                          {team.name.toUpperCase()}
-                        </h3>
-                        <p className="text-white/50 text-sm">{team.confederation}</p>
+                          {team.rating}
+                        </p>
+                        <p className="text-white/40 text-xs">Rating</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p
-                        className="text-4xl font-bold text-gold-400"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        {team.rating}
-                      </p>
-                      <p className="text-white/40 text-xs">Rating</p>
-                    </div>
-                  </div>
 
-                  {/* World Cups */}
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-gold-400">🏆</span>
-                      <span className="text-white/50 text-sm">World Cup Titles</span>
-                    </div>
-                    {team.worldCups > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {team.worldCupYears.map((year) => (
-                          <span
-                            key={year}
-                            className="px-3 py-1 bg-gold-500/20 text-gold-400 text-sm rounded-full"
-                          >
-                            {year}
-                          </span>
-                        ))}
+                    {/* World Cups */}
+                    <div className="mb-6">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-gold-400">🏆</span>
+                        <span className="text-white/50 text-sm">World Cup Titles</span>
                       </div>
-                    ) : (
-                      <p className="text-white/30 text-sm">No titles yet</p>
-                    )}
-                  </div>
-
-                  {/* Legends */}
-                  <div className="pt-6 border-t border-white/10">
-                    <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Team Legends</p>
-                    <div className="flex flex-wrap gap-2">
-                      {team.legends.slice(0, 4).map((legend) => (
-                        <span
-                          key={legend}
-                          className="px-3 py-1 bg-night-600 text-white/70 text-sm rounded-full"
-                        >
-                          {legend}
-                        </span>
-                      ))}
-                      {team.legends.length > 4 && (
-                        <span className="px-3 py-1 bg-night-600 text-gold-400 text-sm rounded-full">
-                          +{team.legends.length - 4} more
-                        </span>
+                      {team.worldCups > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {team.worldCupYears.map((year) => (
+                            <span
+                              key={year}
+                              className="px-3 py-1 bg-gold-500/20 text-gold-400 text-sm rounded-full"
+                            >
+                              {year}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-white/30 text-sm">No titles yet</p>
                       )}
                     </div>
-                  </div>
-                </div>
 
-                {/* Hover Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-gold-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </motion.div>
-            ))}
+                    {/* Legends */}
+                    <div className="pt-6 border-t border-white/10">
+                      <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Team Legends</p>
+                      <div className="flex flex-wrap gap-2">
+                        {teamLegends.slice(0, 4).map((legend) => (
+                          <span
+                            key={legend}
+                            className="px-3 py-1 bg-night-600 text-white/70 text-sm rounded-full"
+                          >
+                            {legend}
+                          </span>
+                        ))}
+                        {teamLegends.length > 4 && (
+                          <span className="px-3 py-1 bg-night-600 text-gold-400 text-sm rounded-full">
+                            +{teamLegends.length - 4} more
+                          </span>
+                        )}
+                        {teamLegends.length === 0 && (
+                          <span className="text-white/30 text-sm">No legends yet</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hover Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-gold-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -252,7 +288,7 @@ export default function TeamsPage() {
                       className="text-4xl font-bold text-white"
                       style={{ fontFamily: 'var(--font-display)' }}
                     >
-                      {selectedTeam.legends.length}
+                      {getTeamLegends(selectedTeam.countryCode).length}
                     </p>
                     <p className="text-white/50 text-sm">Legends</p>
                   </div>
@@ -283,7 +319,7 @@ export default function TeamsPage() {
                     Team Legends
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {selectedTeam.legends.map((legend) => (
+                    {getTeamLegends(selectedTeam.countryCode).map((legend) => (
                       <span
                         key={legend}
                         className="px-4 py-2 bg-night-600 text-white rounded-full"
@@ -291,6 +327,9 @@ export default function TeamsPage() {
                         {legend}
                       </span>
                     ))}
+                    {getTeamLegends(selectedTeam.countryCode).length === 0 && (
+                      <span className="text-white/30">No legends in database</span>
+                    )}
                   </div>
                 </div>
               </div>

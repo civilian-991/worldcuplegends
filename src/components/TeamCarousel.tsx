@@ -1,22 +1,44 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { teams } from '@/data/legends';
+import { getTeams, type Team } from '@/lib/api';
 import Flag from '@/components/Flag';
 
 export default function TeamCarousel() {
   const t = useTranslations('sections.teams');
   const tc = useTranslations('common');
   const containerRef = useRef<HTMLDivElement>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start end', 'end start'],
   });
 
+  useEffect(() => {
+    async function fetchTeams() {
+      const data = await getTeams();
+      setTeams(data);
+      setIsLoading(false);
+    }
+    fetchTeams();
+  }, []);
+
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-25%']);
+
+  if (isLoading || teams.length === 0) {
+    return (
+      <section className="py-24 overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-night-700 via-night-800 to-night-700" />
+        <div className="flex items-center justify-center py-20">
+          <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={containerRef} className="py-24 overflow-hidden relative">
