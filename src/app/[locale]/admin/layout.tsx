@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { Link } from '@/i18n/navigation';
+import { useState, useEffect } from 'react';
+import { Link, useRouter } from '@/i18n/navigation';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
 
 const sidebarItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
@@ -22,6 +23,34 @@ export default function AdminLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && (!isAuthenticated || !isAdmin)) {
+      router.push('/login?redirect=/admin');
+    }
+  }, [isLoading, isAuthenticated, isAdmin, router]);
+
+  // Show loading state while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-night-900 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Don't render admin content if not admin
+  if (!isAuthenticated || !isAdmin) {
+    return (
+      <div className="min-h-screen bg-night-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-white/50">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-night-900 pt-20">
