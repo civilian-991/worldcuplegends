@@ -2,16 +2,19 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
-const words = ['LEGENDS', 'GLORY', 'PASSION', 'HISTORY', 'LEGACY'];
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export default function HeroSection() {
+  const t = useTranslations('home');
   const [currentWord, setCurrentWord] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
   });
+
+  const words = ['LEGENDS', 'GLORY', 'PASSION', 'HISTORY', 'LEGACY'];
 
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -22,7 +25,7 @@ export default function HeroSection() {
       setCurrentWord((prev) => (prev + 1) % words.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, []);
+  }, [words.length]);
 
   return (
     <section ref={containerRef} className="relative h-screen overflow-hidden">
@@ -60,7 +63,7 @@ export default function HeroSection() {
         >
           <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold-400" />
           <span className="text-gold-400 text-sm tracking-[0.4em] uppercase font-medium">
-            World Legends Cup 2026
+            {t('worldLegendsCup')}
           </span>
           <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold-400" />
         </motion.div>
@@ -96,7 +99,7 @@ export default function HeroSection() {
             className="text-2xl md:text-4xl text-white/90 mt-4"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            NEVER DIE
+            {t('neverDie')}
           </motion.p>
         </div>
 
@@ -107,9 +110,9 @@ export default function HeroSection() {
           transition={{ duration: 1, delay: 1 }}
           className="text-white/60 text-lg md:text-xl text-center max-w-2xl mb-12"
         >
-          The greatest footballers in history unite for one legendary tournament.
+          {t('heroSubtitle')}
           <br />
-          <span className="text-gold-400">USA • Mexico • Canada</span>
+          <span className="text-gold-400">{t('hostNations')}</span>
         </motion.p>
 
         {/* CTA Buttons */}
@@ -119,22 +122,26 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="flex flex-col sm:flex-row gap-4"
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold text-lg rounded-full overflow-hidden glow-gold"
-          >
-            <span className="relative z-10">Explore Legends</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-gold-400 to-gold-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-          </motion.button>
+          <Link href="/legends">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="group relative px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold text-lg rounded-full overflow-hidden glow-gold"
+            >
+              <span className="relative z-10">{t('exploreLegends')}</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-gold-400 to-gold-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+            </motion.button>
+          </Link>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 border-2 border-gold-500/50 text-gold-400 font-semibold text-lg rounded-full hover:bg-gold-500/10 transition-colors"
-          >
-            View Schedule
-          </motion.button>
+          <Link href="/schedule">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 border-2 border-gold-500/50 text-gold-400 font-semibold text-lg rounded-full hover:bg-gold-500/10 transition-colors"
+            >
+              {t('viewSchedule')}
+            </motion.button>
+          </Link>
         </motion.div>
 
         {/* Stats Counter */}
@@ -146,10 +153,10 @@ export default function HeroSection() {
         >
           <div className="flex items-center gap-12 md:gap-20">
             {[
-              { value: '100+', label: 'Legends' },
-              { value: '32', label: 'Teams' },
-              { value: '48', label: 'Matches' },
-              { value: '3', label: 'Host Nations' },
+              { value: '100+', label: t('stats.legends') },
+              { value: '32', label: t('stats.teams') },
+              { value: '48', label: t('stats.matches') },
+              { value: '3', label: t('stats.hostNations') },
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <p className="text-3xl md:text-4xl font-bold text-gold-400" style={{ fontFamily: 'var(--font-display)' }}>

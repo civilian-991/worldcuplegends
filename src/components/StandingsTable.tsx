@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { legends } from '@/data/legends';
 import Flag from '@/components/Flag';
@@ -8,6 +9,9 @@ import Flag from '@/components/Flag';
 const topLegends = [...legends].sort((a, b) => b.rating - a.rating).slice(0, 6);
 
 export default function StandingsTable() {
+  const t = useTranslations('sections.standings');
+  const tc = useTranslations('common');
+
   return (
     <section className="py-24 px-6 relative overflow-hidden">
       {/* Background */}
@@ -24,19 +28,19 @@ export default function StandingsTable() {
           className="flex flex-col md:flex-row md:items-end md:justify-between mb-12"
         >
           <div>
-            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">Rankings</p>
+            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">{t('preTitle')}</p>
             <h2
               className="text-4xl md:text-5xl font-bold text-white line-accent"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              LEGEND STANDINGS
+              {t('title')}
             </h2>
           </div>
           <Link
             href="/legends"
             className="mt-6 md:mt-0 text-gold-400 hover:text-gold-300 transition-colors text-sm flex items-center gap-2 group"
           >
-            View All Legends
+            {t('viewAll')}
             <motion.span
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -60,9 +64,9 @@ export default function StandingsTable() {
             <div className="col-span-4">Player</div>
             <div className="col-span-2">Country</div>
             <div className="col-span-2">Team</div>
-            <div className="col-span-1 text-center">Goals</div>
-            <div className="col-span-1 text-center">Apps</div>
-            <div className="col-span-1 text-center">Rating</div>
+            <div className="col-span-1 text-center">{tc('goals')}</div>
+            <div className="col-span-1 text-center">{tc('appearances')}</div>
+            <div className="col-span-1 text-center">{tc('rating')}</div>
           </div>
 
           {/* Table Body */}

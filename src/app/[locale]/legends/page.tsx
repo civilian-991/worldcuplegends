@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { legends, type Legend } from '@/data/legends';
 import { Link } from '@/i18n/navigation';
 import Flag from '@/components/Flag';
@@ -9,6 +10,7 @@ import Flag from '@/components/Flag';
 const eras = ['All Eras', '60s-70s', '70s', '80s', '90s-00s', '2000s', '2010s-20s'];
 
 export default function LegendsPage() {
+  const t = useTranslations('legends');
   const [selectedEra, setSelectedEra] = useState('All Eras');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -41,10 +43,10 @@ export default function LegendsPage() {
               className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tight"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              LEGENDS <span className="text-gold-400">2026</span>
+              {t('pageTitle')} <span className="text-gold-400">{t('year')}</span>
             </h1>
             <p className="text-white/50 text-base">
-              Meet the greatest footballers competing in the World Legends Cup 2026
+              {t('pageSubtitle')}
             </p>
           </motion.div>
         </div>
@@ -58,7 +60,7 @@ export default function LegendsPage() {
             <div className="relative w-full md:w-72">
               <input
                 type="text"
-                placeholder="Search legends..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-4 py-2 bg-[#1f1f2e] border border-white/10 rounded text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors text-sm"
@@ -85,7 +87,7 @@ export default function LegendsPage() {
                       : 'bg-[#1f1f2e] text-white/60 hover:bg-[#2a2a3e] hover:text-white'
                   }`}
                 >
-                  {era}
+                  {era === 'All Eras' ? t('allEras') : era}
                 </button>
               ))}
             </div>
@@ -114,7 +116,7 @@ export default function LegendsPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-20"
             >
-              <p className="text-white/50 text-xl">No legends found matching your criteria.</p>
+              <p className="text-white/50 text-xl">{t('noResults')}</p>
               <button
                 onClick={() => {
                   setSelectedEra('All Eras');
@@ -122,7 +124,7 @@ export default function LegendsPage() {
                 }}
                 className="mt-4 text-gold-500 hover:text-gold-400 transition-colors"
               >
-                Clear filters
+                {t('clearFilters')}
               </button>
             </motion.div>
           )}

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { matches } from '@/data/legends';
 import Flag from '@/components/Flag';
@@ -8,6 +9,8 @@ import Flag from '@/components/Flag';
 const upcomingMatches = matches.slice(0, 4);
 
 export default function UpcomingMatches() {
+  const t = useTranslations('sections.matches');
+
   return (
     <section className="py-24 px-6 relative overflow-hidden bg-night-800">
       {/* Background Pattern */}
@@ -30,19 +33,19 @@ export default function UpcomingMatches() {
           className="flex flex-col md:flex-row md:items-end md:justify-between mb-12"
         >
           <div>
-            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">Fixtures</p>
+            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">{t('preTitle')}</p>
             <h2
               className="text-4xl md:text-5xl font-bold text-white line-accent"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              UPCOMING MATCHES
+              {t('title')}
             </h2>
           </div>
           <Link
             href="/schedule"
             className="mt-6 md:mt-0 text-gold-400 hover:text-gold-300 transition-colors text-sm flex items-center gap-2 group"
           >
-            Full Schedule
+            {t('viewAll')}
             <motion.span
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -68,7 +71,7 @@ export default function UpcomingMatches() {
               {match.isLive && (
                 <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 bg-red-500/20 rounded-full">
                   <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-red-400 text-xs font-semibold uppercase">Live</span>
+                  <span className="text-red-400 text-xs font-semibold uppercase">{t('live')}</span>
                 </div>
               )}
 
@@ -102,7 +105,7 @@ export default function UpcomingMatches() {
                     <span className="text-white/30 text-sm">-</span>
                   ) : (
                     <span className="text-white/50 text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>
-                      VS
+                      {t('vs')}
                     </span>
                   )}
                 </div>

@@ -237,5 +237,30 @@
     "language": "Language",
     "english": "English",
     "portuguese": "Português"
+  },
+  "sections": {
+    "standings": {
+      "preTitle": "Tournament",
+      "title": "GROUP STANDINGS",
+      "viewAll": "View All Groups"
+    },
+    "matches": {
+      "preTitle": "Fixtures",
+      "title": "UPCOMING MATCHES",
+      "viewAll": "Full Schedule",
+      "live": "Live",
+      "vs": "VS"
+    },
+    "teams": {
+      "preTitle": "Competing",
+      "title": "LEGENDARY TEAMS",
+      "viewAll": "All Teams"
+    },
+    "news": {
+      "preTitle": "Latest",
+      "title": "NEWS & STORIES",
+      "viewAll": "All News",
+      "readTime": "read"
+    }
   }
 }

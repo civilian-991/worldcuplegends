@@ -1,12 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { news } from '@/data/legends';
 
 const featuredNews = news.slice(0, 4);
 
 export default function NewsSection() {
+  const t = useTranslations('sections.news');
+
   return (
     <section className="py-24 px-6 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-night-800 to-night-700" />
@@ -21,19 +24,19 @@ export default function NewsSection() {
           className="flex flex-col md:flex-row md:items-end md:justify-between mb-12"
         >
           <div>
-            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">Latest</p>
+            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">{t('preTitle')}</p>
             <h2
               className="text-4xl md:text-5xl font-bold text-white line-accent"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              NEWS & STORIES
+              {t('title')}
             </h2>
           </div>
           <Link
             href="/news"
             className="mt-6 md:mt-0 text-gold-400 hover:text-gold-300 transition-colors text-sm flex items-center gap-2 group"
           >
-            All News
+            {t('viewAll')}
             <motion.span
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
@@ -103,7 +106,7 @@ export default function NewsSection() {
                     <div className="flex items-center gap-4 text-white/40 text-sm">
                       <span>{article.author}</span>
                       <span>•</span>
-                      <span>{article.readTime} read</span>
+                      <span>{article.readTime} {t('readTime')}</span>
                     </div>
                   </div>
 

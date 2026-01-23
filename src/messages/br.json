@@ -237,5 +237,30 @@
     "language": "Idioma",
     "english": "English",
     "portuguese": "Português"
+  },
+  "sections": {
+    "standings": {
+      "preTitle": "Torneio",
+      "title": "CLASSIFICAÇÃO DOS GRUPOS",
+      "viewAll": "Ver Todos os Grupos"
+    },
+    "matches": {
+      "preTitle": "Jogos",
+      "title": "PRÓXIMAS PARTIDAS",
+      "viewAll": "Calendário Completo",
+      "live": "Ao Vivo",
+      "vs": "VS"
+    },
+    "teams": {
+      "preTitle": "Competindo",
+      "title": "TIMES LENDÁRIOS",
+      "viewAll": "Todos os Times"
+    },
+    "news": {
+      "preTitle": "Últimas",
+      "title": "NOTÍCIAS E HISTÓRIAS",
+      "viewAll": "Todas as Notícias",
+      "readTime": "leitura"
+    }
   }
 }

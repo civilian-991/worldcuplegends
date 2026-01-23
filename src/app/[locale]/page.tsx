@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import StandingsTable from '@/components/StandingsTable';
 import UpcomingMatches from '@/components/UpcomingMatches';
@@ -8,6 +10,8 @@ import TeamCarousel from '@/components/TeamCarousel';
 import NewsSection from '@/components/NewsSection';
 
 export default function Home() {
+  const t = useTranslations('home');
+
   return (
     <>
       <HeroSection />
@@ -59,9 +63,9 @@ export default function Home() {
             className="text-3xl md:text-5xl text-white font-bold leading-tight mb-8"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            THE MORE DIFFICULT THE VICTORY, THE GREATER THE HAPPINESS IN WINNING.
+            {t('quote')}
           </blockquote>
-          <cite className="text-gold-400 text-xl not-italic">— PELÉ</cite>
+          <cite className="text-gold-400 text-xl not-italic">— {t('quoteAuthor')}</cite>
         </motion.div>
       </section>
 
@@ -84,34 +88,37 @@ export default function Home() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto text-center relative z-10"
         >
-          <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">Be Part of History</p>
+          <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">{t('ctaSection.preTitle')}</p>
           <h2
             className="text-5xl md:text-7xl font-bold text-white mb-6"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            DON&apos;T MISS THE
-            <span className="text-gradient-gold block">GREATEST SHOW</span>
+            {t('ctaSection.title')}
+            <span className="text-gradient-gold block">{t('ctaSection.titleHighlight')}</span>
           </h2>
           <p className="text-white/60 text-xl mb-12 max-w-2xl mx-auto">
-            Witness football legends unite for one extraordinary tournament.
-            Get your tickets now and be part of history.
+            {t('ctaSection.description')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-10 py-5 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold text-lg rounded-full glow-gold"
-            >
-              Get Tickets Now
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-10 py-5 border-2 border-gold-500/50 text-gold-400 font-semibold text-lg rounded-full hover:bg-gold-500/10 transition-colors"
-            >
-              Learn More
-            </motion.button>
+            <Link href="/tickets">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-10 py-5 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold text-lg rounded-full glow-gold"
+              >
+                {t('ctaSection.getTicketsNow')}
+              </motion.button>
+            </Link>
+            <Link href="/about">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-10 py-5 border-2 border-gold-500/50 text-gold-400 font-semibold text-lg rounded-full hover:bg-gold-500/10 transition-colors"
+              >
+                {t('ctaSection.learnMore')}
+              </motion.button>
+            </Link>
           </div>
         </motion.div>
 

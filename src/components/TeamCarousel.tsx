@@ -2,11 +2,14 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { teams } from '@/data/legends';
 import Flag from '@/components/Flag';
 
 export default function TeamCarousel() {
+  const t = useTranslations('sections.teams');
+  const tc = useTranslations('common');
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -28,19 +31,19 @@ export default function TeamCarousel() {
           className="flex flex-col md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">Nations</p>
+            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">{t('preTitle')}</p>
             <h2
               className="text-4xl md:text-5xl font-bold text-white line-accent"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              LEGENDARY TEAMS
+              {t('title')}
             </h2>
           </div>
           <Link
             href="/teams"
             className="mt-6 md:mt-0 text-gold-400 hover:text-gold-300 transition-colors text-sm flex items-center gap-2"
           >
-            View All Teams →
+            {t('viewAll')} →
           </Link>
         </motion.div>
       </div>
@@ -110,7 +113,7 @@ export default function TeamCarousel() {
               {/* Rating Bar */}
               <div className="mb-4">
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-white/50">Rating</span>
+                  <span className="text-white/50">{tc('rating')}</span>
                   <span className="text-gold-400 font-bold">{team.rating}</span>
                 </div>
                 <div className="h-2 bg-night-600 rounded-full overflow-hidden">
