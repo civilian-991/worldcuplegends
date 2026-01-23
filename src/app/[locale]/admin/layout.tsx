@@ -8,6 +8,10 @@ import { useAuth } from '@/context/AuthContext';
 
 const sidebarItems = [
   { href: '/admin', label: 'Dashboard', icon: '📊' },
+  { href: '/admin/legends', label: 'Legends', icon: '⭐' },
+  { href: '/admin/teams', label: 'Teams', icon: '🏆' },
+  { href: '/admin/matches', label: 'Matches', icon: '⚽' },
+  { href: '/admin/news', label: 'News', icon: '📰' },
   { href: '/admin/products', label: 'Products', icon: '📦' },
   { href: '/admin/orders', label: 'Orders', icon: '🛒' },
   { href: '/admin/customers', label: 'Customers', icon: '👥' },
