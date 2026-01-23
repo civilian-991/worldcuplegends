@@ -23,12 +23,23 @@ export default function AdminLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+  const { isAuthenticated, isAdmin, isLoading, user } = useAuth();
   const router = useRouter();
 
+  // Debug logging
   useEffect(() => {
-    if (!isLoading && (!isAuthenticated || !isAdmin)) {
-      router.push('/login?redirect=/admin');
+    console.log('Admin Layout Auth State:', { isLoading, isAuthenticated, isAdmin, userRole: user?.role });
+  }, [isLoading, isAuthenticated, isAdmin, user]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        // Not logged in - redirect to login
+        router.push('/login?redirect=/admin');
+      } else if (!isAdmin) {
+        // Logged in but not admin - redirect to homepage
+        router.push('/');
+      }
     }
   }, [isLoading, isAuthenticated, isAdmin, router]);
 
@@ -41,12 +52,23 @@ export default function AdminLayout({
     );
   }
 
-  // Don't render admin content if not admin
-  if (!isAuthenticated || !isAdmin) {
+  // Not authenticated - show redirect message
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-night-900 flex items-center justify-center">
         <div className="text-center">
           <p className="text-white/50">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Authenticated but not admin - show access denied
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-night-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-white/50">Access denied. Redirecting...</p>
         </div>
       </div>
     );
