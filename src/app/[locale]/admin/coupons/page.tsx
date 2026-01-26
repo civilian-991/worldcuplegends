@@ -1,87 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
+import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
 
 interface Coupon {
-  id: string;
+  id: number;
   code: string;
   type: 'percentage' | 'fixed';
   value: number;
-  minOrderAmount?: number;
-  maxUses?: number;
-  usedCount: number;
-  expiresAt?: string;
-  isActive: boolean;
-  createdAt: string;
-  applicableCategories?: string[];
+  min_order_amount: number | null;
+  max_uses: number | null;
+  used_count: number;
+  expires_at: string | null;
+  is_active: boolean;
+  created_at: string;
 }
-
-const mockCoupons: Coupon[] = [
-  {
-    id: '1',
-    code: 'LEGENDS10',
-    type: 'percentage',
-    value: 10,
-    minOrderAmount: 50,
-    maxUses: 1000,
-    usedCount: 342,
-    expiresAt: '2026-06-30',
-    isActive: true,
-    createdAt: '2026-01-01',
-  },
-  {
-    id: '2',
-    code: 'WELCOME15',
-    type: 'percentage',
-    value: 15,
-    maxUses: undefined,
-    usedCount: 156,
-    expiresAt: '2026-12-31',
-    isActive: true,
-    createdAt: '2025-12-01',
-  },
-  {
-    id: '3',
-    code: 'JERSEY25',
-    type: 'fixed',
-    value: 25,
-    minOrderAmount: 100,
-    maxUses: 500,
-    usedCount: 500,
-    expiresAt: '2026-03-01',
-    isActive: false,
-    createdAt: '2025-11-15',
-    applicableCategories: ['Jerseys'],
-  },
-  {
-    id: '4',
-    code: 'FREESHIP',
-    type: 'fixed',
-    value: 7.99,
-    minOrderAmount: 30,
-    usedCount: 89,
-    isActive: true,
-    createdAt: '2026-01-05',
-  },
-];
 
 export default function AdminCouponsPage() {
   const { showToast } = useToast();
-  const [coupons, setCoupons] = useState<Coupon[]>(mockCoupons);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     code: '',
     type: 'percentage' as 'percentage' | 'fixed',
     value: '',
-    minOrderAmount: '',
-    maxUses: '',
-    expiresAt: '',
-    isActive: true,
+    min_order_amount: '',
+    max_uses: '',
+    expires_at: '',
+    is_active: true,
   });
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+
+  const fetchCoupons = async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase
+      .from('coupons')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching coupons:', error);
+      showToast('Error loading coupons', 'error');
+    } else {
+      setCoupons(data || []);
+    }
+    setIsLoading(false);
+  };
 
   const openModal = (coupon?: Coupon) => {
     if (coupon) {
@@ -90,10 +65,10 @@ export default function AdminCouponsPage() {
         code: coupon.code,
         type: coupon.type,
         value: coupon.value.toString(),
-        minOrderAmount: coupon.minOrderAmount?.toString() || '',
-        maxUses: coupon.maxUses?.toString() || '',
-        expiresAt: coupon.expiresAt || '',
-        isActive: coupon.isActive,
+        min_order_amount: coupon.min_order_amount?.toString() || '',
+        max_uses: coupon.max_uses?.toString() || '',
+        expires_at: coupon.expires_at ? coupon.expires_at.split('T')[0] : '',
+        is_active: coupon.is_active,
       });
     } else {
       setEditingCoupon(null);
@@ -101,10 +76,10 @@ export default function AdminCouponsPage() {
         code: '',
         type: 'percentage',
         value: '',
-        minOrderAmount: '',
-        maxUses: '',
-        expiresAt: '',
-        isActive: true,
+        min_order_amount: '',
+        max_uses: '',
+        expires_at: '',
+        is_active: true,
       });
     }
     setShowModal(true);
@@ -115,45 +90,104 @@ export default function AdminCouponsPage() {
     setEditingCoupon(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
 
-    const couponData: Coupon = {
-      id: editingCoupon?.id || Date.now().toString(),
+    const couponData = {
       code: formData.code.toUpperCase(),
       type: formData.type,
       value: parseFloat(formData.value),
-      minOrderAmount: formData.minOrderAmount ? parseFloat(formData.minOrderAmount) : undefined,
-      maxUses: formData.maxUses ? parseInt(formData.maxUses) : undefined,
-      expiresAt: formData.expiresAt || undefined,
-      isActive: formData.isActive,
-      usedCount: editingCoupon?.usedCount || 0,
-      createdAt: editingCoupon?.createdAt || new Date().toISOString().split('T')[0],
+      min_order_amount: formData.min_order_amount ? parseFloat(formData.min_order_amount) : null,
+      max_uses: formData.max_uses ? parseInt(formData.max_uses) : null,
+      expires_at: formData.expires_at || null,
+      is_active: formData.is_active,
     };
 
     if (editingCoupon) {
-      setCoupons((prev) => prev.map((c) => (c.id === couponData.id ? couponData : c)));
-      showToast('Coupon updated successfully', 'success');
+      // Update existing coupon
+      const { error } = await supabase
+        .from('coupons')
+        .update(couponData)
+        .eq('id', editingCoupon.id);
+
+      if (error) {
+        console.error('Error updating coupon:', error);
+        showToast('Error updating coupon', 'error');
+      } else {
+        setCoupons((prev) =>
+          prev.map((c) => (c.id === editingCoupon.id ? { ...c, ...couponData } : c))
+        );
+        showToast('Coupon updated successfully', 'success');
+        closeModal();
+      }
     } else {
-      setCoupons((prev) => [couponData, ...prev]);
-      showToast('Coupon created successfully', 'success');
+      // Create new coupon
+      const { data, error } = await supabase
+        .from('coupons')
+        .insert([{ ...couponData, used_count: 0 }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating coupon:', error);
+        if (error.code === '23505') {
+          showToast('Coupon code already exists', 'error');
+        } else {
+          showToast('Error creating coupon', 'error');
+        }
+      } else {
+        setCoupons((prev) => [data, ...prev]);
+        showToast('Coupon created successfully', 'success');
+        closeModal();
+      }
     }
 
-    closeModal();
+    setIsSaving(false);
   };
 
-  const toggleCouponStatus = (couponId: string) => {
-    setCoupons((prev) =>
-      prev.map((c) => (c.id === couponId ? { ...c, isActive: !c.isActive } : c))
-    );
-    showToast('Coupon status updated', 'success');
+  const toggleCouponStatus = async (coupon: Coupon) => {
+    const { error } = await supabase
+      .from('coupons')
+      .update({ is_active: !coupon.is_active })
+      .eq('id', coupon.id);
+
+    if (error) {
+      console.error('Error toggling coupon status:', error);
+      showToast('Error updating coupon', 'error');
+    } else {
+      setCoupons((prev) =>
+        prev.map((c) => (c.id === coupon.id ? { ...c, is_active: !c.is_active } : c))
+      );
+      showToast('Coupon status updated', 'success');
+    }
   };
 
-  const deleteCoupon = (couponId: string) => {
+  const deleteCoupon = async (couponId: number) => {
     if (!confirm('Are you sure you want to delete this coupon?')) return;
-    setCoupons((prev) => prev.filter((c) => c.id !== couponId));
-    showToast('Coupon deleted', 'success');
+
+    const { error } = await supabase.from('coupons').delete().eq('id', couponId);
+
+    if (error) {
+      console.error('Error deleting coupon:', error);
+      showToast('Error deleting coupon', 'error');
+    } else {
+      setCoupons((prev) => prev.filter((c) => c.id !== couponId));
+      showToast('Coupon deleted', 'success');
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-24 pb-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-6">
@@ -171,15 +205,23 @@ export default function AdminCouponsPage() {
               COUPON MANAGEMENT
             </h1>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => openModal()}
-            className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2"
-          >
-            <span>➕</span>
-            Create Coupon
-          </motion.button>
+          <div className="flex gap-3">
+            <button
+              onClick={fetchCoupons}
+              className="px-4 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors"
+            >
+              Refresh
+            </button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => openModal()}
+              className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2"
+            >
+              <span>➕</span>
+              Create Coupon
+            </motion.button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -188,19 +230,19 @@ export default function AdminCouponsPage() {
             { label: 'Total Coupons', value: coupons.length, icon: '🎟️' },
             {
               label: 'Active',
-              value: coupons.filter((c) => c.isActive).length,
+              value: coupons.filter((c) => c.is_active).length,
               icon: '✅',
               color: 'text-green-400',
             },
             {
               label: 'Inactive',
-              value: coupons.filter((c) => !c.isActive).length,
+              value: coupons.filter((c) => !c.is_active).length,
               icon: '⏸️',
               color: 'text-yellow-400',
             },
             {
               label: 'Total Uses',
-              value: coupons.reduce((acc, c) => acc + c.usedCount, 0),
+              value: coupons.reduce((acc, c) => acc + c.used_count, 0),
               icon: '📊',
             },
           ].map((stat) => (
@@ -215,89 +257,96 @@ export default function AdminCouponsPage() {
         </div>
 
         {/* Coupons Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {coupons.map((coupon) => (
-            <motion.div
-              key={coupon.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`glass rounded-2xl p-6 ${!coupon.isActive ? 'opacity-60' : ''}`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🎟️</span>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      coupon.isActive
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-gray-500/20 text-gray-400'
+        {coupons.length === 0 ? (
+          <div className="glass rounded-2xl p-12 text-center">
+            <span className="text-4xl block mb-4">🎟️</span>
+            <p className="text-white/50">No coupons found. Create your first coupon!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {coupons.map((coupon) => (
+              <motion.div
+                key={coupon.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`glass rounded-2xl p-6 ${!coupon.is_active ? 'opacity-60' : ''}`}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🎟️</span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        coupon.is_active
+                          ? 'bg-green-500/20 text-green-400'
+                          : 'bg-gray-500/20 text-gray-400'
+                      }`}
+                    >
+                      {coupon.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => openModal(coupon)}
+                    className="text-white/40 hover:text-white transition-colors"
+                  >
+                    ✏️
+                  </button>
+                </div>
+
+                <h3
+                  className="text-2xl font-bold text-gold-400 mb-2 font-mono"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  {coupon.code}
+                </h3>
+
+                <p className="text-white text-lg mb-4">
+                  {coupon.type === 'percentage' ? `${coupon.value}% OFF` : `$${coupon.value} OFF`}
+                </p>
+
+                <div className="space-y-2 text-sm mb-6">
+                  {coupon.min_order_amount && (
+                    <p className="text-white/50">Min. order: ${coupon.min_order_amount}</p>
+                  )}
+                  {coupon.max_uses && (
+                    <p className="text-white/50">
+                      Uses: {coupon.used_count} / {coupon.max_uses}
+                      {coupon.used_count >= coupon.max_uses && (
+                        <span className="text-red-400 ml-2">(Exhausted)</span>
+                      )}
+                    </p>
+                  )}
+                  {coupon.expires_at && (
+                    <p className="text-white/50">
+                      Expires: {new Date(coupon.expires_at).toLocaleDateString()}
+                      {new Date(coupon.expires_at) < new Date() && (
+                        <span className="text-red-400 ml-2">(Expired)</span>
+                      )}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggleCouponStatus(coupon)}
+                    className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      coupon.is_active
+                        ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
+                        : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
                     }`}
                   >
-                    {coupon.isActive ? 'Active' : 'Inactive'}
-                  </span>
+                    {coupon.is_active ? 'Deactivate' : 'Activate'}
+                  </button>
+                  <button
+                    onClick={() => deleteCoupon(coupon.id)}
+                    className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-colors"
+                  >
+                    Delete
+                  </button>
                 </div>
-                <button
-                  onClick={() => openModal(coupon)}
-                  className="text-white/40 hover:text-white transition-colors"
-                >
-                  ✏️
-                </button>
-              </div>
-
-              <h3
-                className="text-2xl font-bold text-gold-400 mb-2 font-mono"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {coupon.code}
-              </h3>
-
-              <p className="text-white text-lg mb-4">
-                {coupon.type === 'percentage' ? `${coupon.value}% OFF` : `$${coupon.value} OFF`}
-              </p>
-
-              <div className="space-y-2 text-sm mb-6">
-                {coupon.minOrderAmount && (
-                  <p className="text-white/50">Min. order: ${coupon.minOrderAmount}</p>
-                )}
-                {coupon.maxUses && (
-                  <p className="text-white/50">
-                    Uses: {coupon.usedCount} / {coupon.maxUses}
-                    {coupon.usedCount >= coupon.maxUses && (
-                      <span className="text-red-400 ml-2">(Exhausted)</span>
-                    )}
-                  </p>
-                )}
-                {coupon.expiresAt && (
-                  <p className="text-white/50">
-                    Expires: {new Date(coupon.expiresAt).toLocaleDateString()}
-                    {new Date(coupon.expiresAt) < new Date() && (
-                      <span className="text-red-400 ml-2">(Expired)</span>
-                    )}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => toggleCouponStatus(coupon.id)}
-                  className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    coupon.isActive
-                      ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
-                      : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                  }`}
-                >
-                  {coupon.isActive ? 'Deactivate' : 'Activate'}
-                </button>
-                <button
-                  onClick={() => deleteCoupon(coupon.id)}
-                  className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
         {/* Modal */}
         <AnimatePresence>
@@ -382,8 +431,8 @@ export default function AdminCouponsPage() {
                         type="number"
                         step="0.01"
                         min="0"
-                        value={formData.minOrderAmount}
-                        onChange={(e) => setFormData({ ...formData, minOrderAmount: e.target.value })}
+                        value={formData.min_order_amount}
+                        onChange={(e) => setFormData({ ...formData, min_order_amount: e.target.value })}
                         placeholder="Optional"
                         className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
                       />
@@ -393,8 +442,8 @@ export default function AdminCouponsPage() {
                       <input
                         type="number"
                         min="1"
-                        value={formData.maxUses}
-                        onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
+                        value={formData.max_uses}
+                        onChange={(e) => setFormData({ ...formData, max_uses: e.target.value })}
                         placeholder="Unlimited"
                         className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
                       />
@@ -405,8 +454,8 @@ export default function AdminCouponsPage() {
                     <label className="text-white/50 text-sm mb-2 block">Expiration Date</label>
                     <input
                       type="date"
-                      value={formData.expiresAt}
-                      onChange={(e) => setFormData({ ...formData, expiresAt: e.target.value })}
+                      value={formData.expires_at}
+                      onChange={(e) => setFormData({ ...formData, expires_at: e.target.value })}
                       className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors"
                     />
                   </div>
@@ -414,8 +463,8 @@ export default function AdminCouponsPage() {
                   <label className="flex items-center gap-3 cursor-pointer pt-2">
                     <input
                       type="checkbox"
-                      checked={formData.isActive}
-                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                      checked={formData.is_active}
+                      onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                       className="w-4 h-4 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50"
                     />
                     <span className="text-white/70">Active immediately</span>
@@ -425,7 +474,8 @@ export default function AdminCouponsPage() {
                     <button
                       type="button"
                       onClick={closeModal}
-                      className="flex-1 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors"
+                      disabled={isSaving}
+                      className="flex-1 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors disabled:opacity-50"
                     >
                       Cancel
                     </button>
@@ -433,9 +483,17 @@ export default function AdminCouponsPage() {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
-                      className="flex-1 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl"
+                      disabled={isSaving}
+                      className="flex-1 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
                     >
-                      {editingCoupon ? 'Update' : 'Create'} Coupon
+                      {isSaving ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-night-900/20 border-t-night-900 rounded-full animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>{editingCoupon ? 'Update' : 'Create'} Coupon</>
+                      )}
                     </motion.button>
                   </div>
                 </form>

@@ -1,14 +1,107 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { customers, orders, type Customer } from '@/data/admin';
+import { createClient } from '@/lib/supabase/client';
+
+interface Customer {
+  id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  avatar_url: string | null;
+  role: string;
+  created_at: string;
+  updated_at: string;
+  // Computed fields
+  totalOrders: number;
+  totalSpent: number;
+  lastOrderAt: string | null;
+  status: 'active' | 'inactive';
+}
+
+interface Order {
+  id: string;
+  user_id: string | null;
+  status: string;
+  total: number;
+  created_at: string;
+}
+
+interface Profile {
+  id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  avatar_url: string | null;
+  role: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function AdminCustomersPage() {
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [sortBy, setSortBy] = useState('recent');
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+
+    // Fetch profiles and orders in parallel
+    const [profilesResult, ordersResult] = await Promise.all([
+      supabase.from('profiles').select('*').order('created_at', { ascending: false }),
+      supabase.from('orders').select('id, user_id, status, total, created_at'),
+    ]);
+
+    const profiles = profilesResult.data || [];
+    const ordersData = ordersResult.data || [];
+    setOrders(ordersData);
+
+    // Calculate customer stats from orders
+    const customerStats: Record<string, { totalOrders: number; totalSpent: number; lastOrderAt: string | null }> = {};
+    ordersData.forEach((order: Order) => {
+      if (!order.user_id) return;
+      if (!customerStats[order.user_id]) {
+        customerStats[order.user_id] = { totalOrders: 0, totalSpent: 0, lastOrderAt: null };
+      }
+      customerStats[order.user_id].totalOrders += 1;
+      customerStats[order.user_id].totalSpent += Number(order.total) || 0;
+      if (!customerStats[order.user_id].lastOrderAt || new Date(order.created_at) > new Date(customerStats[order.user_id].lastOrderAt!)) {
+        customerStats[order.user_id].lastOrderAt = order.created_at;
+      }
+    });
+
+    // Merge profiles with stats
+    const customersWithStats: Customer[] = profiles.map((profile: Profile) => {
+      const stats = customerStats[profile.id] || { totalOrders: 0, totalSpent: 0, lastOrderAt: null };
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const isActive = stats.lastOrderAt ? new Date(stats.lastOrderAt) > thirtyDaysAgo : false;
+
+      return {
+        ...profile,
+        totalOrders: stats.totalOrders,
+        totalSpent: stats.totalSpent,
+        lastOrderAt: stats.lastOrderAt,
+        status: isActive ? 'active' : 'inactive',
+      };
+    });
+
+    setCustomers(customersWithStats);
+    setIsLoading(false);
+  };
 
   const filteredCustomers = useMemo(() => {
     let filtered = [...customers];
@@ -18,7 +111,8 @@ export default function AdminCustomersPage() {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (c) =>
-          c.name.toLowerCase().includes(query) ||
+          (c.first_name?.toLowerCase().includes(query) || false) ||
+          (c.last_name?.toLowerCase().includes(query) || false) ||
           c.email.toLowerCase().includes(query)
       );
     }
@@ -31,7 +125,12 @@ export default function AdminCustomersPage() {
     // Sort
     switch (sortBy) {
       case 'recent':
-        filtered.sort((a, b) => new Date(b.lastOrderAt).getTime() - new Date(a.lastOrderAt).getTime());
+        filtered.sort((a, b) => {
+          if (!a.lastOrderAt && !b.lastOrderAt) return 0;
+          if (!a.lastOrderAt) return 1;
+          if (!b.lastOrderAt) return -1;
+          return new Date(b.lastOrderAt).getTime() - new Date(a.lastOrderAt).getTime();
+        });
         break;
       case 'spent':
         filtered.sort((a, b) => b.totalSpent - a.totalSpent);
@@ -40,18 +139,30 @@ export default function AdminCustomersPage() {
         filtered.sort((a, b) => b.totalOrders - a.totalOrders);
         break;
       case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => {
+          const nameA = `${a.first_name || ''} ${a.last_name || ''}`.trim();
+          const nameB = `${b.first_name || ''} ${b.last_name || ''}`.trim();
+          return nameA.localeCompare(nameB);
+        });
         break;
     }
 
     return filtered;
-  }, [searchQuery, statusFilter, sortBy]);
+  }, [customers, searchQuery, statusFilter, sortBy]);
 
   const getCustomerOrders = (customerId: string) => {
-    return orders.filter((o) => o.customerId === customerId);
+    return orders.filter((o) => o.user_id === customerId);
   };
 
-  const formatDate = (dateString: string) => {
+  const getCustomerName = (customer: Customer) => {
+    if (customer.first_name || customer.last_name) {
+      return `${customer.first_name || ''} ${customer.last_name || ''}`.trim();
+    }
+    return customer.email.split('@')[0];
+  };
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Never';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -62,7 +173,16 @@ export default function AdminCustomersPage() {
   const totalCustomers = customers.length;
   const activeCustomers = customers.filter((c) => c.status === 'active').length;
   const totalRevenue = customers.reduce((sum, c) => sum + c.totalSpent, 0);
-  const avgOrderValue = totalRevenue / customers.reduce((sum, c) => sum + c.totalOrders, 0);
+  const totalOrders = customers.reduce((sum, c) => sum + c.totalOrders, 0);
+  const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -146,9 +266,12 @@ export default function AdminCustomersPage() {
           <option value="name">Name A-Z</option>
         </select>
 
-        {/* Export */}
-        <button className="px-6 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors">
-          Export
+        {/* Refresh */}
+        <button
+          onClick={fetchData}
+          className="px-6 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors"
+        >
+          Refresh
         </button>
       </div>
 
@@ -167,13 +290,13 @@ export default function AdminCustomersPage() {
               {/* Avatar */}
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center flex-shrink-0">
                 <span className="text-night-900 font-bold text-lg">
-                  {customer.name.charAt(0)}
+                  {getCustomerName(customer).charAt(0).toUpperCase()}
                 </span>
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-white font-semibold truncate">{customer.name}</h3>
+                  <h3 className="text-white font-semibold truncate">{getCustomerName(customer)}</h3>
                   <span
                     className={`px-2 py-0.5 rounded-full text-xs ${
                       customer.status === 'active'
@@ -237,11 +360,11 @@ export default function AdminCustomersPage() {
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center">
                       <span className="text-night-900 font-bold text-2xl">
-                        {selectedCustomer.name.charAt(0)}
+                        {getCustomerName(selectedCustomer).charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-white">{selectedCustomer.name}</h2>
+                      <h2 className="text-xl font-bold text-white">{getCustomerName(selectedCustomer)}</h2>
                       <p className="text-white/50">{selectedCustomer.email}</p>
                     </div>
                   </div>
@@ -286,11 +409,11 @@ export default function AdminCustomersPage() {
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-white/50">📱</span>
-                      <span className="text-white/70">{selectedCustomer.phone}</span>
+                      <span className="text-white/70">{selectedCustomer.phone || 'Not provided'}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-white/50">📅</span>
-                      <span className="text-white/70">Joined {formatDate(selectedCustomer.joinedAt)}</span>
+                      <span className="text-white/70">Joined {formatDate(selectedCustomer.created_at)}</span>
                     </div>
                   </div>
                 </div>
@@ -307,10 +430,10 @@ export default function AdminCustomersPage() {
                         >
                           <div>
                             <p className="text-gold-400 font-mono text-sm">{order.id}</p>
-                            <p className="text-white/50 text-xs">{formatDate(order.createdAt)}</p>
+                            <p className="text-white/50 text-xs">{formatDate(order.created_at)}</p>
                           </div>
                           <div className="text-right">
-                            <p className="text-white font-semibold">${order.total.toFixed(2)}</p>
+                            <p className="text-white font-semibold">${Number(order.total).toFixed(2)}</p>
                             <span
                               className={`px-2 py-0.5 rounded-full text-xs capitalize ${
                                 order.status === 'delivered'

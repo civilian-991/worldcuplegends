@@ -1,49 +1,149 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
-import {
-  orders,
-  customers,
-  getOrderStats,
-  getCustomerStats,
-  getTopProducts,
-  getRecentOrders,
-} from '@/data/admin';
+import { createClient } from '@/lib/supabase/client';
+
+interface OrderStats {
+  totalRevenue: number;
+  totalOrders: number;
+  averageOrderValue: number;
+  pendingOrders: number;
+  processingOrders: number;
+  shippedOrders: number;
+  deliveredOrders: number;
+  cancelledOrders: number;
+}
+
+interface RecentOrder {
+  id: string;
+  status: string;
+  total: number;
+  created_at: string;
+  shipping_address: { firstName?: string; lastName?: string } | null;
+}
+
+interface TopProduct {
+  product_id: number;
+  product_name: string;
+  total_quantity: number;
+  total_revenue: number;
+}
+
+interface OrderItem {
+  product_id: number;
+  product_name: string;
+  quantity: number;
+  price: number;
+}
 
 export default function AdminDashboard() {
-  const orderStats = getOrderStats();
-  const customerStats = getCustomerStats();
-  const topProducts = getTopProducts();
-  const recentOrders = getRecentOrders(5);
+  const [orderStats, setOrderStats] = useState<OrderStats>({
+    totalRevenue: 0,
+    totalOrders: 0,
+    averageOrderValue: 0,
+    pendingOrders: 0,
+    processingOrders: 0,
+    shippedOrders: 0,
+    deliveredOrders: 0,
+    cancelledOrders: 0,
+  });
+  const [customerCount, setCustomerCount] = useState(0);
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    setIsLoading(true);
+
+    // Fetch orders for stats
+    const { data: orders } = await supabase
+      .from('orders')
+      .select('id, status, total, created_at, shipping_address');
+
+    if (orders) {
+      const totalRevenue = orders.reduce((sum: number, o: RecentOrder) => sum + (Number(o.total) || 0), 0);
+      const totalOrders = orders.length;
+      const stats: OrderStats = {
+        totalRevenue,
+        totalOrders,
+        averageOrderValue: totalOrders > 0 ? totalRevenue / totalOrders : 0,
+        pendingOrders: orders.filter((o: RecentOrder) => o.status === 'pending').length,
+        processingOrders: orders.filter((o: RecentOrder) => o.status === 'processing').length,
+        shippedOrders: orders.filter((o: RecentOrder) => o.status === 'shipped').length,
+        deliveredOrders: orders.filter((o: RecentOrder) => o.status === 'delivered').length,
+        cancelledOrders: orders.filter((o: RecentOrder) => o.status === 'cancelled').length,
+      };
+      setOrderStats(stats);
+
+      // Recent orders (last 5)
+      const recent = orders
+        .sort((a: RecentOrder, b: RecentOrder) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .slice(0, 5);
+      setRecentOrders(recent);
+    }
+
+    // Fetch customer count
+    const { count } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true });
+    setCustomerCount(count || 0);
+
+    // Fetch top products from order_items
+    const { data: orderItems } = await supabase
+      .from('order_items')
+      .select('product_id, product_name, quantity, price');
+
+    if (orderItems) {
+      const productMap = new Map<number, { name: string; quantity: number; revenue: number }>();
+      orderItems.forEach((item: OrderItem) => {
+        const existing = productMap.get(item.product_id) || { name: item.product_name, quantity: 0, revenue: 0 };
+        existing.quantity += item.quantity;
+        existing.revenue += Number(item.price) * item.quantity;
+        productMap.set(item.product_id, existing);
+      });
+
+      const top = Array.from(productMap.entries())
+        .map(([id, data]) => ({
+          product_id: id,
+          product_name: data.name,
+          total_quantity: data.quantity,
+          total_revenue: data.revenue,
+        }))
+        .sort((a, b) => b.total_revenue - a.total_revenue)
+        .slice(0, 5);
+      setTopProducts(top);
+    }
+
+    setIsLoading(false);
+  };
 
   const statsCards = [
     {
       label: 'Total Revenue',
-      value: `$${orderStats.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-      change: '+12.5%',
-      positive: true,
+      value: `$${orderStats.totalRevenue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: '💰',
     },
     {
       label: 'Total Orders',
       value: orderStats.totalOrders.toString(),
-      change: '+8.2%',
-      positive: true,
       icon: '📦',
     },
     {
       label: 'Total Customers',
-      value: customerStats.totalCustomers.toString(),
-      change: '+15.3%',
-      positive: true,
+      value: customerCount.toString(),
       icon: '👥',
     },
     {
       label: 'Avg. Order Value',
       value: `$${orderStats.averageOrderValue.toFixed(2)}`,
-      change: '+3.1%',
-      positive: true,
       icon: '📊',
     },
   ];
@@ -73,6 +173,21 @@ export default function AdminDashboard() {
       minute: '2-digit',
     });
   };
+
+  const getCustomerName = (order: RecentOrder) => {
+    if (order.shipping_address?.firstName && order.shipping_address?.lastName) {
+      return `${order.shipping_address.firstName} ${order.shipping_address.lastName}`;
+    }
+    return 'Guest Customer';
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -108,16 +223,6 @@ export default function AdminDashboard() {
                 </p>
               </div>
               <span className="text-3xl">{stat.icon}</span>
-            </div>
-            <div className="mt-4 flex items-center gap-2">
-              <span
-                className={`text-sm font-medium ${
-                  stat.positive ? 'text-green-400' : 'text-red-400'
-                }`}
-              >
-                {stat.change}
-              </span>
-              <span className="text-white/30 text-sm">vs last month</span>
             </div>
           </motion.div>
         ))}
@@ -163,30 +268,34 @@ export default function AdminDashboard() {
             </Link>
           </div>
           <div className="space-y-4">
-            {recentOrders.map((order) => (
-              <div
-                key={order.id}
-                className="flex items-center justify-between p-4 bg-night-700 rounded-xl"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-3">
-                    <p className="text-white font-semibold">{order.id}</p>
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                        order.status
-                      )}`}
-                    >
-                      {order.status}
-                    </span>
+            {recentOrders.length === 0 ? (
+              <p className="text-white/50 text-center py-8">No orders yet</p>
+            ) : (
+              recentOrders.map((order) => (
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between p-4 bg-night-700 rounded-xl"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3">
+                      <p className="text-white font-semibold">{order.id}</p>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          order.status
+                        )}`}
+                      >
+                        {order.status}
+                      </span>
+                    </div>
+                    <p className="text-white/50 text-sm mt-1">{getCustomerName(order)}</p>
                   </div>
-                  <p className="text-white/50 text-sm mt-1">{order.customerName}</p>
+                  <div className="text-right">
+                    <p className="text-gold-400 font-semibold">${Number(order.total).toFixed(2)}</p>
+                    <p className="text-white/30 text-xs">{formatDate(order.created_at)}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-gold-400 font-semibold">${order.total.toFixed(2)}</p>
-                  <p className="text-white/30 text-xs">{formatDate(order.createdAt)}</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </motion.div>
 
@@ -204,26 +313,29 @@ export default function AdminDashboard() {
             </Link>
           </div>
           <div className="space-y-4">
-            {topProducts.map((product, index) => (
-              <div
-                key={product.productId}
-                className="flex items-center gap-4 p-4 bg-night-700 rounded-xl"
-              >
-                <div className="w-8 h-8 rounded-full bg-gold-500/20 flex items-center justify-center text-gold-400 font-bold">
-                  {index + 1}
+            {topProducts.length === 0 ? (
+              <p className="text-white/50 text-center py-8">No sales data yet</p>
+            ) : (
+              topProducts.map((product, index) => (
+                <div
+                  key={product.product_id}
+                  className="flex items-center gap-4 p-4 bg-night-700 rounded-xl"
+                >
+                  <div className="w-8 h-8 rounded-full bg-gold-500/20 flex items-center justify-center text-gold-400 font-bold">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-semibold truncate">{product.product_name}</p>
+                    <p className="text-white/40 text-sm">{product.total_quantity} sold</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-gold-400 font-semibold">
+                      ${product.total_revenue.toFixed(2)}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold truncate">{product.productName}</p>
-                  <p className="text-white/40 text-sm">{product.category}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-gold-400 font-semibold">
-                    ${product.revenue.toFixed(2)}
-                  </p>
-                  <p className="text-white/30 text-xs">{product.quantity} sold</p>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </motion.div>
       </div>

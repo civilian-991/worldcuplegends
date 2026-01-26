@@ -74,8 +74,8 @@ export default function NewsSection() {
           </Link>
         </motion.div>
 
-        {/* News Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* News Grid - Horizontal scroll on mobile */}
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0 snap-x snap-mandatory md:snap-none scrollbar-hide">
           {featuredNews.map((article, index) => (
             <motion.article
               key={article.id}
@@ -83,7 +83,7 @@ export default function NewsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`group cursor-pointer ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}
+              className={`group cursor-pointer flex-shrink-0 w-72 md:w-auto snap-start ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}
             >
               <Link href={`/news/${article.id}`}>
                 <div className={`relative overflow-hidden rounded-2xl ${index === 0 ? 'h-full min-h-[500px]' : 'h-64'}`}>

@@ -149,9 +149,9 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.5 }}
-          className="absolute bottom-16 left-0 right-0 flex justify-center"
+          className="absolute bottom-16 left-0 right-0 flex justify-center px-4"
         >
-          <div className="flex items-center gap-12 md:gap-20">
+          <div className="grid grid-cols-4 gap-4 md:flex md:items-center md:gap-20 w-full max-w-xl md:max-w-none md:w-auto">
             {[
               { value: '100+', label: t('stats.legends') },
               { value: '32', label: t('stats.teams') },
@@ -159,10 +159,10 @@ export default function HeroSection() {
               { value: '3', label: t('stats.hostNations') },
             ].map((stat, i) => (
               <div key={i} className="text-center">
-                <p className="text-3xl md:text-4xl font-bold text-gold-400" style={{ fontFamily: 'var(--font-display)' }}>
+                <p className="text-xl sm:text-3xl md:text-4xl font-bold text-gold-400" style={{ fontFamily: 'var(--font-display)' }}>
                   {stat.value}
                 </p>
-                <p className="text-white/50 text-sm mt-1">{stat.label}</p>
+                <p className="text-white/50 text-xs sm:text-sm mt-1">{stat.label}</p>
               </div>
             ))}
           </div>

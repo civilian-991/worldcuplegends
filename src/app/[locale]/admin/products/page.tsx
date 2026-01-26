@@ -1,16 +1,82 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
-import { products, categories } from '@/data/products';
+import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
+
+interface Product {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  original_price: number | null;
+  description: string | null;
+  category: string;
+  subcategory: string | null;
+  images: string[];
+  sizes: string[];
+  colors: string[];
+  in_stock: boolean;
+  stock_quantity: number;
+  featured: boolean;
+  rating: number;
+  review_count: number;
+  tags: string[];
+  legend: string | null;
+  team: string | null;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function AdminProductsPage() {
+  const { showToast } = useToast();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('name');
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [deleteModal, setDeleteModal] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching products:', error);
+      showToast('Error loading products', 'error');
+    } else {
+      setProducts(data || []);
+    }
+    setIsLoading(false);
+  };
+
+  // Get unique categories from products
+  const categories = useMemo(() => {
+    const cats = new Map<string, number>();
+    cats.set('all', products.length);
+    products.forEach((p) => {
+      const count = cats.get(p.category) || 0;
+      cats.set(p.category, count + 1);
+    });
+    return Array.from(cats.entries()).map(([name, count]) => ({
+      slug: name === 'all' ? 'all' : name.toLowerCase().replace(/\s+/g, '-'),
+      name: name === 'all' ? 'All Products' : name,
+      count,
+    }));
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
@@ -21,7 +87,7 @@ export default function AdminProductsPage() {
       filtered = filtered.filter(
         (p) =>
           p.name.toLowerCase().includes(query) ||
-          p.description.toLowerCase().includes(query) ||
+          (p.description?.toLowerCase().includes(query) || false) ||
           p.category.toLowerCase().includes(query)
       );
     }
@@ -45,12 +111,12 @@ export default function AdminProductsPage() {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case 'stock':
-        filtered.sort((a, b) => (b.inStock ? 1 : 0) - (a.inStock ? 1 : 0));
+        filtered.sort((a, b) => (b.in_stock ? 1 : 0) - (a.in_stock ? 1 : 0));
         break;
     }
 
     return filtered;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [products, searchQuery, selectedCategory, sortBy]);
 
   const toggleSelectProduct = (id: number) => {
     setSelectedProducts((prev) =>
@@ -66,11 +132,64 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleDelete = (id: number) => {
-    // In a real app, this would call an API
-    console.log('Deleting product:', id);
+  const handleDelete = async (id: number) => {
+    setIsDeleting(true);
+    const { error } = await supabase.from('products').delete().eq('id', id);
+
+    if (error) {
+      console.error('Error deleting product:', error);
+      showToast('Error deleting product', 'error');
+    } else {
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      showToast('Product deleted successfully', 'success');
+    }
+    setIsDeleting(false);
     setDeleteModal(null);
   };
+
+  const handleBulkDelete = async () => {
+    if (!confirm(`Are you sure you want to delete ${selectedProducts.length} product(s)?`)) return;
+
+    const { error } = await supabase.from('products').delete().in('id', selectedProducts);
+
+    if (error) {
+      console.error('Error deleting products:', error);
+      showToast('Error deleting products', 'error');
+    } else {
+      setProducts((prev) => prev.filter((p) => !selectedProducts.includes(p.id)));
+      setSelectedProducts([]);
+      showToast(`${selectedProducts.length} products deleted`, 'success');
+    }
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'Jerseys':
+        return '👕';
+      case 'T-Shirts':
+        return '👔';
+      case 'Outerwear':
+        return '🧥';
+      case 'Shorts':
+        return '🩳';
+      case 'Accessories':
+        return '🧢';
+      case 'Equipment':
+        return '⚽';
+      case 'Collectibles':
+        return '🏆';
+      default:
+        return '🛍️';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -85,16 +204,24 @@ export default function AdminProductsPage() {
           </h1>
           <p className="text-white/50 mt-1">Manage your product catalog</p>
         </div>
-        <Link href="/admin/products/new">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2"
+        <div className="flex gap-3">
+          <button
+            onClick={fetchProducts}
+            className="px-4 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors"
           >
-            <span>➕</span>
-            Add Product
-          </motion.button>
-        </Link>
+            Refresh
+          </button>
+          <Link href="/admin/products/new">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2"
+            >
+              <span>➕</span>
+              Add Product
+            </motion.button>
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}
@@ -163,7 +290,10 @@ export default function AdminProductsPage() {
             <button className="px-4 py-2 bg-night-600 text-white/70 rounded-lg hover:bg-night-500 transition-colors">
               Export
             </button>
-            <button className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors">
+            <button
+              onClick={handleBulkDelete}
+              className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
+            >
               Delete Selected
             </button>
           </div>
@@ -209,23 +339,7 @@ export default function AdminProductsPage() {
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-gold-500/20 to-night-800 flex items-center justify-center flex-shrink-0">
-                        <span className="text-xl">
-                          {product.category === 'Jerseys'
-                            ? '👕'
-                            : product.category === 'T-Shirts'
-                            ? '👔'
-                            : product.category === 'Outerwear'
-                            ? '🧥'
-                            : product.category === 'Shorts'
-                            ? '🩳'
-                            : product.category === 'Accessories'
-                            ? '🧢'
-                            : product.category === 'Equipment'
-                            ? '⚽'
-                            : product.category === 'Collectibles'
-                            ? '🏆'
-                            : '🛍️'}
-                        </span>
+                        <span className="text-xl">{getCategoryIcon(product.category)}</span>
                       </div>
                       <div>
                         <p className="text-white font-semibold">{product.name}</p>
@@ -241,9 +355,9 @@ export default function AdminProductsPage() {
                   <td className="p-4">
                     <div>
                       <p className="text-white font-semibold">${product.price.toFixed(2)}</p>
-                      {product.originalPrice && (
+                      {product.original_price && (
                         <p className="text-white/40 text-sm line-through">
-                          ${product.originalPrice.toFixed(2)}
+                          ${product.original_price.toFixed(2)}
                         </p>
                       )}
                     </div>
@@ -251,19 +365,19 @@ export default function AdminProductsPage() {
                   <td className="p-4">
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        product.inStock
+                        product.in_stock
                           ? 'bg-green-500/20 text-green-400'
                           : 'bg-red-500/20 text-red-400'
                       }`}
                     >
-                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                      {product.in_stock ? `${product.stock_quantity} in stock` : 'Out of Stock'}
                     </span>
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-1">
                       <span className="text-gold-400">★</span>
-                      <span className="text-white">{product.rating}</span>
-                      <span className="text-white/40 text-sm">({product.reviews})</span>
+                      <span className="text-white">{product.rating.toFixed(1)}</span>
+                      <span className="text-white/40 text-sm">({product.review_count})</span>
                     </div>
                   </td>
                   <td className="p-4">
@@ -299,21 +413,30 @@ export default function AdminProductsPage() {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
-          <p className="text-white/50 text-sm">
-            Showing {filteredProducts.length} of {products.length} products
-          </p>
-          <div className="flex gap-2">
-            <button className="px-4 py-2 bg-night-700 text-white/50 rounded-lg hover:bg-night-600 transition-colors">
-              Previous
-            </button>
-            <button className="px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg">1</button>
-            <button className="px-4 py-2 bg-night-700 text-white/50 rounded-lg hover:bg-night-600 transition-colors">
-              Next
-            </button>
+        {filteredProducts.length === 0 && (
+          <div className="p-12 text-center">
+            <span className="text-4xl block mb-4">📦</span>
+            <p className="text-white/50">No products found</p>
           </div>
-        </div>
+        )}
+
+        {/* Pagination */}
+        {filteredProducts.length > 0 && (
+          <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
+            <p className="text-white/50 text-sm">
+              Showing {filteredProducts.length} of {products.length} products
+            </p>
+            <div className="flex gap-2">
+              <button className="px-4 py-2 bg-night-700 text-white/50 rounded-lg hover:bg-night-600 transition-colors">
+                Previous
+              </button>
+              <button className="px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg">1</button>
+              <button className="px-4 py-2 bg-night-700 text-white/50 rounded-lg hover:bg-night-600 transition-colors">
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Delete Modal */}
@@ -340,15 +463,24 @@ export default function AdminProductsPage() {
               <div className="flex gap-4">
                 <button
                   onClick={() => setDeleteModal(null)}
-                  className="flex-1 py-3 bg-night-600 text-white rounded-xl hover:bg-night-500 transition-colors"
+                  disabled={isDeleting}
+                  className="flex-1 py-3 bg-night-600 text-white rounded-xl hover:bg-night-500 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleDelete(deleteModal)}
-                  className="flex-1 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                  disabled={isDeleting}
+                  className="flex-1 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  Delete
+                  {isDeleting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    'Delete'
+                  )}
                 </button>
               </div>
             </motion.div>

@@ -75,8 +75,8 @@ export default function UpcomingMatches() {
           </Link>
         </motion.div>
 
-        {/* Matches Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Matches Grid - Horizontal scroll on mobile */}
+        <div className="flex md:grid md:grid-cols-2 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0 snap-x snap-mandatory md:snap-none scrollbar-hide">
           {upcomingMatches.map((match, index) => (
             <motion.div
               key={match.id}
@@ -85,7 +85,7 @@ export default function UpcomingMatches() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="relative glass rounded-2xl p-6 overflow-hidden group cursor-pointer card-hover"
+              className="relative glass rounded-2xl p-6 overflow-hidden group cursor-pointer card-hover flex-shrink-0 w-80 md:w-auto snap-start"
             >
               {/* Live Badge */}
               {match.isLive && (
