@@ -42,7 +42,7 @@ export default function LegendsPage() {
   }, [filteredLegends]);
 
   return (
-    <div className="min-h-screen bg-[#15151e]">
+    <div className="min-h-screen bg-night-700">
       {/* Hero Section */}
       <section className="relative pt-32 pb-8 px-6">
         <div className="max-w-7xl mx-auto relative z-10">
@@ -65,7 +65,7 @@ export default function LegendsPage() {
       </section>
 
       {/* Filters */}
-      <section className="sticky top-20 z-30 py-4 px-6 bg-[#15151e]/95 backdrop-blur-sm border-b border-white/5">
+      <section className="sticky top-20 z-30 py-4 px-6 bg-night-700/95 backdrop-blur-sm border-b border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search */}
@@ -75,7 +75,7 @@ export default function LegendsPage() {
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 bg-[#1f1f2e] border border-white/10 rounded text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors text-sm"
+                className="w-full px-4 py-2 bg-night-600 border border-white/10 rounded text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors text-sm"
               />
               <svg
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30"
@@ -96,7 +96,7 @@ export default function LegendsPage() {
                   className={`px-4 py-1.5 rounded text-sm font-medium transition-all ${
                     selectedEra === era
                       ? 'bg-gold-500 text-night-900'
-                      : 'bg-[#1f1f2e] text-white/60 hover:bg-[#2a2a3e] hover:text-white'
+                      : 'bg-night-600 text-white/60 hover:bg-night-500 hover:text-white'
                   }`}
                 >
                   {era === 'All Eras' ? t('allEras') : era}
