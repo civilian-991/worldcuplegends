@@ -44,20 +44,22 @@ export default function Navigation() {
       >
         <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="flex items-center gap-2 group">
             <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center glow-gold-sm"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+              className="relative"
             >
-              <span className="text-night-900 font-bold text-xl" style={{ fontFamily: 'var(--font-display)' }}>
-                WLC
-              </span>
+              <img
+                src="/wlc-trophy.png"
+                alt="World Legends Cup"
+                className="h-14 w-auto drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]"
+              />
             </motion.div>
             <div className="hidden sm:block">
-              <p className="text-gold-400 text-xs tracking-[0.3em] uppercase">{t('worldLegends')}</p>
-              <p className="text-white text-lg font-semibold tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>
-                {t('cup2026')}
+              <p className="text-gold-400 text-[10px] tracking-[0.25em] uppercase">{t('worldLegends')}</p>
+              <p className="text-white text-xl font-bold tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
+                CUP 2026
               </p>
             </div>
           </Link>
