@@ -58,7 +58,7 @@ body {
   background-size: 100% auto;
   background-position: top center;
   background-repeat: repeat-y;
-  opacity: 0.35;
+  opacity: 0.25;
   pointer-events: none;
   z-index: 50;
   mix-blend-mode: screen;
