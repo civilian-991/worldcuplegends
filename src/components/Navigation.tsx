@@ -46,13 +46,13 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/" className="group">
             <motion.div
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
               <img
-                src="/wlc-logo.png"
+                src="/wlc-text-logo.png"
                 alt="World Legends Cup"
-                className="h-16 w-auto drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]"
+                className="h-10 md:h-12 w-auto"
               />
             </motion.div>
           </Link>
