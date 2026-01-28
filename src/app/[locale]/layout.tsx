@@ -35,7 +35,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className="antialiased" style={{ fontFamily: 'var(--font-body)' }}>
+      <body className="antialiased bg-pattern" style={{ fontFamily: 'var(--font-body)' }}>
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <CartProvider>
@@ -43,7 +43,7 @@ export default async function LocaleLayout({
                 <ToastProvider>
                   <CustomCursor />
                   <Navigation />
-                  <main className="min-h-screen">
+                  <main className="min-h-screen relative z-10">
                     {children}
                   </main>
                   <Footer />
