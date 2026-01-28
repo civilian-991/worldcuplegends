@@ -62,7 +62,7 @@ export default function HeroSection() {
           className="mb-4"
         >
           <motion.img
-            src="/wlc-trophy.png"
+            src="/wlc-logo.png"
             alt="World Legends Cup Trophy"
             className="h-32 md:h-40 w-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]"
             animate={{ y: [0, -8, 0] }}

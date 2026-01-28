@@ -44,18 +44,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
+            <div className="mb-6">
               <img
-                src="/wlc-trophy.png"
+                src="/wlc-logo.png"
                 alt="World Legends Cup"
-                className="h-16 w-auto drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                className="h-24 w-auto drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]"
               />
-              <div>
-                <p className="text-gold-400 text-xs tracking-[0.3em] uppercase">World Legends</p>
-                <p className="text-white text-xl font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
-                  CUP 2026
-                </p>
-              </div>
             </div>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm mb-8">
               {t('description')}
