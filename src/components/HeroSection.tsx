@@ -54,43 +54,13 @@ export default function HeroSection() {
         style={{ opacity, scale }}
         className="relative z-20 h-full flex flex-col items-center justify-center px-6"
       >
-        {/* Trophy Logo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.1 }}
-          className="mb-4"
-        >
-          <motion.img
-            src="/wlc-logo.png"
-            alt="World Legends Cup Trophy"
-            className="h-32 md:h-40 w-auto drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]"
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-
-        {/* Pre-title */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex items-center gap-4 mb-4"
-        >
-          <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold-400" />
-          <span className="text-gold-400 text-sm tracking-[0.4em] uppercase font-medium">
-            {t('worldLegendsCup')}
-          </span>
-          <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold-400" />
-        </motion.div>
-
-        {/* Main Title */}
-        <div className="text-center mb-8">
+        {/* Main Title with cycling words */}
+        <div className="text-center mb-6">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-6xl md:text-8xl lg:text-[10rem] font-bold tracking-tight leading-none"
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             <span className="text-gradient-gold">
@@ -111,8 +81,8 @@ export default function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-2xl md:text-4xl text-white/90 mt-4"
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="text-3xl md:text-5xl text-white/90 mt-4"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             {t('neverDie')}
@@ -123,8 +93,8 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="text-white/60 text-lg md:text-xl text-center max-w-2xl mb-12"
+          transition={{ duration: 1, delay: 0.8 }}
+          className="text-white/60 text-lg md:text-xl text-center max-w-2xl mb-10"
         >
           {t('heroSubtitle')}
           <br />
@@ -135,7 +105,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: 0.8, delay: 1 }}
           className="flex flex-col sm:flex-row gap-4"
         >
           <Link href="/legends">
@@ -164,7 +134,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.5 }}
+          transition={{ duration: 1, delay: 1.2 }}
           className="absolute bottom-16 left-0 right-0 flex justify-center px-4"
         >
           <div className="grid grid-cols-4 gap-4 md:flex md:items-center md:gap-20 w-full max-w-xl md:max-w-none md:w-auto">

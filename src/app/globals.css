@@ -49,22 +49,19 @@ body {
   overflow-x: hidden;
 }
 
-/* Geometric Background Pattern */
-.bg-pattern {
-  position: relative;
-}
-
-.bg-pattern::before {
+/* Geometric Background Pattern - subtle overlay texture */
+.bg-pattern::after {
   content: '';
   position: fixed;
   inset: 0;
   background-image: url('/bg-pattern.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.4;
+  background-size: 100% auto;
+  background-position: top center;
+  background-repeat: repeat-y;
+  opacity: 0.08;
   pointer-events: none;
-  z-index: 0;
+  z-index: 50;
+  mix-blend-mode: screen;
 }
 
 /* Custom Scrollbar */
