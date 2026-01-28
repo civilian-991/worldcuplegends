@@ -49,7 +49,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Geometric Background Pattern - subtle overlay texture */
+/* Geometric Background Pattern - overlay texture */
 .bg-pattern::after {
   content: '';
   position: fixed;
@@ -58,7 +58,7 @@ body {
   background-size: 100% auto;
   background-position: top center;
   background-repeat: repeat-y;
-  opacity: 0.08;
+  opacity: 0.35;
   pointer-events: none;
   z-index: 50;
   mix-blend-mode: screen;
