@@ -7,7 +7,7 @@ import { getLegends, type Legend } from '@/lib/api';
 import { Link } from '@/i18n/navigation';
 import Flag from '@/components/Flag';
 
-const eras = ['All Eras', '60s-70s', '70s', '80s', '90s-00s', '2000s', '2000s-20s', '2010s-20s'];
+const eras = ['All Eras', '1980s-1990s', '1990s-2000s', '2000s', '2000s-2010s'];
 
 export default function LegendsPage() {
   const t = useTranslations('legends');
