@@ -6,6 +6,20 @@ import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { getNewsById, getNews, type NewsArticle } from '@/lib/api';
 
+/**
+ * Sanitizes HTML content to prevent XSS attacks by escaping HTML entities
+ * before replacing newlines with <br /> tags.
+ */
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/\n/g, '<br />');
+}
+
 export default function NewsArticlePage() {
   const params = useParams();
   const articleId = parseInt(params.id as string);
@@ -155,7 +169,7 @@ export default function NewsArticlePage() {
             {article.content ? (
               <div
                 className="text-white/70 leading-relaxed space-y-6"
-                dangerouslySetInnerHTML={{ __html: article.content.replace(/\n/g, '<br />') }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
               />
             ) : (
               <>

@@ -81,7 +81,7 @@ export default function StandingsTable() {
           className="glass rounded-2xl overflow-hidden"
         >
           {/* Table Header */}
-          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-gold-500/10 text-sm text-white/50 uppercase tracking-wider">
+          <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-gold-500/10 text-sm text-white/70 uppercase tracking-wider">
             <div className="col-span-1">Pos.</div>
             <div className="col-span-4">Player</div>
             <div className="col-span-2">Country</div>
@@ -105,7 +105,7 @@ export default function StandingsTable() {
               {/* Position */}
               <div className="col-span-2 md:col-span-1">
                 <span
-                  className={`text-2xl font-bold ${index < 3 ? 'text-gold-400' : 'text-white/30'}`}
+                  className={`text-2xl font-bold ${index < 3 ? 'text-gold-400' : 'text-white/60'}`}
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
                   {index + 1}
@@ -130,7 +130,7 @@ export default function StandingsTable() {
                   <p className="text-white font-semibold group-hover:text-gold-400 transition-colors">
                     {legend.name}
                   </p>
-                  <p className="text-white/40 text-sm">{legend.position}</p>
+                  <p className="text-white/60 text-sm">{legend.position}</p>
                 </div>
               </div>
 

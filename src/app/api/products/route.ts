@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get('category')
   const featured = searchParams.get('featured')
   const search = searchParams.get('search')
-  const limit = parseInt(searchParams.get('limit') || '50')
+  const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100)
   const offset = parseInt(searchParams.get('offset') || '0')
 
   let query = supabase
@@ -26,7 +26,11 @@ export async function GET(request: NextRequest) {
   }
 
   if (search) {
-    query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,tags.cs.{${search}}`)
+    // Sanitize search input to prevent injection attacks
+    const sanitizedSearch = search.replace(/[%_\\'"(){}[\]]/g, '')
+    if (sanitizedSearch.length > 0) {
+      query = query.or(`name.ilike.%${sanitizedSearch}%,description.ilike.%${sanitizedSearch}%,tags.cs.{${sanitizedSearch}}`)
+    }
   }
 
   query = query.range(offset, offset + limit - 1)

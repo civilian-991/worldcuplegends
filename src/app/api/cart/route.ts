@@ -23,7 +23,7 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ items: cartItems })
+  return NextResponse.json({ items: cartItems || [] })
 }
 
 // POST - Add item to cart

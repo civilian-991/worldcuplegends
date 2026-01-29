@@ -131,7 +131,7 @@ export default function NewsSection() {
                     )}
 
                     {/* Meta */}
-                    <div className="flex items-center gap-4 text-white/40 text-sm">
+                    <div className="flex items-center gap-4 text-white/60 text-sm">
                       <span>{article.author}</span>
                       <span>•</span>
                       <span>{getReadTime(article.content, article.excerpt)} {t('readTime')}</span>

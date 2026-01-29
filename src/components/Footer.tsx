@@ -126,17 +126,17 @@ export default function Footer() {
 
         {/* Bottom Section */}
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
+          <p className="text-white/60 text-sm">
             © {t('copyright')}
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <Link href="/privacy" className="text-white/60 hover:text-white text-sm transition-colors">
               {t('privacyPolicy')}
             </Link>
-            <Link href="/terms" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <Link href="/terms" className="text-white/60 hover:text-white text-sm transition-colors">
               {t('termsOfService')}
             </Link>
-            <Link href="/cookies" className="text-white/40 hover:text-white/60 text-sm transition-colors">
+            <Link href="/cookies" className="text-white/60 hover:text-white text-sm transition-colors">
               {t('cookies')}
             </Link>
           </div>

@@ -26,7 +26,6 @@ export default function NewProductPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app, this would call an API
-    console.log('Creating product:', formData);
     router.push('/admin/products');
   };
 

@@ -30,11 +30,6 @@ export default function AdminLayout({
   const { isAuthenticated, isAdmin, isLoading, user } = useAuth();
   const router = useRouter();
 
-  // Debug logging
-  useEffect(() => {
-    console.log('Admin Layout Auth State:', { isLoading, isAuthenticated, isAdmin, userRole: user?.role });
-  }, [isLoading, isAuthenticated, isAdmin, user]);
-
   useEffect(() => {
     if (!isLoading) {
       if (!isAuthenticated) {
