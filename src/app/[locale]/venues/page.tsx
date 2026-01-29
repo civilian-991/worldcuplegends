@@ -100,7 +100,7 @@ export default function VenuesPage() {
             </h1>
             <p className="text-white/60 text-xl max-w-2xl">
               The world&apos;s most iconic stadiums will play host to the greatest footballers
-              in history. Experience the magic across three nations.
+              in history. Eight legendary nations battling for glory.
             </p>
           </motion.div>
         </div>
@@ -112,7 +112,7 @@ export default function VenuesPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { value: '16', label: 'Venues' },
-              { value: '3', label: 'Countries' },
+              { value: '8', label: 'Nations' },
               { value: '1M+', label: 'Total Capacity' },
               { value: '48', label: 'Matches' },
             ].map((stat, index) => (
@@ -201,7 +201,7 @@ export default function VenuesPage() {
         </div>
       </section>
 
-      {/* Map Section Placeholder */}
+      {/* Competing Nations Section */}
       <section className="py-24 px-6 bg-night-800">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
@@ -213,19 +213,42 @@ export default function VenuesPage() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              ACROSS NORTH AMERICA
+              THE <span className="text-gradient-gold">8 NATIONS</span>
             </h2>
             <p className="text-white/50 mb-12">
-              From coast to coast, experience legendary football in world-class venues
+              Legendary teams competing for ultimate glory
             </p>
 
-            <div className="glass rounded-3xl p-12">
-              <div className="flex justify-center items-center gap-8 text-6xl">
-                <span>🇺🇸</span>
-                <span>🇲🇽</span>
-                <span>🇨🇦</span>
-              </div>
-              <p className="text-white/40 mt-8">Interactive map coming soon</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[
+                { flag: '🇧🇷', name: 'Brazil', player: 'Ronaldo' },
+                { flag: '🇦🇷', name: 'Argentina', player: 'Legends' },
+                { flag: '🇫🇷', name: 'France', player: 'Henry' },
+                { flag: '🇳🇱', name: 'Netherlands', player: 'Seedorf' },
+                { flag: '🇪🇸', name: 'Spain', player: 'Puyol' },
+                { flag: '🇮🇹', name: 'Italy', player: 'Buffon' },
+                { flag: '🇸🇦', name: 'Saudi Arabia', player: 'Yasser' },
+                { flag: '🇳🇬', name: 'Nigeria', player: 'Kanu' },
+              ].map((nation, index) => (
+                <motion.div
+                  key={nation.name}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="glass rounded-xl p-6 cursor-pointer group"
+                >
+                  <span className="text-5xl mb-3 block">{nation.flag}</span>
+                  <h3
+                    className="text-xl font-bold text-white group-hover:text-gold-400 transition-colors"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    {nation.name.toUpperCase()}
+                  </h3>
+                  <p className="text-white/40 text-sm mt-1">ft. {nation.player}</p>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
