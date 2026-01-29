@@ -4,76 +4,77 @@ import { motion } from 'framer-motion';
 
 const venues = [
   {
-    name: 'MetLife Stadium',
-    city: 'East Rutherford, New Jersey',
-    country: '🇺🇸',
-    capacity: '82,500',
-    matches: ['Group Stage', 'Semi-Final', 'Final'],
-    image: '/venues/metlife.jpg',
-    description: 'Home of the NFL\'s Giants and Jets, this iconic venue will host the World Legends Cup Final.',
+    name: 'Estádio Maracanã',
+    city: 'Rio de Janeiro',
+    country: '🇧🇷',
+    capacity: '78,838',
+    matches: ['Semi-Final', 'Final'],
+    image: '/stadium/maracana.jpg',
+    description: 'The Temple of Football. Home to two World Cup Finals and where legends become immortal. The heart of WLC 2026.',
+    featured: true,
   },
   {
-    name: 'SoFi Stadium',
-    city: 'Los Angeles, California',
-    country: '🇺🇸',
-    capacity: '70,240',
+    name: 'Allianz Parque',
+    city: 'São Paulo',
+    country: '🇧🇷',
+    capacity: '43,713',
     matches: ['Group Stage', 'Quarter-Final'],
-    image: '/venues/sofi.jpg',
-    description: 'A state-of-the-art stadium that combines cutting-edge technology with spectacular design.',
+    image: '/venues/allianz-parque.jpg',
+    description: 'A modern arena combining world-class facilities with the passionate atmosphere of Brazilian football.',
   },
   {
-    name: 'Rose Bowl',
-    city: 'Pasadena, California',
-    country: '🇺🇸',
-    capacity: '88,438',
+    name: 'Arena Corinthians',
+    city: 'São Paulo',
+    country: '🇧🇷',
+    capacity: '49,205',
+    matches: ['Group Stage', 'Quarter-Final'],
+    image: '/venues/arena-corinthians.jpg',
+    description: 'Host of the 2014 World Cup opening match, this iconic venue represents the soul of São Paulo football.',
+  },
+  {
+    name: 'Mineirão',
+    city: 'Belo Horizonte',
+    country: '🇧🇷',
+    capacity: '61,846',
     matches: ['Group Stage', 'Semi-Final'],
-    image: '/venues/rosebowl.jpg',
-    description: 'A historic venue that has hosted multiple FIFA World Cup matches and Olympic events.',
+    image: '/venues/mineirao.jpg',
+    description: 'One of Brazil\'s most historic stadiums, witness to countless legendary moments in Brazilian football.',
   },
   {
-    name: 'Estadio Azteca',
-    city: 'Mexico City',
-    country: '🇲🇽',
-    capacity: '87,523',
-    matches: ['Group Stage', 'Quarter-Final'],
-    image: '/venues/azteca.jpg',
-    description: 'The legendary stadium where Maradona scored the "Hand of God" and "Goal of the Century".',
-  },
-  {
-    name: 'AT&T Stadium',
-    city: 'Arlington, Texas',
-    country: '🇺🇸',
-    capacity: '80,000',
-    matches: ['Group Stage', 'Round of 16'],
-    image: '/venues/att.jpg',
-    description: 'Features the world\'s largest column-free interior and a massive video board.',
-  },
-  {
-    name: 'Hard Rock Stadium',
-    city: 'Miami Gardens, Florida',
-    country: '🇺🇸',
-    capacity: '64,767',
-    matches: ['Group Stage', 'Round of 16'],
-    image: '/venues/hardrock.jpg',
-    description: 'A versatile venue that hosts NFL, tennis, and major concerts year-round.',
-  },
-  {
-    name: 'Lumen Field',
-    city: 'Seattle, Washington',
-    country: '🇺🇸',
-    capacity: '68,740',
+    name: 'Arena da Baixada',
+    city: 'Curitiba',
+    country: '🇧🇷',
+    capacity: '42,372',
     matches: ['Group Stage'],
-    image: '/venues/lumen.jpg',
-    description: 'Known for its incredible atmosphere and passionate fans.',
+    image: '/venues/arena-baixada.jpg',
+    description: 'A 2014 World Cup venue known for its intimate atmosphere and passionate southern Brazilian fans.',
   },
   {
-    name: 'BMO Field',
-    city: 'Toronto',
-    country: '🇨🇦',
-    capacity: '45,500',
+    name: 'Beira-Rio',
+    city: 'Porto Alegre',
+    country: '🇧🇷',
+    capacity: '50,128',
+    matches: ['Group Stage', 'Round of 16'],
+    image: '/venues/beira-rio.jpg',
+    description: 'Located on the banks of the Guaíba River, this stunning stadium offers breathtaking views and electric atmosphere.',
+  },
+  {
+    name: 'Arena Fonte Nova',
+    city: 'Salvador',
+    country: '🇧🇷',
+    capacity: '47,907',
     matches: ['Group Stage'],
-    image: '/venues/bmo.jpg',
-    description: 'Canada\'s premier soccer-specific stadium and home of Toronto FC.',
+    image: '/venues/fonte-nova.jpg',
+    description: 'Rising from the site of the original Fonte Nova, this modern arena brings Bahian passion to life.',
+  },
+  {
+    name: 'Arena Pernambuco',
+    city: 'Recife',
+    country: '🇧🇷',
+    capacity: '46,154',
+    matches: ['Group Stage'],
+    image: '/venues/arena-pernambuco.jpg',
+    description: 'A state-of-the-art venue in Brazil\'s northeast, bringing World Legends Cup action to Pernambuco.',
   },
 ];
 
@@ -99,8 +100,8 @@ export default function VenuesPage() {
               LEGENDARY <span className="text-gradient-gold">VENUES</span>
             </h1>
             <p className="text-white/60 text-xl max-w-2xl">
-              The world&apos;s most iconic stadiums will play host to the greatest footballers
-              in history. Eight legendary nations battling for glory.
+              Brazil&apos;s most iconic stadiums will play host to the greatest footballers
+              in history. Eight legendary nations battling for glory in the home of football.
             </p>
           </motion.div>
         </div>
@@ -111,10 +112,10 @@ export default function VenuesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: '16', label: 'Venues' },
+              { value: '8', label: 'Venues' },
               { value: '8', label: 'Nations' },
-              { value: '1M+', label: 'Total Capacity' },
-              { value: '48', label: 'Matches' },
+              { value: '420K+', label: 'Total Capacity' },
+              { value: '24', label: 'Matches' },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -140,8 +141,67 @@ export default function VenuesPage() {
       {/* Venues Grid */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {venues.map((venue, index) => (
+          {/* Featured Venue - Maracanã */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="md:col-span-2 relative rounded-2xl overflow-hidden group cursor-pointer"
+          >
+            <div className="relative h-80 md:h-96 bg-gradient-to-br from-green-900/40 to-night-900 overflow-hidden">
+              <img
+                src="/stadium/maracana.jpg"
+                alt="Estádio Maracanã"
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-night-900/80 to-transparent" />
+
+              {/* Brazilian flag accent lines */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 via-yellow-500 to-green-500" />
+
+              {/* Featured badge */}
+              <div className="absolute top-6 left-6">
+                <span className="px-4 py-2 bg-gold-500 text-night-900 text-sm font-bold rounded-full">
+                  MAIN VENUE
+                </span>
+              </div>
+
+              <div className="absolute top-6 right-6">
+                <span className="text-5xl drop-shadow-lg">🇧🇷</span>
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">Rio de Janeiro, Brazil</p>
+                <h3
+                  className="text-4xl md:text-5xl font-bold text-white mb-3 group-hover:text-gold-400 transition-colors"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  ESTÁDIO MARACANÃ
+                </h3>
+                <p className="text-white/70 text-lg max-w-2xl mb-4">
+                  The Temple of Football. Home to two World Cup Finals and where legends become immortal. The heart of WLC 2026.
+                </p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <span className="px-4 py-2 bg-gold-500/20 backdrop-blur-sm text-gold-400 rounded-full">
+                    78,838 capacity
+                  </span>
+                  <span className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full">
+                    Semi-Final
+                  </span>
+                  <span className="px-4 py-2 bg-gold-500 text-night-900 font-bold rounded-full">
+                    FINAL
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Other Venues Grid */}
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+            {venues.slice(1).map((venue, index) => (
               <motion.div
                 key={venue.name}
                 initial={{ opacity: 0, y: 30 }}
@@ -151,7 +211,7 @@ export default function VenuesPage() {
                 className="glass rounded-2xl overflow-hidden group cursor-pointer card-hover"
               >
                 {/* Venue Image */}
-                <div className="relative h-48 bg-gradient-to-br from-gold-600/20 to-night-800 overflow-hidden">
+                <div className="relative h-48 bg-gradient-to-br from-green-900/20 to-night-800 overflow-hidden">
                   {venue.image && (
                     <img
                       src={venue.image}
