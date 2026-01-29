@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import StandingsTable from '@/components/StandingsTable';
+import MaracanaShowcase from '@/components/MaracanaShowcase';
 import UpcomingMatches from '@/components/UpcomingMatches';
 import TeamCarousel from '@/components/TeamCarousel';
 import NewsSection from '@/components/NewsSection';
@@ -68,6 +69,8 @@ export default function Home() {
           <cite className="text-gold-400 text-xl not-italic">— {t('quoteAuthor')}</cite>
         </motion.div>
       </section>
+
+      <MaracanaShowcase />
 
       <UpcomingMatches />
       <TeamCarousel />
