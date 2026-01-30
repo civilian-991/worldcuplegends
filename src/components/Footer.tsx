@@ -46,9 +46,9 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="mb-6">
               <img
-                src="/wlc-text-logo.png"
+                src="/wlc-logo-vertical.png"
                 alt="World Legends Cup"
-                className="h-16 w-auto"
+                className="h-32 w-auto"
               />
             </div>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm mb-8">

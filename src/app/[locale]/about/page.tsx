@@ -64,12 +64,12 @@ export default function AboutPage() {
   const t = useTranslations('about');
 
   const boardMembers = [
-    { name: 'H.H. Prince Khalid Al Saud', role: t('board.chairman'), initials: 'KA' },
-    { name: 'Nasr Jawid Bunyadi', role: t('board.ceo'), initials: 'NB' },
-    { name: 'Clarence Seedorf', role: t('board.boardMember'), initials: 'CS' },
-    { name: 'Raafat Hatoum', role: t('board.cso'), initials: 'RH' },
-    { name: 'Rami Salman', role: t('board.coo'), initials: 'RS' },
-    { name: 'Rutger Schouten', role: t('board.clo'), initials: 'RS' },
+    { name: 'H.H. Prince Khalid Al Saud', role: t('board.chairman'), initials: 'KA', image: '/board/khalid-al-saud.jpeg' },
+    { name: 'Nasr Jawid Bunyadi', role: t('board.ceo'), initials: 'NB', image: '/board/nasr-bunyadi.jpeg' },
+    { name: 'Clarence Seedorf', role: t('board.boardMember'), initials: 'CS', image: '/board/clarence-seedorf.jpeg' },
+    { name: 'Raafat Hatoum', role: t('board.cso'), initials: 'RH', image: '/board/raafat-hatoum.jpeg' },
+    { name: 'Rami Salman', role: t('board.coo'), initials: 'RS', image: '/board/rami-salman.jpeg' },
+    { name: 'Rutger Schouten', role: t('board.clo'), initials: 'RS', image: '/board/rutger-schouten.jpeg' },
   ];
 
   const values = [
@@ -172,7 +172,11 @@ export default function AboutPage() {
             >
               <div className="glass rounded-3xl p-8 glow-gold">
                 <div className="text-center">
-                  <span className="text-8xl block mb-6">🏆</span>
+                  <img
+                    src="/wlc-logo-vertical.png"
+                    alt="World Legends Cup"
+                    className="h-32 mx-auto mb-6"
+                  />
                   <h3
                     className="text-3xl font-bold text-gold-400 mb-4"
                     style={{ fontFamily: 'var(--font-display)' }}
@@ -551,17 +555,25 @@ export default function AboutPage() {
                   {/* Decorative corner accent */}
                   <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gold-500/10 to-transparent" />
 
-                  {/* Avatar with initials */}
+                  {/* Avatar with image or initials */}
                   <div className="relative mb-6">
                     <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-gold-400 to-gold-600 p-[2px] group-hover:shadow-lg group-hover:shadow-gold-500/25 transition-shadow duration-500">
-                      <div className="w-full h-full rounded-full bg-night-800 flex items-center justify-center">
-                        <span
-                          className="text-2xl font-bold text-gold-400 group-hover:text-gold-300 transition-colors"
-                          style={{ fontFamily: 'var(--font-display)' }}
-                        >
-                          {member.initials}
-                        </span>
-                      </div>
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full rounded-full object-cover object-top"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-night-800 flex items-center justify-center">
+                          <span
+                            className="text-2xl font-bold text-gold-400 group-hover:text-gold-300 transition-colors"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                          >
+                            {member.initials}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     {/* Subtle ring effect on hover */}
                     <div className="absolute inset-0 w-24 h-24 mx-auto rounded-full border-2 border-gold-500/0 group-hover:border-gold-500/30 group-hover:scale-110 transition-all duration-500" />
