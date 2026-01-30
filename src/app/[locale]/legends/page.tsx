@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { getLegends, type Legend } from '@/lib/api';
+import { type Legend } from '@/lib/api';
 import { Link } from '@/i18n/navigation';
 import Flag from '@/components/Flag';
 
@@ -23,9 +23,13 @@ export default function LegendsPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await getLegends();
+        const response = await fetch('/api/legends');
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        const data = await response.json();
         if (data.length === 0) {
-          console.warn('No legends returned from API - check Supabase configuration');
+          console.warn('No legends returned from API');
         }
         setLegends(data);
       } catch (err) {
