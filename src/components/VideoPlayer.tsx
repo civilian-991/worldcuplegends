@@ -188,16 +188,20 @@ export default function VideoPlayer({
 
           {/* Video Embed */}
           {isPlaying && (
-            <motion.iframe
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              src={embedUrl}
-              title={video.title}
-              className="absolute inset-0 w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <div className="absolute inset-0">
+              <motion.iframe
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                src={embedUrl}
+                title={video.title}
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+              {/* Overlay to hide YouTube header (title/channel) */}
+              <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-night-900 via-night-900/80 to-transparent pointer-events-none z-10" />
+            </div>
           )}
 
           {/* Play Button Overlay */}
