@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 
 const socialLinks = [
-  { label: 'Twitter', icon: '𝕏' },
-  { label: 'Instagram', icon: '📷' },
-  { label: 'YouTube', icon: '▶' },
-  { label: 'TikTok', icon: '♪' },
+  { label: 'Twitter', icon: '𝕏', href: 'https://twitter.com/wlcworld' },
+  { label: 'Instagram', icon: '📷', href: 'https://instagram.com/wlcworld' },
+  { label: 'YouTube', icon: '▶', href: 'https://youtube.com/@wlcworld' },
+  { label: 'TikTok', icon: '♪', href: 'https://tiktok.com/@wlcworld' },
 ];
 
 export default function Footer() {
@@ -41,7 +41,7 @@ export default function Footer() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="mb-6">
@@ -56,15 +56,49 @@ export default function Footer() {
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
-                <motion.button
+                <motion.a
                   key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   className="w-10 h-10 rounded-full bg-night-600 border border-gold-500/20 flex items-center justify-center text-white/70 hover:text-gold-400 hover:border-gold-500/40 transition-colors"
                 >
                   <span className="text-sm">{social.icon}</span>
-                </motion.button>
+                </motion.a>
               ))}
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="lg:col-span-1">
+            <h4 className="text-gold-400 font-semibold text-sm tracking-wider uppercase mb-4">
+              {t('contactInfo')}
+            </h4>
+            <div className="space-y-3 text-white/60 text-sm">
+              <p className="font-medium text-white/80">{t('companyName')}</p>
+              <p>{t('address1')}</p>
+              <p>{t('address2')}</p>
+              <p className="pt-2">
+                <a
+                  href="mailto:info@wlc.world"
+                  className="hover:text-gold-400 transition-colors"
+                >
+                  info@wlc.world
+                </a>
+              </p>
+              <p>
+                <a
+                  href="https://www.wlc.world"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gold-400 transition-colors"
+                >
+                  www.wlc.world
+                </a>
+              </p>
             </div>
           </div>
 

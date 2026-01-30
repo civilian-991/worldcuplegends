@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
+import VideoPlayer from '@/components/VideoPlayer';
 import StandingsTable from '@/components/StandingsTable';
 import MaracanaShowcase from '@/components/MaracanaShowcase';
+import GlobalReach from '@/components/GlobalReach';
 import UpcomingMatches from '@/components/UpcomingMatches';
 import TeamCarousel from '@/components/TeamCarousel';
 import NewsSection from '@/components/NewsSection';
@@ -13,9 +15,98 @@ import NewsSection from '@/components/NewsSection';
 export default function Home() {
   const t = useTranslations('home');
 
+  // Promo video data
+  const promoVideo = {
+    id: 'YvQKopMBvsg',
+    type: 'youtube' as const,
+    title: t('promoVideo.videoTitle'),
+    description: t('promoVideo.description'),
+  };
+
   return (
     <>
       <HeroSection />
+
+      {/* Promo Video Section */}
+      <section className="py-24 px-6 relative overflow-hidden bg-night-900">
+        {/* Background Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
+        </div>
+
+        {/* Decorative Lines */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4"
+            >
+              {t('promoVideo.preTitle')}
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-4xl md:text-6xl font-bold text-white mb-4"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              {t('promoVideo.title')}{' '}
+              <span className="text-gradient-gold">{t('promoVideo.titleHighlight')}</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="text-white/60 text-lg max-w-2xl mx-auto"
+            >
+              {t('promoVideo.description')}
+            </motion.p>
+          </motion.div>
+
+          {/* Video Player */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative"
+          >
+            {/* Glow Effect Behind Video */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-gold-500/20 via-gold-400/10 to-gold-500/20 rounded-3xl blur-2xl opacity-50" />
+
+            {/* Video Container with Border */}
+            <div className="relative rounded-2xl overflow-hidden border border-gold-500/20 shadow-2xl shadow-black/50">
+              <VideoPlayer
+                video={promoVideo}
+                showInfo={false}
+                className="w-full"
+              />
+            </div>
+
+            {/* Corner Accents */}
+            <div className="absolute -top-2 -left-2 w-8 h-8 border-t-2 border-l-2 border-gold-500/50 rounded-tl-lg" />
+            <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-gold-500/50 rounded-tr-lg" />
+            <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-gold-500/50 rounded-bl-lg" />
+            <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b-2 border-r-2 border-gold-500/50 rounded-br-lg" />
+          </motion.div>
+        </div>
+      </section>
 
       {/* Marquee Banner */}
       <div className="bg-gold-500 py-3 overflow-hidden relative">
@@ -71,6 +162,8 @@ export default function Home() {
       </section>
 
       <MaracanaShowcase />
+
+      <GlobalReach />
 
       <UpcomingMatches />
       <TeamCarousel />

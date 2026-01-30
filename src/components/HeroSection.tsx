@@ -139,10 +139,10 @@ export default function HeroSection() {
         >
           <div className="grid grid-cols-4 gap-4 md:flex md:items-center md:gap-20 w-full max-w-xl md:max-w-none md:w-auto">
             {[
-              { value: '100+', label: t('stats.legends') },
-              { value: '32', label: t('stats.teams') },
-              { value: '48', label: t('stats.matches') },
-              { value: '8', label: t('stats.venues') },
+              { value: '170+', label: t('stats.legends') },
+              { value: '8', label: t('stats.teams') },
+              { value: '7', label: t('stats.matches') },
+              { value: '70,000', label: t('stats.seats') },
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <p className="text-xl sm:text-3xl md:text-4xl font-bold text-gold-400" style={{ fontFamily: 'var(--font-display)' }}>

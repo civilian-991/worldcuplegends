@@ -30,7 +30,11 @@
     "copyright": "2026 World Legends Cup. Todos os direitos reservados.",
     "privacyPolicy": "Política de Privacidade",
     "termsOfService": "Termos de Serviço",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "contactInfo": "Contato",
+    "companyName": "World Legends Cup Ltd.",
+    "address1": "Kingdom Tower, 28º Andar",
+    "address2": "Riade 11321, Arábia Saudita"
   },
   "home": {
     "worldLegendsCup": "World Legends Cup 2026",
@@ -44,7 +48,8 @@
       "teams": "Times",
       "matches": "Partidas",
       "hostNations": "País Sede",
-      "venues": "Estádios"
+      "venues": "Estádios",
+      "seats": "Lugares"
     },
     "quote": "QUANTO MAIS DIFÍCIL A VITÓRIA, MAIOR A FELICIDADE DE VENCER.",
     "quoteAuthor": "PELÉ",
@@ -55,6 +60,28 @@
       "description": "Testemunhe lendas do futebol unidas em um torneio extraordinário. Garanta seus ingressos agora e faça parte da história.",
       "getTicketsNow": "Comprar Ingressos",
       "learnMore": "Saiba Mais"
+    },
+    "promoVideo": {
+      "preTitle": "Trailer Oficial",
+      "title": "VIVA A EXPERIÊNCIA",
+      "titleHighlight": "LENDAS",
+      "description": "Testemunhe os maiores jogadores de futebol da história se reunindo para uma celebração inesquecível do belo jogo. Isso é mais do que um torneio—é uma homenagem aos heróis imortais do futebol.",
+      "videoTitle": "World Legends Cup 2026 - Promo Oficial",
+      "watchNow": "Assista Agora"
+    },
+    "globalReach": {
+      "preTitle": "Impacto Mundial",
+      "title": "ALCANCE",
+      "titleHighlight": "GLOBAL",
+      "description": "A World Legends Cup conecta fãs em todos os continentes, levando momentos lendários do futebol para bilhões de pessoas.",
+      "tagline": "UNINDO O MUNDO ATRAVÉS DO BELO JOGO",
+      "stats": {
+        "countries": "Países com Transmissão",
+        "tvAudience": "Audiência de TV Estimada",
+        "broadcastReach": "Alcance em Mídia Broadcast",
+        "digitalReach": "Alcance em Mídia Digital",
+        "legends": "Lendas Participantes"
+      }
     }
   },
   "legends": {
@@ -111,15 +138,114 @@
       "title": "A JORNADA",
       "subtitle": "Do conceito à realidade",
       "2023": "Conceito da World Legends Cup anunciado",
-      "2024": "Países sede confirmados: EUA, México, Canadá",
+      "2024": "País sede confirmado: Brasil",
       "2025": "Seleção de lendas e formação de times começam",
-      "2026": "Torneio começa em junho"
+      "2026": "Torneio começa em janeiro"
+    },
+    "tournamentFacts": {
+      "title": "FATOS DO TORNEIO",
+      "subtitle": "Tudo que você precisa saber sobre o evento",
+      "matchDuration": "Partidas de 60 Minutos",
+      "matchDurationDesc": "Formato mais curto para as lendas",
+      "substitutions": "Substituições Ilimitadas",
+      "substitutionsDesc": "Jogadores podem ser substituídos livremente",
+      "noExtraTime": "Sem Prorrogação",
+      "noExtraTimeDesc": "Direto para pênaltis",
+      "fifaEndorsed": "Endossado pela FIFA",
+      "fifaEndorsedDesc": "Reconhecimento oficial",
+      "broadcast": "75 Países",
+      "broadcastDesc": "Transmissão global",
+      "tvAudience": "3 Bilhões",
+      "tvAudienceDesc": "Audiência estimada de TV"
     },
     "hostNations": {
       "title": "PAÍS SEDE",
       "subtitle": "A casa do futebol recebe as lendas",
       "brazil": "Brasil",
       "venues": "Estádios"
+    },
+    "board": {
+      "preTitle": "Lideranca",
+      "title": "CONSELHO DE ADMINISTRACAO",
+      "subtitle": "Conheca os lideres visionarios que impulsionam a World Legends Cup",
+      "chairman": "Presidente do Conselho",
+      "ceo": "CEO",
+      "boardMember": "Conselheiro",
+      "cso": "Diretor de Estrategia",
+      "coo": "Diretor de Operacoes",
+      "clo": "Diretor Juridico"
+    },
+    "unicef": {
+      "preTitle": "Impacto Social",
+      "title": "UNICEF",
+      "titleHighlight": "ESCOLA DA VIDA",
+      "description": "Atraves de nossa parceria global com a UNICEF, estamos comprometidos em apoiar o desenvolvimento social e economico de longo prazo do Brasil, usando o poder do futebol para inspirar e educar a proxima geracao.",
+      "partnership": {
+        "title": "Parceria com a UNICEF",
+        "subtitle": "Parceria Global",
+        "description": "A World Legends Cup formou uma parceria estrategica com a UNICEF para apoiar o desenvolvimento social e economico de longo prazo do Brasil. Juntos, aproveitamos o apelo universal do futebol para criar mudancas significativas nas comunidades em todo o pais.",
+        "tag1": "Educacao",
+        "tag2": "Desenvolvimento Juvenil",
+        "tag3": "Impacto Comunitario",
+        "impactTitle": "Impacto Global",
+        "impactDescription": "Empoderando criancas e comunidades atraves de programas de futebol e educacao em todo o Brasil"
+      },
+      "valuesTitle": "OS 8 VALORES DO FUTEBOL LENDARIO",
+      "valuesSubtitle": "Principios fundamentais que guiam nossos programas de desenvolvimento juvenil",
+      "legendsValues": {
+        "teamwork": {
+          "title": "Trabalho em Equipe",
+          "description": "Trabalhando juntos em direcao a objetivos comuns"
+        },
+        "respect": {
+          "title": "Respeito",
+          "description": "Tratando os outros com dignidade e honra"
+        },
+        "dedication": {
+          "title": "Dedicacao",
+          "description": "Comprometendo-se totalmente com a excelencia"
+        },
+        "fairPlay": {
+          "title": "Fair Play",
+          "description": "Competindo com integridade e honra"
+        },
+        "courage": {
+          "title": "Coragem",
+          "description": "Enfrentando desafios com bravura"
+        },
+        "discipline": {
+          "title": "Disciplina",
+          "description": "Mantendo foco e compromisso"
+        },
+        "perseverance": {
+          "title": "Perseveranca",
+          "description": "Nunca desistindo dos seus sonhos"
+        },
+        "unity": {
+          "title": "Uniao",
+          "description": "Permanecendo juntos como um so time"
+        }
+      },
+      "programTitle": "ELEMENTOS DO PROGRAMA",
+      "programSubtitle": "Como fazemos a diferenca durante todo o torneio",
+      "program": {
+        "yearRound": {
+          "title": "Programa Anual",
+          "description": "Programas educacionais e esportivos continuos durante todo o ano, fornecendo apoio constante a juventude brasileira"
+        },
+        "schoolVisits": {
+          "title": "Visitas das Lendas",
+          "description": "Lendas do futebol visitam escolas e clubes em todo o Brasil, inspirando criancas atraves de interacao pessoal e mentoria"
+        },
+        "galaAuction": {
+          "title": "Leilao de Gala",
+          "description": "Eventos exclusivos de leilao com memorabilia unica, com toda a arrecadacao beneficiando programas da UNICEF no Brasil"
+        },
+        "manOfMatch": {
+          "title": "Doacoes Craque do Jogo",
+          "description": "Cada premio de Craque do Jogo gera uma doacao para a UNICEF, apoiando diretamente a educacao e bem-estar das criancas"
+        }
+      }
     }
   },
   "contact": {

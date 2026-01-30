@@ -30,7 +30,11 @@
     "copyright": "2026 World Legends Cup. All rights reserved.",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "contactInfo": "Contact",
+    "companyName": "World Legends Cup Ltd.",
+    "address1": "Kingdom Tower, 28th Floor",
+    "address2": "Riyadh 11321, Saudi Arabia"
   },
   "home": {
     "worldLegendsCup": "World Legends Cup 2026",
@@ -44,7 +48,8 @@
       "teams": "Teams",
       "matches": "Matches",
       "hostNations": "Host Nation",
-      "venues": "Venues"
+      "venues": "Venues",
+      "seats": "Seats"
     },
     "quote": "THE MORE DIFFICULT THE VICTORY, THE GREATER THE HAPPINESS IN WINNING.",
     "quoteAuthor": "PELÉ",
@@ -55,6 +60,28 @@
       "description": "Witness football legends unite for one extraordinary tournament. Get your tickets now and be part of history.",
       "getTicketsNow": "Get Tickets Now",
       "learnMore": "Learn More"
+    },
+    "promoVideo": {
+      "preTitle": "Official Trailer",
+      "title": "EXPERIENCE THE",
+      "titleHighlight": "LEGENDS",
+      "description": "Witness the greatest footballers in history come together for an unforgettable celebration of the beautiful game. This is more than a tournament—it's a tribute to football's immortal heroes.",
+      "videoTitle": "World Legends Cup 2026 - Official Promo",
+      "watchNow": "Watch Now"
+    },
+    "globalReach": {
+      "preTitle": "Worldwide Impact",
+      "title": "GLOBAL",
+      "titleHighlight": "REACH",
+      "description": "The World Legends Cup connects fans across every continent, delivering legendary football moments to billions.",
+      "tagline": "UNITING THE WORLD THROUGH THE BEAUTIFUL GAME",
+      "stats": {
+        "countries": "Countries Broadcast",
+        "tvAudience": "Estimated TV Audience",
+        "broadcastReach": "Broadcast Media Reach",
+        "digitalReach": "Digital Media Reach",
+        "legends": "Legends Participating"
+      }
     }
   },
   "legends": {
@@ -111,15 +138,114 @@
       "title": "THE JOURNEY",
       "subtitle": "From concept to reality",
       "2023": "World Legends Cup concept announced",
-      "2024": "Host nations confirmed: USA, Mexico, Canada",
+      "2024": "Host nation confirmed: Brazil",
       "2025": "Legend selections and team formations begin",
-      "2026": "Tournament kicks off in June"
+      "2026": "Tournament kicks off in January"
+    },
+    "tournamentFacts": {
+      "title": "TOURNAMENT FACTS",
+      "subtitle": "Everything you need to know about the event",
+      "matchDuration": "60-Minute Matches",
+      "matchDurationDesc": "Shorter format for legends",
+      "substitutions": "Unlimited Substitutions",
+      "substitutionsDesc": "Players can be subbed freely",
+      "noExtraTime": "No Extra-Time",
+      "noExtraTimeDesc": "Straight to penalty shoot-outs",
+      "fifaEndorsed": "FIFA Endorsed",
+      "fifaEndorsedDesc": "Official recognition",
+      "broadcast": "75 Countries",
+      "broadcastDesc": "Global broadcast coverage",
+      "tvAudience": "3 Billion",
+      "tvAudienceDesc": "Estimated TV audience"
     },
     "hostNations": {
       "title": "HOST NATION",
       "subtitle": "The home of football welcomes the legends",
       "brazil": "Brazil",
       "venues": "Venues"
+    },
+    "board": {
+      "preTitle": "Leadership",
+      "title": "BOARD OF DIRECTORS",
+      "subtitle": "Meet the visionary leaders driving the World Legends Cup forward",
+      "chairman": "Chairman",
+      "ceo": "CEO",
+      "boardMember": "Board Member",
+      "cso": "Chief Strategy Officer",
+      "coo": "Chief Operating Officer",
+      "clo": "Chief Legal Officer"
+    },
+    "unicef": {
+      "preTitle": "Social Impact",
+      "title": "UNICEF",
+      "titleHighlight": "SCHOOL OF LIFE",
+      "description": "Through our global partnership with UNICEF, we are committed to supporting Brazil's long-term social and economic development, using the power of football to inspire and educate the next generation.",
+      "partnership": {
+        "title": "Partnership with UNICEF",
+        "subtitle": "Global Partnership",
+        "description": "The World Legends Cup has formed a strategic partnership with UNICEF to support Brazil's long-term social and economic development. Together, we leverage the universal appeal of football to create meaningful change in communities across the nation.",
+        "tag1": "Education",
+        "tag2": "Youth Development",
+        "tag3": "Community Impact",
+        "impactTitle": "Global Impact",
+        "impactDescription": "Empowering children and communities through football and education programs across Brazil"
+      },
+      "valuesTitle": "THE 8 VALUES OF LEGENDS FOOTBALL",
+      "valuesSubtitle": "Core principles that guide our youth development programs",
+      "legendsValues": {
+        "teamwork": {
+          "title": "Teamwork",
+          "description": "Working together towards common goals"
+        },
+        "respect": {
+          "title": "Respect",
+          "description": "Treating others with dignity and honor"
+        },
+        "dedication": {
+          "title": "Dedication",
+          "description": "Committing fully to excellence"
+        },
+        "fairPlay": {
+          "title": "Fair Play",
+          "description": "Competing with integrity and honor"
+        },
+        "courage": {
+          "title": "Courage",
+          "description": "Facing challenges with bravery"
+        },
+        "discipline": {
+          "title": "Discipline",
+          "description": "Maintaining focus and commitment"
+        },
+        "perseverance": {
+          "title": "Perseverance",
+          "description": "Never giving up on your dreams"
+        },
+        "unity": {
+          "title": "Unity",
+          "description": "Standing together as one team"
+        }
+      },
+      "programTitle": "PROGRAM ELEMENTS",
+      "programSubtitle": "How we make a difference throughout the tournament",
+      "program": {
+        "yearRound": {
+          "title": "Year-Round Program",
+          "description": "Continuous educational and sports programs running throughout the year, providing ongoing support to Brazilian youth"
+        },
+        "schoolVisits": {
+          "title": "Legends School Visits",
+          "description": "Football legends visit schools and clubs across Brazil, inspiring children through personal interaction and mentorship"
+        },
+        "galaAuction": {
+          "title": "Gala Auction",
+          "description": "Exclusive auction events featuring unique memorabilia, with all proceeds benefiting UNICEF programs in Brazil"
+        },
+        "manOfMatch": {
+          "title": "Man of the Match Donations",
+          "description": "Every Man of the Match award triggers a donation to UNICEF, directly supporting children's education and welfare"
+        }
+      }
     }
   },
   "contact": {
