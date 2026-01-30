@@ -3,11 +3,12 @@ import { getFlagUrl } from '@/utils/flags';
 
 interface FlagProps {
   countryCode: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
 
 const sizeMap = {
+  xs: { width: 16, height: 12, cdn: 'w20' as const },
   sm: { width: 20, height: 15, cdn: 'w20' as const },
   md: { width: 28, height: 21, cdn: 'w40' as const },
   lg: { width: 40, height: 30, cdn: 'w40' as const },

@@ -366,6 +366,28 @@
       "title": "NOTÍCIAS E HISTÓRIAS",
       "viewAll": "Todas as Notícias",
       "readTime": "leitura"
+    },
+    "trending": {
+      "preTitle": "Em Alta Agora",
+      "title": "TENDÊNCIAS",
+      "viewAll": "Ver Tudo",
+      "tabs": {
+        "legends": "LENDAS",
+        "products": "PRODUTOS",
+        "news": "NOTÍCIAS"
+      },
+      "periods": {
+        "today": "Hoje",
+        "thisWeek": "Esta Semana",
+        "allTime": "Todos os Tempos"
+      },
+      "stats": {
+        "topViews": "Mais Vistas",
+        "totalViews": "Total de Visualizações",
+        "liveUpdates": "Atualizações ao vivo"
+      },
+      "noData": "Nenhum dado de tendências disponível",
+      "views": "visualizações"
     }
   }
 }

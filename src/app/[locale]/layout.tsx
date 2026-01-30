@@ -11,6 +11,8 @@ import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { RecentlyViewedProvider } from "@/context/RecentlyViewedContext";
+import { PollProvider } from "@/context/PollContext";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -40,15 +42,19 @@ export default async function LocaleLayout({
           <AuthProvider>
             <CartProvider>
               <WishlistProvider>
-                <ToastProvider>
-                  <CustomCursor />
-                  <Navigation />
-                  <main className="min-h-screen relative z-10">
-                    {children}
-                  </main>
-                  <Footer />
-                  <CartSidebar />
-                </ToastProvider>
+                <RecentlyViewedProvider>
+                  <PollProvider>
+                    <ToastProvider>
+                      <CustomCursor />
+                      <Navigation />
+                      <main className="min-h-screen relative z-10">
+                        {children}
+                      </main>
+                      <Footer />
+                      <CartSidebar />
+                    </ToastProvider>
+                  </PollProvider>
+                </RecentlyViewedProvider>
               </WishlistProvider>
             </CartProvider>
           </AuthProvider>

@@ -366,6 +366,28 @@
       "title": "NEWS & STORIES",
       "viewAll": "All News",
       "readTime": "read"
+    },
+    "trending": {
+      "preTitle": "Hot Right Now",
+      "title": "TRENDING",
+      "viewAll": "View All",
+      "tabs": {
+        "legends": "LEGENDS",
+        "products": "PRODUCTS",
+        "news": "NEWS"
+      },
+      "periods": {
+        "today": "Today",
+        "thisWeek": "This Week",
+        "allTime": "All Time"
+      },
+      "stats": {
+        "topViews": "Top Views",
+        "totalViews": "Total Views",
+        "liveUpdates": "Live updates"
+      },
+      "noData": "No trending data available",
+      "views": "views"
     }
   }
 }
