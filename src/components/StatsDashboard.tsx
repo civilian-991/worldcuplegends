@@ -239,8 +239,8 @@ export default function StatsDashboard() {
       <div className="absolute inset-0 bg-gradient-to-b from-night-700 via-night-800 to-night-900" />
 
       {/* Stadium Light Effects */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-400/5 rounded-full blur-[200px]" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold-400/5 rounded-full blur-[200px]" />
+      <div className="hidden md:block absolute top-0 left-1/4 w-96 h-96 bg-gold-400/5 rounded-full blur-[200px]" />
+      <div className="hidden md:block absolute bottom-0 right-1/4 w-96 h-96 bg-gold-400/5 rounded-full blur-[200px]" />
 
       {/* Decorative Lines */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />

@@ -46,8 +46,8 @@ export default function HeroSection() {
       </motion.div>
 
       {/* Stadium Lights Effect */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[150px] stadium-light" />
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[150px] stadium-light" style={{ animationDelay: '2s' }} />
+      <div className="hidden md:block absolute top-0 left-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[150px] stadium-light" />
+      <div className="hidden md:block absolute top-0 right-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[150px] stadium-light" style={{ animationDelay: '2s' }} />
 
       {/* Content */}
       <motion.div

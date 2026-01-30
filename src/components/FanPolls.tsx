@@ -565,8 +565,8 @@ export default function FanPolls() {
   return (
     <section className="py-20 px-6 bg-gradient-to-b from-night-700 via-night-800 to-night-900 relative overflow-hidden">
       {/* Background decorations */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[150px]" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[150px]" />
+      <div className="hidden md:block absolute top-0 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[150px]" />
+      <div className="hidden md:block absolute bottom-0 right-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[150px]" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section header */}
