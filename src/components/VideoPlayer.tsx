@@ -193,7 +193,7 @@ export default function VideoPlayer({
 
           {/* Play Button Overlay */}
           <AnimatePresence>
-            {!isPlaying && isLoaded && (
+            {!isPlaying && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -241,7 +241,7 @@ export default function VideoPlayer({
 
           {/* Video Info Overlay */}
           <AnimatePresence>
-            {showInfo && !isPlaying && isLoaded && (
+            {showInfo && !isPlaying && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
