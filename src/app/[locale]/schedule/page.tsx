@@ -115,7 +115,7 @@ export default function SchedulePage() {
               >
                 THE FINAL
               </h2>
-              <p className="text-white/50 mt-2">July 19, 2026 • MetLife Stadium, New Jersey</p>
+              <p className="text-white/50 mt-2">Date TBA • Maracanã Stadium, Rio de Janeiro</p>
             </div>
 
             <div className="max-w-lg mx-auto glass rounded-2xl p-8 text-center glow-gold">
@@ -138,7 +138,7 @@ export default function SchedulePage() {
                 </div>
               </div>
               <div className="mt-6 pt-6 border-t border-gold-500/20">
-                <p className="text-gold-400 text-sm">19:00 Local Time</p>
+                <p className="text-gold-400 text-sm">Time TBA</p>
               </div>
             </div>
           </motion.div>
@@ -173,15 +173,15 @@ export default function SchedulePage() {
             >
               HOST VENUES
             </h2>
-            <p className="text-white/50">Legendary stadiums across three nations</p>
+            <p className="text-white/50">Legendary stadiums across Brazil</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { name: 'MetLife Stadium', city: 'New Jersey', countryCode: 'US', capacity: '82,500' },
-              { name: 'SoFi Stadium', city: 'Los Angeles', countryCode: 'US', capacity: '70,240' },
-              { name: 'Rose Bowl', city: 'Pasadena', countryCode: 'US', capacity: '88,438' },
-              { name: 'Estadio Azteca', city: 'Mexico City', countryCode: 'MX', capacity: '87,523' },
+              { name: 'Maracanã Stadium', city: 'Rio de Janeiro', countryCode: 'BR', capacity: '78,838' },
+              { name: 'Allianz Parque', city: 'São Paulo', countryCode: 'BR', capacity: '43,713' },
+              { name: 'Arena Corinthians', city: 'São Paulo', countryCode: 'BR', capacity: '49,205' },
+              { name: 'Mineirão', city: 'Belo Horizonte', countryCode: 'BR', capacity: '61,846' },
             ].map((venue, index) => (
               <motion.div
                 key={venue.name}
@@ -238,8 +238,8 @@ function MatchCard({ match, index }: { match: Match; index: number }) {
             >
               {match.stage}
             </span>
-            <p className="text-white/50 text-sm">{formatDate(match.matchDate)}</p>
-            <p className="text-gold-400 text-sm font-semibold">{match.matchTime}</p>
+            <p className="text-white/50 text-sm">Date TBA</p>
+            <p className="text-gold-400 text-sm font-semibold">Time TBA</p>
           </div>
 
           {/* Teams */}
