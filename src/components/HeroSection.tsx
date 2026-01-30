@@ -34,10 +34,10 @@ export default function HeroSection() {
         style={{ y }}
         className="absolute inset-0"
       >
-        {/* Hero Background Image */}
+        {/* Hero Background Image - Maracanã Stadium */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(/banners/hero-home.png)' }}
+          style={{ backgroundImage: 'url(/stadium/maracana.jpg)' }}
         />
 
         {/* Gradient Overlay */}
