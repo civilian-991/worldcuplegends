@@ -1,12 +1,13 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Flag from '@/components/Flag';
 
 const venues = [
   {
     name: 'Estádio Maracanã',
     city: 'Rio de Janeiro',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '78,838',
     matches: ['Semi-Final', 'Final'],
     image: '/stadium/maracana.jpg',
@@ -16,7 +17,7 @@ const venues = [
   {
     name: 'Allianz Parque',
     city: 'São Paulo',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '43,713',
     matches: ['Group Stage', 'Quarter-Final'],
     image: '/venues/allianz-parque.jpg',
@@ -25,7 +26,7 @@ const venues = [
   {
     name: 'Arena Corinthians',
     city: 'São Paulo',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '49,205',
     matches: ['Group Stage', 'Quarter-Final'],
     image: '/venues/arena-corinthians.jpg',
@@ -34,7 +35,7 @@ const venues = [
   {
     name: 'Mineirão',
     city: 'Belo Horizonte',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '61,846',
     matches: ['Group Stage', 'Semi-Final'],
     image: '/venues/mineirao.jpg',
@@ -43,7 +44,7 @@ const venues = [
   {
     name: 'Arena da Baixada',
     city: 'Curitiba',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '42,372',
     matches: ['Group Stage'],
     image: '/venues/arena-baixada.jpg',
@@ -52,7 +53,7 @@ const venues = [
   {
     name: 'Beira-Rio',
     city: 'Porto Alegre',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '50,128',
     matches: ['Group Stage', 'Round of 16'],
     image: '/venues/beira-rio.jpg',
@@ -61,7 +62,7 @@ const venues = [
   {
     name: 'Arena Fonte Nova',
     city: 'Salvador',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '47,907',
     matches: ['Group Stage'],
     image: '/venues/fonte-nova.jpg',
@@ -70,7 +71,7 @@ const venues = [
   {
     name: 'Arena Pernambuco',
     city: 'Recife',
-    country: '🇧🇷',
+    countryCode: 'BR',
     capacity: '46,154',
     matches: ['Group Stage'],
     image: '/venues/arena-pernambuco.jpg',
@@ -170,7 +171,7 @@ export default function VenuesPage() {
               </div>
 
               <div className="absolute top-6 right-6">
-                <span className="text-5xl drop-shadow-lg">🇧🇷</span>
+                <Flag countryCode="BR" size="xl" className="drop-shadow-lg" />
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 p-8">
@@ -222,7 +223,7 @@ export default function VenuesPage() {
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-night-900 to-transparent" />
                   <div className="absolute top-4 right-4">
-                    <span className="text-4xl drop-shadow-lg">{venue.country}</span>
+                    <Flag countryCode={venue.countryCode} size="xl" className="drop-shadow-lg" />
                   </div>
                   <div className="absolute bottom-4 left-4">
                     <span className="px-3 py-1 bg-gold-500/20 backdrop-blur-sm text-gold-400 text-sm rounded-full">
@@ -281,14 +282,14 @@ export default function VenuesPage() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                { flag: '🇧🇷', name: 'Brazil', player: 'Ronaldo' },
-                { flag: '🇦🇷', name: 'Argentina', player: 'Legends' },
-                { flag: '🇫🇷', name: 'France', player: 'Henry' },
-                { flag: '🇳🇱', name: 'Netherlands', player: 'Seedorf' },
-                { flag: '🇪🇸', name: 'Spain', player: 'Puyol' },
-                { flag: '🇮🇹', name: 'Italy', player: 'Buffon' },
-                { flag: '🇸🇦', name: 'Saudi Arabia', player: 'Yasser' },
-                { flag: '🇳🇬', name: 'Nigeria', player: 'Kanu' },
+                { countryCode: 'BR', name: 'Brazil', player: 'Ronaldo' },
+                { countryCode: 'AR', name: 'Argentina', player: 'Legends' },
+                { countryCode: 'FR', name: 'France', player: 'Henry' },
+                { countryCode: 'NL', name: 'Netherlands', player: 'Seedorf' },
+                { countryCode: 'ES', name: 'Spain', player: 'Puyol' },
+                { countryCode: 'IT', name: 'Italy', player: 'Buffon' },
+                { countryCode: 'SA', name: 'Saudi Arabia', player: 'Yasser' },
+                { countryCode: 'NG', name: 'Nigeria', player: 'Kanu' },
               ].map((nation, index) => (
                 <motion.div
                   key={nation.name}
@@ -299,7 +300,9 @@ export default function VenuesPage() {
                   whileHover={{ scale: 1.05, y: -5 }}
                   className="glass rounded-xl p-6 cursor-pointer group"
                 >
-                  <span className="text-5xl mb-3 block">{nation.flag}</span>
+                  <div className="mb-3 flex justify-center">
+                    <img src={`https://flagcdn.com/w80/${nation.countryCode.toLowerCase()}.png`} alt={nation.name} className="w-12 h-auto rounded shadow-md" />
+                  </div>
                   <h3
                     className="text-xl font-bold text-white group-hover:text-gold-400 transition-colors"
                     style={{ fontFamily: 'var(--font-display)' }}

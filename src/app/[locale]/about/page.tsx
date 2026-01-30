@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import Flag from '@/components/Flag';
 
 // SVG Icons for the 8 Values of Legends Football
 const TeamworkIcon = () => (
@@ -628,7 +629,9 @@ export default function AboutPage() {
             transition={{ duration: 0.5 }}
             className="glass rounded-3xl p-12 text-center max-w-2xl mx-auto glow-gold"
           >
-            <span className="text-9xl block mb-6">🇧🇷</span>
+            <div className="mb-6">
+              <img src="https://flagcdn.com/w160/br.png" alt="Brazil flag" className="w-32 h-auto mx-auto rounded-lg shadow-lg" />
+            </div>
             <h3
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}

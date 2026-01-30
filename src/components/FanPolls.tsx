@@ -270,14 +270,14 @@ function PollOptionCard({
                 className="object-cover"
               />
               {option.countryCode && (
-                <div className="absolute bottom-0 right-0 w-6 h-6 flex items-center justify-center bg-night-800/80 rounded-tl-lg text-xs">
-                  {getFlag(option.countryCode)}
+                <div className="absolute bottom-0 right-0 w-6 h-6 flex items-center justify-center bg-night-800/80 rounded-tl-lg">
+                  <FlagImage countryCode={option.countryCode} size="sm" />
                 </div>
               )}
             </div>
           ) : option.countryCode ? (
-            <div className="w-16 h-16 rounded-lg bg-night-600 flex items-center justify-center text-3xl flex-shrink-0">
-              {getFlag(option.countryCode)}
+            <div className="w-16 h-16 rounded-lg bg-night-600 flex items-center justify-center flex-shrink-0">
+              <FlagImage countryCode={option.countryCode} size="lg" />
             </div>
           ) : null}
 
@@ -336,21 +336,17 @@ function PollOptionCard({
   );
 }
 
-// Get flag emoji from country code
-function getFlag(countryCode: string): string {
-  const flags: Record<string, string> = {
-    BR: '🇧🇷',
-    AR: '🇦🇷',
-    FR: '🇫🇷',
-    DE: '🇩🇪',
-    IT: '🇮🇹',
-    NL: '🇳🇱',
-    ES: '🇪🇸',
-    GB: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-    PT: '🇵🇹',
-    CM: '🇨🇲',
-  };
-  return flags[countryCode] || '🏳️';
+// Get flag image from country code
+function FlagImage({ countryCode, size = 'md' }: { countryCode: string; size?: 'sm' | 'md' | 'lg' }) {
+  const sizeMap = { sm: 'w-4 h-3', md: 'w-6 h-4', lg: 'w-10 h-7' };
+  const widthMap = { sm: 20, md: 40, lg: 80 };
+  return (
+    <img
+      src={`https://flagcdn.com/w${widthMap[size]}/${countryCode.toLowerCase()}.png`}
+      alt={`${countryCode} flag`}
+      className={`${sizeMap[size]} object-cover rounded-sm`}
+    />
+  );
 }
 
 // Single poll card component

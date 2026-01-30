@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Flag from '@/components/Flag';
 
 const stats = [
   { value: '78,838', label: 'CAPACITY', suffix: '' },
@@ -94,7 +95,7 @@ export default function MaracanaShowcase() {
               <span className="text-gold-400 text-sm tracking-[0.3em] uppercase">
                 Rio de Janeiro, Brazil
               </span>
-              <span className="text-2xl">🇧🇷</span>
+              <Flag countryCode="BR" size="lg" />
             </motion.div>
 
             {/* Main title */}
