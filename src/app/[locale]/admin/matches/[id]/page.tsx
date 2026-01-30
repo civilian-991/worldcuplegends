@@ -5,11 +5,13 @@ import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { use } from 'react';
+import { useToast } from '@/context/ToastContext';
 
 export default function EditMatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -81,8 +83,9 @@ export default function EditMatchPage({ params }: { params: Promise<{ id: string
 
     if (error) {
       console.error('Error updating match:', error);
-      alert('Error updating match');
+      showToast('Error updating match', 'error');
     } else {
+      showToast('Match updated successfully', 'success');
       router.push('/admin/matches');
     }
     setIsSaving(false);

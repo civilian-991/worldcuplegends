@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
 
 export default function NewMatchPage() {
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     home_team: '',
@@ -43,8 +45,9 @@ export default function NewMatchPage() {
 
     if (error) {
       console.error('Error creating match:', error);
-      alert('Error creating match');
+      showToast('Error creating match', 'error');
     } else {
+      showToast('Match created successfully', 'success');
       router.push('/admin/matches');
     }
     setIsLoading(false);

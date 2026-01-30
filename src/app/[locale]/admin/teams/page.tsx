@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -25,11 +25,7 @@ export default function AdminTeamsPage() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchTeams();
-  }, []);
-
-  const fetchTeams = async () => {
+  const fetchTeams = useCallback(async () => {
     setIsLoading(true);
     const { data, error } = await supabase
       .from('teams')
@@ -42,7 +38,11 @@ export default function AdminTeamsPage() {
       setTeams(data || []);
     }
     setIsLoading(false);
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchTeams();
+  }, [fetchTeams]);
 
   const handleDelete = async (id: number) => {
     const { error } = await supabase.from('teams').delete().eq('id', id);

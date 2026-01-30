@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
 
 export default function NewLegendPage() {
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -38,8 +40,9 @@ export default function NewLegendPage() {
 
     if (error) {
       console.error('Error creating legend:', error);
-      alert('Error creating legend');
+      showToast('Error creating legend', 'error');
     } else {
+      showToast('Legend created successfully', 'success');
       router.push('/admin/legends');
     }
     setIsLoading(false);

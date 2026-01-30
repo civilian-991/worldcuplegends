@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
 
 export default function NewTeamPage() {
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -37,8 +39,9 @@ export default function NewTeamPage() {
 
     if (error) {
       console.error('Error creating team:', error);
-      alert('Error creating team');
+      showToast('Error creating team', 'error');
     } else {
+      showToast('Team created successfully', 'success');
       router.push('/admin/teams');
     }
     setIsLoading(false);

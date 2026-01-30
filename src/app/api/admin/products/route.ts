@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkAdmin } from '@/lib/admin'
 
+const sanitizeSearch = (search: string) => search.replace(/[%_\\'"(){}[\]]/g, '');
+
 export async function GET(request: NextRequest) {
   const { supabase, isAdmin } = await checkAdmin()
 
@@ -11,8 +13,10 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const category = searchParams.get('category')
   const search = searchParams.get('search')
-  const limit = parseInt(searchParams.get('limit') || '50')
-  const offset = parseInt(searchParams.get('offset') || '0')
+  const limitParam = parseInt(searchParams.get('limit') || '50')
+  const offsetParam = parseInt(searchParams.get('offset') || '0')
+  const limit = isNaN(limitParam) || limitParam < 1 ? 50 : Math.min(limitParam, 100)
+  const offset = isNaN(offsetParam) || offsetParam < 0 ? 0 : offsetParam
 
   let query = supabase
     .from('products')
@@ -24,7 +28,8 @@ export async function GET(request: NextRequest) {
   }
 
   if (search) {
-    query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%`)
+    const sanitized = sanitizeSearch(search)
+    query = query.or(`name.ilike.%${sanitized}%,description.ilike.%${sanitized}%`)
   }
 
   query = query.range(offset, offset + limit - 1)
@@ -50,7 +55,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = await request.json()
+  let body
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
+  }
 
   const { data: product, error } = await supabase
     .from('products')

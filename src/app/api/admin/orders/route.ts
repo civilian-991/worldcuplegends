@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkAdmin } from '@/lib/admin'
 
+const sanitizeSearch = (search: string) => search.replace(/[%_\\'"(){}[\]]/g, '');
+
 export async function GET(request: NextRequest) {
   const { supabase, isAdmin } = await checkAdmin()
 
@@ -11,8 +13,10 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const status = searchParams.get('status')
   const search = searchParams.get('search')
-  const limit = parseInt(searchParams.get('limit') || '50')
-  const offset = parseInt(searchParams.get('offset') || '0')
+  const limitParam = parseInt(searchParams.get('limit') || '50')
+  const offsetParam = parseInt(searchParams.get('offset') || '0')
+  const limit = isNaN(limitParam) || limitParam < 1 ? 50 : Math.min(limitParam, 100)
+  const offset = isNaN(offsetParam) || offsetParam < 0 ? 0 : offsetParam
 
   let query = supabase
     .from('orders')
@@ -27,7 +31,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (search) {
-    query = query.or(`id.ilike.%${search}%`)
+    query = query.or(`id.ilike.%${sanitizeSearch(search)}%`)
   }
 
   query = query.range(offset, offset + limit - 1)

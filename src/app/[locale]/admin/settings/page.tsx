@@ -1,10 +1,38 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Toast notification component
+function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onClose, 3000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -50 }}
+      className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-xl shadow-lg ${
+        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <span>{type === 'success' ? '✓' : '✕'}</span>
+        <span>{message}</span>
+      </div>
+    </motion.div>
+  );
+}
+
+const SETTINGS_STORAGE_KEY = 'wlc_admin_settings';
 
 export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState('general');
+  const [isSaving, setIsSaving] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const [generalSettings, setGeneralSettings] = useState({
     storeName: 'World Legends Cup Shop',
@@ -38,6 +66,47 @@ export default function AdminSettingsPage() {
     newCustomerAlerts: true,
   });
 
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        if (parsed.general) setGeneralSettings(parsed.general);
+        if (parsed.shipping) setShippingSettings(parsed.shipping);
+        if (parsed.tax) setTaxSettings(parsed.tax);
+        if (parsed.notifications) setNotificationSettings(parsed.notifications);
+      }
+    } catch (error) {
+      console.error('Failed to load settings from localStorage:', error);
+    }
+  }, []);
+
+  // Handle save function
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // Simulate a small delay for better UX feedback
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const allSettings = {
+        general: generalSettings,
+        shipping: shippingSettings,
+        tax: taxSettings,
+        notifications: notificationSettings,
+        savedAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(allSettings));
+      setToast({ message: 'Settings saved successfully!', type: 'success' });
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      setToast({ message: 'Failed to save settings. Please try again.', type: 'error' });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const tabs = [
     { id: 'general', label: 'General', icon: '⚙️' },
     { id: 'shipping', label: 'Shipping', icon: '🚚' },
@@ -48,6 +117,17 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <div>
         <h1
@@ -385,9 +465,40 @@ export default function AdminSettingsPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-8 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl"
+              onClick={handleSave}
+              disabled={isSaving}
+              className={`px-8 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2 ${
+                isSaving ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
-              Save Changes
+              {isSaving ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
             </motion.button>
           </div>
         </div>

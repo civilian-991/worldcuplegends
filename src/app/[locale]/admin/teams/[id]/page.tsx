@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { use } from 'react';
+import { useToast } from '@/context/ToastContext';
 
 export default function EditTeamPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,11 +25,7 @@ export default function EditTeamPage({ params }: { params: Promise<{ id: string 
     color: '#FFD700',
   });
 
-  useEffect(() => {
-    fetchTeam();
-  }, [id]);
-
-  const fetchTeam = async () => {
+  const fetchTeam = useCallback(async () => {
     const { data, error } = await supabase
       .from('teams')
       .select('*')
@@ -50,7 +48,11 @@ export default function EditTeamPage({ params }: { params: Promise<{ id: string 
       });
     }
     setIsLoading(false);
-  };
+  }, [supabase, id, router]);
+
+  useEffect(() => {
+    fetchTeam();
+  }, [fetchTeam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,8 +74,9 @@ export default function EditTeamPage({ params }: { params: Promise<{ id: string 
 
     if (error) {
       console.error('Error updating team:', error);
-      alert('Error updating team');
+      showToast('Error updating team', 'error');
     } else {
+      showToast('Team updated successfully', 'success');
       router.push('/admin/teams');
     }
     setIsSaving(false);

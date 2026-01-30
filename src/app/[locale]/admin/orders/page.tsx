@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 
@@ -47,11 +47,7 @@ export default function AdminOrdersPage() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setIsLoading(true);
     const { data, error } = await supabase
       .from('orders')
@@ -64,7 +60,11 @@ export default function AdminOrdersPage() {
       setOrders(data || []);
     }
     setIsLoading(false);
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const fetchOrderItems = async (orderId: string) => {
     const { data } = await supabase

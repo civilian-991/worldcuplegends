@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 
@@ -52,11 +52,7 @@ export default function AdminCustomersPage() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
 
     // Fetch profiles and orders in parallel
@@ -101,7 +97,11 @@ export default function AdminCustomersPage() {
 
     setCustomers(customersWithStats);
     setIsLoading(false);
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const filteredCustomers = useMemo(() => {
     let filtered = [...customers];

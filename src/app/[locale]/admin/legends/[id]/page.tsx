@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { use } from 'react';
+import { useToast } from '@/context/ToastContext';
 
 export default function EditLegendPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,11 +31,7 @@ export default function EditLegendPage({ params }: { params: Promise<{ id: strin
     rating: '',
   });
 
-  useEffect(() => {
-    fetchLegend();
-  }, [id]);
-
-  const fetchLegend = async () => {
+  const fetchLegend = useCallback(async () => {
     const { data, error } = await supabase
       .from('legends')
       .select('*')
@@ -62,7 +60,11 @@ export default function EditLegendPage({ params }: { params: Promise<{ id: strin
       });
     }
     setIsLoading(false);
-  };
+  }, [supabase, id, router]);
+
+  useEffect(() => {
+    fetchLegend();
+  }, [fetchLegend]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,8 +81,9 @@ export default function EditLegendPage({ params }: { params: Promise<{ id: strin
 
     if (error) {
       console.error('Error updating legend:', error);
-      alert('Error updating legend');
+      showToast('Error updating legend', 'error');
     } else {
+      showToast('Legend updated successfully', 'success');
       router.push('/admin/legends');
     }
     setIsSaving(false);

@@ -40,8 +40,19 @@ export async function PATCH(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = await request.json()
+  let body
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
+  }
   const { status, tracking_number, notes } = body
+
+  // Validate status if provided
+  const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
+  if (status && !validStatuses.includes(status)) {
+    return NextResponse.json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` }, { status: 400 })
+  }
 
   const updateData: Record<string, unknown> = {}
   if (status) updateData.status = status
@@ -64,12 +75,17 @@ export async function PATCH(
   if (status === 'shipped' && tracking_number && orderData) {
     const shippingAddress = orderData.shipping_address
 
-    await sendShippingNotification(
-      shippingAddress.email,
-      `${shippingAddress.firstName} ${shippingAddress.lastName}`,
-      orderData.id,
-      tracking_number
-    )
+    try {
+      await sendShippingNotification(
+        shippingAddress.email,
+        `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+        orderData.id,
+        tracking_number
+      )
+    } catch (emailError) {
+      // Log error but don't fail the request - order was already updated
+      console.error('Failed to send shipping notification:', emailError)
+    }
   }
 
   return NextResponse.json({ order })

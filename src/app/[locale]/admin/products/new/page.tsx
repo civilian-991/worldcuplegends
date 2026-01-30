@@ -3,10 +3,24 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useRouter } from '@/i18n/navigation';
-import { categories } from '@/data/products';
+import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
+
+const categories = [
+  { slug: 'jerseys', name: 'Jerseys' },
+  { slug: 't-shirts', name: 'T-Shirts' },
+  { slug: 'outerwear', name: 'Outerwear' },
+  { slug: 'shorts', name: 'Shorts' },
+  { slug: 'accessories', name: 'Accessories' },
+  { slug: 'equipment', name: 'Equipment' },
+  { slug: 'collectibles', name: 'Collectibles' },
+];
 
 export default function NewProductPage() {
   const router = useRouter();
+  const supabase = createClient();
+  const { showToast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -21,12 +35,52 @@ export default function NewProductPage() {
     tags: '',
     legend: '',
     team: '',
+    stockQuantity: '100',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would call an API
-    router.push('/admin/products');
+    setIsLoading(true);
+
+    try {
+      // Prepare product data for database
+      const productData = {
+        name: formData.name.trim(),
+        slug: formData.slug.trim() || formData.name.toLowerCase().replace(/\s+/g, '-'),
+        price: parseFloat(formData.price),
+        original_price: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
+        description: formData.description.trim() || null,
+        category: formData.category,
+        in_stock: formData.inStock,
+        featured: formData.featured,
+        sizes: formData.sizes,
+        colors: formData.colors.filter(c => c.name.trim() !== ''),
+        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t !== '') : [],
+        legend: formData.legend.trim() || null,
+        team: formData.team.trim() || null,
+        stock_quantity: parseInt(formData.stockQuantity) || 0,
+        images: [],
+        rating: 0,
+        review_count: 0,
+      };
+
+      const { error } = await supabase
+        .from('products')
+        .insert(productData);
+
+      if (error) {
+        console.error('Error creating product:', error);
+        showToast(`Error creating product: ${error.message}`, 'error');
+      } else {
+        showToast('Product created successfully!', 'success');
+        router.push('/admin/products');
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      showToast('An unexpected error occurred', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -103,7 +157,8 @@ export default function NewProductPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                disabled={isLoading}
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                 placeholder="World Legends Cup 2026 Official Jersey"
               />
             </div>
@@ -115,7 +170,8 @@ export default function NewProductPage() {
                 value={formData.slug}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                disabled={isLoading}
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                 placeholder="wlc-2026-official-jersey"
               />
             </div>
@@ -126,9 +182,10 @@ export default function NewProductPage() {
                 value={formData.category}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer"
+                disabled={isLoading}
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer disabled:opacity-50"
               >
-                {categories.filter(c => c.slug !== 'all').map((cat) => (
+                {categories.map((cat) => (
                   <option key={cat.slug} value={cat.name}>
                     {cat.name}
                   </option>
@@ -142,8 +199,9 @@ export default function NewProductPage() {
                 value={formData.description}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
                 rows={4}
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors resize-none"
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors resize-none disabled:opacity-50"
                 placeholder="Product description..."
               />
             </div>
@@ -158,7 +216,7 @@ export default function NewProductPage() {
           className="glass rounded-2xl p-6"
         >
           <h2 className="text-xl font-bold text-white mb-6">Pricing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="text-white/50 text-sm mb-2 block">Price ($) *</label>
               <input
@@ -167,9 +225,10 @@ export default function NewProductPage() {
                 value={formData.price}
                 onChange={handleChange}
                 required
+                disabled={isLoading}
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                 placeholder="99.99"
               />
             </div>
@@ -180,10 +239,24 @@ export default function NewProductPage() {
                 name="originalPrice"
                 value={formData.originalPrice}
                 onChange={handleChange}
+                disabled={isLoading}
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                 placeholder="129.99 (leave empty if no sale)"
+              />
+            </div>
+            <div>
+              <label className="text-white/50 text-sm mb-2 block">Stock Quantity</label>
+              <input
+                type="number"
+                name="stockQuantity"
+                value={formData.stockQuantity}
+                onChange={handleChange}
+                disabled={isLoading}
+                min="0"
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
+                placeholder="100"
               />
             </div>
           </div>
@@ -207,7 +280,8 @@ export default function NewProductPage() {
                   key={size}
                   type="button"
                   onClick={() => toggleSize(size)}
-                  className={`w-12 h-12 rounded-xl font-semibold transition-all ${
+                  disabled={isLoading}
+                  className={`w-12 h-12 rounded-xl font-semibold transition-all disabled:opacity-50 ${
                     formData.sizes.includes(size)
                       ? 'bg-gold-500 text-night-900'
                       : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -230,19 +304,22 @@ export default function NewProductPage() {
                     value={color.name}
                     onChange={(e) => updateColor(index, 'name', e.target.value)}
                     placeholder="Color name (e.g., Black/Gold)"
-                    className="flex-1 px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                    disabled={isLoading}
+                    className="flex-1 px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                   />
                   <input
                     type="color"
                     value={color.hex}
                     onChange={(e) => updateColor(index, 'hex', e.target.value)}
-                    className="w-12 h-12 rounded-xl cursor-pointer border-0"
+                    disabled={isLoading}
+                    className="w-12 h-12 rounded-xl cursor-pointer border-0 disabled:opacity-50"
                   />
                   {formData.colors.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeColor(index)}
-                      className="w-12 h-12 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                      disabled={isLoading}
+                      className="w-12 h-12 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors disabled:opacity-50"
                     >
                       ✕
                     </button>
@@ -253,7 +330,8 @@ export default function NewProductPage() {
             <button
               type="button"
               onClick={addColor}
-              className="mt-3 px-4 py-2 bg-night-700 text-gold-400 rounded-xl hover:bg-night-600 transition-colors"
+              disabled={isLoading}
+              className="mt-3 px-4 py-2 bg-night-700 text-gold-400 rounded-xl hover:bg-night-600 transition-colors disabled:opacity-50"
             >
               + Add Color
             </button>
@@ -276,8 +354,9 @@ export default function NewProductPage() {
                 name="legend"
                 value={formData.legend}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
-                placeholder="Pelé, Maradona, etc."
+                disabled={isLoading}
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
+                placeholder="Pele, Maradona, etc."
               />
             </div>
             <div>
@@ -287,7 +366,8 @@ export default function NewProductPage() {
                 name="team"
                 value={formData.team}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                disabled={isLoading}
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                 placeholder="Brazil, Argentina, etc."
               />
             </div>
@@ -298,7 +378,8 @@ export default function NewProductPage() {
                 name="tags"
                 value={formData.tags}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+                disabled={isLoading}
+                className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
                 placeholder="official, jersey, new arrival"
               />
             </div>
@@ -312,6 +393,7 @@ export default function NewProductPage() {
                 name="inStock"
                 checked={formData.inStock}
                 onChange={handleChange}
+                disabled={isLoading}
                 className="w-5 h-5 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50"
               />
               <span className="text-white">In Stock</span>
@@ -322,6 +404,7 @@ export default function NewProductPage() {
                 name="featured"
                 checked={formData.featured}
                 onChange={handleChange}
+                disabled={isLoading}
                 className="w-5 h-5 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50"
               />
               <span className="text-white">Featured Product</span>
@@ -334,18 +417,27 @@ export default function NewProductPage() {
           <Link href="/admin/products" className="flex-1">
             <button
               type="button"
-              className="w-full py-4 bg-night-700 text-white rounded-xl hover:bg-night-600 transition-colors"
+              disabled={isLoading}
+              className="w-full py-4 bg-night-700 text-white rounded-xl hover:bg-night-600 transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
           </Link>
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: isLoading ? 1 : 1.02 }}
+            whileTap={{ scale: isLoading ? 1 : 0.98 }}
             type="submit"
-            className="flex-1 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl"
+            disabled={isLoading}
+            className="flex-1 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Create Product
+            {isLoading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-night-900/20 border-t-night-900 rounded-full animate-spin" />
+                Creating...
+              </>
+            ) : (
+              'Create Product'
+            )}
           </motion.button>
         </div>
       </form>
