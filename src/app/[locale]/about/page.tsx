@@ -138,7 +138,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission Section */}
-      <section className="py-24 px-6 bg-night-800">
+      <section className="py-24 px-6 bg-night-800 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -605,7 +605,7 @@ export default function AboutPage() {
       </section>
 
       {/* Host Nations */}
-      <section className="py-24 px-6 bg-night-800">
+      <section className="py-24 px-6 bg-night-800 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
