@@ -10,6 +10,7 @@ import MaracanaShowcase from '@/components/MaracanaShowcase';
 import GlobalReach from '@/components/GlobalReach';
 import UpcomingMatches from '@/components/UpcomingMatches';
 import TeamCarousel from '@/components/TeamCarousel';
+import LegendaryCoaches from '@/components/LegendaryCoaches';
 import NewsSection from '@/components/NewsSection';
 
 export default function Home() {
@@ -167,6 +168,7 @@ export default function Home() {
 
       <UpcomingMatches />
       <TeamCarousel />
+      <LegendaryCoaches />
       <NewsSection />
 
       {/* CTA Section */}

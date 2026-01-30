@@ -82,6 +82,14 @@
         "digitalReach": "Digital Media Reach",
         "legends": "Legends Participating"
       }
+    },
+    "coaches": {
+      "preTitle": "Leadership",
+      "title": "LEGENDARY",
+      "titleHighlight": "COACHES",
+      "description": "Football icons turned leaders. These legendary figures guide their nations in the World Legends Cup 2026.",
+      "coachBadge": "Head Coach",
+      "tagline": "LEGENDS LEADING LEGENDS"
     }
   },
   "legends": {

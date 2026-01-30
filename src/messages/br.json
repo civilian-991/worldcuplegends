@@ -82,6 +82,14 @@
         "digitalReach": "Alcance em Mídia Digital",
         "legends": "Lendas Participantes"
       }
+    },
+    "coaches": {
+      "preTitle": "Liderança",
+      "title": "TÉCNICOS",
+      "titleHighlight": "LENDÁRIOS",
+      "description": "Ícones do futebol que se tornaram líderes. Essas figuras lendárias guiam suas nações na World Legends Cup 2026.",
+      "coachBadge": "Técnico",
+      "tagline": "LENDAS LIDERANDO LENDAS"
     }
   },
   "legends": {
