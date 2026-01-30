@@ -61,8 +61,17 @@ export default function VideoPlayer({
   const thumbnail = video.thumbnail ||
     (video.type === 'youtube' ? getYouTubeThumbnail(video.id) : getVimeoThumbnail(video.id));
 
+  // YouTube privacy-enhanced mode with minimal branding
+  // - youtube-nocookie.com: Privacy-enhanced mode, no tracking cookies
+  // - modestbranding=1: Minimal YouTube logo
+  // - rel=0: Don't show related videos from other channels
+  // - showinfo=0: Hide video title and uploader (deprecated but still works partially)
+  // - iv_load_policy=3: Hide video annotations
+  // - disablekb=1: Disable keyboard controls
+  // - fs=0: Hide fullscreen button (we have our own cinema mode)
+  // - playsinline=1: Play inline on iOS
   const embedUrl = video.type === 'youtube'
-    ? `https://www.youtube.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`
+    ? `https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1`
     : `https://player.vimeo.com/video/${video.id}?autoplay=1`;
 
   const handlePlay = useCallback(() => {
