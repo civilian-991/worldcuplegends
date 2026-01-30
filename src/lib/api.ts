@@ -153,20 +153,18 @@ function transformNews(row: Record<string, unknown>): NewsArticle {
   };
 }
 
-// API Functions
+// API Functions - Use server-side routes to avoid client-side Supabase issues in production
 export async function getLegends(): Promise<Legend[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('legends')
-    .select('*')
-    .order('rating', { ascending: false });
-
-  if (error) {
+  try {
+    const response = await fetch('/api/legends');
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
     console.error('Error fetching legends:', error);
     return [];
   }
-
-  return (data || []).map(transformLegend);
 }
 
 export async function getLegendById(id: number): Promise<Legend | null> {
@@ -186,37 +184,16 @@ export async function getLegendById(id: number): Promise<Legend | null> {
 }
 
 export async function getTeams(): Promise<Team[]> {
-  const supabase = createClient();
-
-  // Fetch teams and legends in parallel
-  const [teamsResult, legendsResult] = await Promise.all([
-    supabase.from('teams').select('*').order('rating', { ascending: false }),
-    supabase.from('legends').select('name, country_code')
-  ]);
-
-  if (teamsResult.error) {
-    console.error('Error fetching teams:', teamsResult.error);
+  try {
+    const response = await fetch('/api/teams');
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching teams:', error);
     return [];
   }
-
-  // Create a map of country code to legend names
-  const legendsByCountry: Record<string, string[]> = {};
-  if (legendsResult.data) {
-    legendsResult.data.forEach((legend: Record<string, unknown>) => {
-      const code = legend.country_code as string;
-      if (!legendsByCountry[code]) {
-        legendsByCountry[code] = [];
-      }
-      legendsByCountry[code].push(legend.name as string);
-    });
-  }
-
-  // Transform teams and add legends
-  return (teamsResult.data || []).map((row: Record<string, unknown>) => {
-    const team = transformTeam(row);
-    team.legends = legendsByCountry[team.countryCode] || [];
-    return team;
-  });
 }
 
 export async function getTeamById(id: number): Promise<Team | null> {
@@ -236,18 +213,16 @@ export async function getTeamById(id: number): Promise<Team | null> {
 }
 
 export async function getMatches(): Promise<Match[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('matches')
-    .select('*')
-    .order('match_date', { ascending: true });
-
-  if (error) {
+  try {
+    const response = await fetch('/api/matches');
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
     console.error('Error fetching matches:', error);
     return [];
   }
-
-  return (data || []).map(transformMatch);
 }
 
 export async function getUpcomingMatches(limit: number = 5): Promise<Match[]> {
@@ -285,19 +260,16 @@ export async function getLiveMatches(): Promise<Match[]> {
 }
 
 export async function getNews(): Promise<NewsArticle[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
-    .eq('published', true)
-    .order('published_at', { ascending: false });
-
-  if (error) {
+  try {
+    const response = await fetch('/api/news');
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
     console.error('Error fetching news:', error);
     return [];
   }
-
-  return (data || []).map(transformNews);
 }
 
 export async function getNewsById(id: number): Promise<NewsArticle | null> {
@@ -335,18 +307,11 @@ export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
 }
 
 export async function getLatestNews(limit: number = 6): Promise<NewsArticle[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
-    .eq('published', true)
-    .order('published_at', { ascending: false })
-    .limit(limit);
-
-  if (error) {
+  try {
+    const news = await getNews();
+    return news.slice(0, limit);
+  } catch (error) {
     console.error('Error fetching latest news:', error);
     return [];
   }
-
-  return (data || []).map(transformNews);
 }
