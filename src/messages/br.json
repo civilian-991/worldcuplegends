@@ -36,14 +36,15 @@
     "worldLegendsCup": "World Legends Cup 2026",
     "neverDie": "NEVER DIE",
     "heroSubtitle": "Os maiores jogadores de futebol da história se unem para um torneio lendário.",
-    "hostNations": "EUA • México • Canadá",
+    "hostNations": "Brasil",
     "exploreLegends": "Explorar Lendas",
     "viewSchedule": "Ver Calendário",
     "stats": {
       "legends": "Lendas",
       "teams": "Times",
       "matches": "Partidas",
-      "hostNations": "Países Sede"
+      "hostNations": "País Sede",
+      "venues": "Estádios"
     },
     "quote": "QUANTO MAIS DIFÍCIL A VITÓRIA, MAIOR A FELICIDADE DE VENCER.",
     "quoteAuthor": "PELÉ",
@@ -115,11 +116,9 @@
       "2026": "Torneio começa em junho"
     },
     "hostNations": {
-      "title": "PAÍSES SEDE",
-      "subtitle": "Três nações, um torneio lendário",
-      "unitedStates": "Estados Unidos",
-      "mexico": "México",
-      "canada": "Canadá",
+      "title": "PAÍS SEDE",
+      "subtitle": "A casa do futebol recebe as lendas",
+      "brazil": "Brasil",
       "venues": "Estádios"
     }
   },

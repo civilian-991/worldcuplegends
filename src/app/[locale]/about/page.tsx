@@ -210,31 +210,56 @@ export default function AboutPage() {
             <p className="text-white/50">{t('hostNations.subtitle')}</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { flag: '🇺🇸', name: t('hostNations.unitedStates'), venues: 11 },
-              { flag: '🇲🇽', name: t('hostNations.mexico'), venues: 3 },
-              { flag: '🇨🇦', name: t('hostNations.canada'), venues: 2 },
-            ].map((nation, index) => (
-              <motion.div
-                key={nation.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass rounded-2xl p-8 text-center"
-              >
-                <span className="text-7xl block mb-4">{nation.flag}</span>
-                <h3
-                  className="text-2xl font-bold text-white mb-2"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {nation.name.toUpperCase()}
-                </h3>
-                <p className="text-gold-400">{nation.venues} {t('hostNations.venues')}</p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="glass rounded-3xl p-12 text-center max-w-2xl mx-auto glow-gold"
+          >
+            <span className="text-9xl block mb-6">🇧🇷</span>
+            <h3
+              className="text-4xl font-bold text-white mb-4"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              BRAZIL
+            </h3>
+            <p className="text-gold-400 text-xl mb-6">8 {t('hostNations.venues')}</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-white/60">
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Maracanã</p>
+                <p>Rio de Janeiro</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Allianz Parque</p>
+                <p>São Paulo</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Arena Corinthians</p>
+                <p>São Paulo</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Mineirão</p>
+                <p>Belo Horizonte</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Arena da Baixada</p>
+                <p>Curitiba</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Beira-Rio</p>
+                <p>Porto Alegre</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Arena Fonte Nova</p>
+                <p>Salvador</p>
+              </div>
+              <div className="glass-gold rounded-lg p-3">
+                <p className="text-gold-400 font-semibold">Arena Pernambuco</p>
+                <p>Recife</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

@@ -36,14 +36,15 @@
     "worldLegendsCup": "World Legends Cup 2026",
     "neverDie": "NEVER DIE",
     "heroSubtitle": "The greatest footballers in history unite for one legendary tournament.",
-    "hostNations": "USA • Mexico • Canada",
+    "hostNations": "Brazil",
     "exploreLegends": "Explore Legends",
     "viewSchedule": "View Schedule",
     "stats": {
       "legends": "Legends",
       "teams": "Teams",
       "matches": "Matches",
-      "hostNations": "Host Nations"
+      "hostNations": "Host Nation",
+      "venues": "Venues"
     },
     "quote": "THE MORE DIFFICULT THE VICTORY, THE GREATER THE HAPPINESS IN WINNING.",
     "quoteAuthor": "PELÉ",
@@ -115,11 +116,9 @@
       "2026": "Tournament kicks off in June"
     },
     "hostNations": {
-      "title": "HOST NATIONS",
-      "subtitle": "Three nations, one legendary tournament",
-      "unitedStates": "United States",
-      "mexico": "Mexico",
-      "canada": "Canada",
+      "title": "HOST NATION",
+      "subtitle": "The home of football welcomes the legends",
+      "brazil": "Brazil",
       "venues": "Venues"
     }
   },
