@@ -1,45 +1,45 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import useSWR from 'swr';
 import { type Legend } from '@/lib/api';
 import { Link } from '@/i18n/navigation';
 import Flag from '@/components/Flag';
 
 const eras = ['All Eras', '1980s-1990s', '1990s-2000s', '2000s', '2000s-2010s'];
+const LEGENDS_PER_PAGE = 12;
+
+// SWR fetcher function
+const fetcher = async (url: string): Promise<Legend[]> => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+  const data = await response.json();
+  if (data.length === 0) {
+    console.warn('No legends returned from API');
+  }
+  return data;
+};
 
 export default function LegendsPage() {
   const t = useTranslations('legends');
   const [selectedEra, setSelectedEra] = useState('All Eras');
   const [searchQuery, setSearchQuery] = useState('');
-  const [legends, setLegends] = useState<Legend[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(LEGENDS_PER_PAGE);
 
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchLegends() {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch('/api/legends');
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.length === 0) {
-          console.warn('No legends returned from API');
-        }
-        setLegends(data);
-      } catch (err) {
-        console.error('Failed to fetch legends:', err);
-        setError('Failed to load legends. Please try again later.');
-      }
-      setIsLoading(false);
+  // Use SWR for data fetching with caching
+  const { data: legends = [], error, isLoading } = useSWR<Legend[]>(
+    '/api/legends',
+    fetcher,
+    {
+      revalidateOnFocus: false, // Don't refetch when tab regains focus
+      dedupingInterval: 60000, // Dedupe requests within 1 minute
     }
-    fetchLegends();
-  }, []);
+  );
 
   const filteredLegends = useMemo(() => {
     return legends.filter((legend) => {
@@ -55,6 +55,24 @@ export default function LegendsPage() {
   const sortedLegends = useMemo(() => {
     return [...filteredLegends].sort((a, b) => b.rating - a.rating);
   }, [filteredLegends]);
+
+  // Get visible legends based on current visibleCount
+  const visibleLegends = useMemo(() => {
+    return sortedLegends.slice(0, visibleCount);
+  }, [sortedLegends, visibleCount]);
+
+  // Reset visible count when filters change
+  useEffect(() => {
+    setVisibleCount(LEGENDS_PER_PAGE);
+  }, [selectedEra, searchQuery]);
+
+  // Check if there are more legends to load
+  const hasMoreLegends = visibleCount < sortedLegends.length;
+
+  // Handle load more click
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + LEGENDS_PER_PAGE);
+  };
 
   return (
     <div className="min-h-screen bg-night-700">
@@ -90,6 +108,7 @@ export default function LegendsPage() {
                 placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search legends"
                 className="w-full px-4 py-2 bg-night-600 border border-white/10 rounded text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors text-sm"
               />
               <svg
@@ -108,6 +127,7 @@ export default function LegendsPage() {
                 <button
                   key={era}
                   onClick={() => setSelectedEra(era)}
+                  aria-pressed={selectedEra === era}
                   className={`px-4 py-1.5 rounded text-sm font-medium transition-all ${
                     selectedEra === era
                       ? 'bg-gold-500 text-night-900'
@@ -122,27 +142,69 @@ export default function LegendsPage() {
         </div>
       </section>
 
-      {/* Loading State */}
+      {/* Loading State - Skeleton Grid */}
       {isLoading && (
-        <div className="flex items-center justify-center py-20">
-          <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
-        </div>
+        <section className="py-8 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div
+              role="status"
+              aria-label="Loading legends"
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              {Array.from({ length: 8 }).map((_, index) => (
+                <SkeletonCard key={index} />
+              ))}
+            </div>
+          </div>
+        </section>
       )}
 
       {/* Legends Grid - F1 Style */}
       {!isLoading && (
         <section className="py-8 px-6">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto" aria-live="polite">
             <motion.div
               layout
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               <AnimatePresence mode="popLayout">
-                {sortedLegends.map((legend, index) => (
+                {visibleLegends.map((legend, index) => (
                   <LegendCard key={legend.id} legend={legend} index={index} />
                 ))}
               </AnimatePresence>
             </motion.div>
+
+            {/* Load More Button */}
+            {!error && sortedLegends.length > 0 && hasMoreLegends && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center mt-10 gap-3"
+              >
+                <p className="text-white/40 text-sm">
+                  {t('showingCount', { count: visibleLegends.length, total: sortedLegends.length })}
+                </p>
+                <button
+                  onClick={handleLoadMore}
+                  className="px-6 py-2.5 rounded text-sm font-medium transition-all bg-night-600 text-white/60 hover:bg-gold-500 hover:text-night-900"
+                >
+                  {t('loadMore')}
+                </button>
+              </motion.div>
+            )}
+
+            {/* Showing all legends indicator */}
+            {!error && sortedLegends.length > 0 && !hasMoreLegends && sortedLegends.length > LEGENDS_PER_PAGE && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-center mt-10"
+              >
+                <p className="text-white/40 text-sm">
+                  {t('showingCount', { count: sortedLegends.length, total: sortedLegends.length })}
+                </p>
+              </motion.div>
+            )}
 
             {/* Error State */}
             {error && (
@@ -151,7 +213,9 @@ export default function LegendsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center py-20"
               >
-                <p className="text-red-400 text-xl mb-4">{error}</p>
+                <p className="text-red-400 text-xl mb-4">
+                  {error.message || 'Failed to load legends. Please try again later.'}
+                </p>
                 <button
                   onClick={() => window.location.reload()}
                   className="text-gold-500 hover:text-gold-400 transition-colors"
@@ -272,14 +336,17 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
             {/* Right Side - Player Image */}
             <div className="relative w-[45%] h-full">
               {legend.image ? (
-                <img
+                <Image
                   src={legend.image}
                   alt={legend.name}
-                  className="absolute bottom-0 right-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 768px) 45vw, 300px"
+                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   style={{
                     maskImage: 'linear-gradient(to left, black 60%, transparent 100%)',
                     WebkitMaskImage: 'linear-gradient(to left, black 60%, transparent 100%)'
                   }}
+                  priority={index < 4}
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -299,5 +366,55 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
         </div>
       </Link>
     </motion.div>
+  );
+}
+
+// Skeleton card component that mimics the LegendCard layout
+function SkeletonCard() {
+  return (
+    <div
+      className="relative h-[280px] rounded-lg overflow-hidden animate-pulse"
+      style={{ background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)' }}
+    >
+      {/* Content Container */}
+      <div className="relative h-full flex">
+        {/* Left Side - Text Content Skeleton */}
+        <div className="flex-1 p-6 flex flex-col justify-between relative z-10">
+          {/* Top - Name and Team Skeleton */}
+          <div>
+            {/* First name placeholder */}
+            <div className="h-4 w-16 bg-night-800/50 rounded mb-2" />
+            {/* Last name placeholder */}
+            <div className="h-8 w-32 bg-night-800/50 rounded mb-2" />
+            {/* Team/Country placeholder */}
+            <div className="h-4 w-24 bg-night-800/50 rounded mt-1" />
+          </div>
+
+          {/* Jersey Number Skeleton */}
+          <div className="mt-auto">
+            <div className="h-16 w-20 bg-night-800/30 rounded" />
+          </div>
+
+          {/* Flag Skeleton */}
+          <div className="mt-4">
+            <div className="h-6 w-9 bg-night-800/50 rounded" />
+          </div>
+        </div>
+
+        {/* Right Side - Player Image Skeleton */}
+        <div className="relative w-[45%] h-full">
+          <div
+            className="absolute inset-0 bg-night-800/30"
+            style={{
+              maskImage: 'linear-gradient(to left, black 60%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to left, black 60%, transparent 100%)'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Subtle gradient overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/20 pointer-events-none" />
+    </div>
   );
 }

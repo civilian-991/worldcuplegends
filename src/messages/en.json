@@ -99,7 +99,9 @@
     "searchPlaceholder": "Search legends...",
     "allEras": "All Eras",
     "noResults": "No legends found matching your criteria.",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "loadMore": "Load More",
+    "showingCount": "Showing {count} of {total} legends"
   },
   "about": {
     "preTitle": "Our Story",

@@ -99,7 +99,9 @@
     "searchPlaceholder": "Buscar lendas...",
     "allEras": "Todas as Épocas",
     "noResults": "Nenhuma lenda encontrada com os critérios selecionados.",
-    "clearFilters": "Limpar filtros"
+    "clearFilters": "Limpar filtros",
+    "loadMore": "Carregar Mais",
+    "showingCount": "Mostrando {count} de {total} lendas"
   },
   "about": {
     "preTitle": "Nossa História",

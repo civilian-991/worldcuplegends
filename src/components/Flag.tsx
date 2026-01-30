@@ -1,4 +1,5 @@
 // Flag component - uses CDN images for cross-platform compatibility
+import Image from 'next/image';
 import { getFlagUrl } from '@/utils/flags';
 
 interface FlagProps {
@@ -19,7 +20,7 @@ export default function Flag({ countryCode, size = 'md', className = '' }: FlagP
   const { width, height, cdn } = sizeMap[size];
 
   return (
-    <img
+    <Image
       src={getFlagUrl(countryCode, cdn)}
       alt={`${countryCode} flag`}
       width={width}
