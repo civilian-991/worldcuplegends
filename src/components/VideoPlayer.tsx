@@ -140,7 +140,7 @@ export default function VideoPlayer({
           isCinemaMode
             ? 'fixed inset-8 md:inset-16 lg:inset-24 z-50 shadow-2xl shadow-black/50'
             : className
-        } ${isPlaying && !showControls ? 'cursor-none' : ''}`}
+        }`}
         layout
       >
         {/* Aspect Ratio Container */}

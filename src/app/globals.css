@@ -43,6 +43,12 @@ body {
   background: var(--color-night-700);
   color: #ffffff;
   overflow-x: hidden;
+  cursor: none;
+}
+
+/* Hide default cursor for all elements (using custom cursor) */
+*, *::before, *::after {
+  cursor: none !important;
 }
 
 /* Geometric Background Pattern - overlay texture */
