@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Link, usePathname } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCart } from '@/context/CartContext';
 import { useTranslations } from 'next-intl';
 import GlobalSearch from './GlobalSearch';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -12,7 +11,6 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { totalItems, setIsCartOpen } = useCart();
   const t = useTranslations('nav');
 
   const navItems = [
@@ -20,7 +18,6 @@ export default function Navigation() {
     { href: '/legends', label: t('legends') },
     { href: '/teams', label: t('teams') },
     { href: '/schedule', label: t('schedule') },
-    { href: '/shop', label: t('shop') },
     { href: '/news', label: t('news') },
   ];
 
@@ -94,23 +91,6 @@ export default function Navigation() {
             {/* Language Switcher */}
             <LanguageSwitcher />
 
-            {/* Cart Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setIsCartOpen(true)}
-              className="relative w-10 h-10 rounded-full bg-night-600 flex items-center justify-center text-white/70 hover:text-gold-400 hover:bg-night-500 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-gold-500 text-night-900 text-xs font-bold rounded-full flex items-center justify-center">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
-            </motion.button>
-
             <Link href="/tickets">
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -122,25 +102,10 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile Cart & Menu */}
+          {/* Mobile Menu */}
           <div className="lg:hidden flex items-center gap-2">
             {/* Language Switcher (Mobile) */}
             <LanguageSwitcher />
-
-            {/* Mobile Cart Button */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative w-10 h-10 rounded-full bg-night-600 flex items-center justify-center text-white/70"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-gold-500 text-night-900 text-xs font-bold rounded-full flex items-center justify-center">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
-            </button>
 
             {/* Mobile Menu Button */}
             <button
