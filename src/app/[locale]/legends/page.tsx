@@ -16,11 +16,22 @@ export default function LegendsPage() {
   const [legends, setLegends] = useState<Legend[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     async function fetchLegends() {
       setIsLoading(true);
-      const data = await getLegends();
-      setLegends(data);
+      setError(null);
+      try {
+        const data = await getLegends();
+        if (data.length === 0) {
+          console.warn('No legends returned from API - check Supabase configuration');
+        }
+        setLegends(data);
+      } catch (err) {
+        console.error('Failed to fetch legends:', err);
+        setError('Failed to load legends. Please try again later.');
+      }
       setIsLoading(false);
     }
     fetchLegends();
@@ -129,8 +140,37 @@ export default function LegendsPage() {
               </AnimatePresence>
             </motion.div>
 
+            {/* Error State */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <p className="text-red-400 text-xl mb-4">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="text-gold-500 hover:text-gold-400 transition-colors"
+                >
+                  Retry
+                </button>
+              </motion.div>
+            )}
+
             {/* No Results */}
-            {sortedLegends.length === 0 && (
+            {!error && sortedLegends.length === 0 && legends.length === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <p className="text-white/50 text-xl mb-2">No legends available</p>
+                <p className="text-white/30 text-sm">Database connection may not be configured.</p>
+              </motion.div>
+            )}
+
+            {/* No Filter Results */}
+            {!error && sortedLegends.length === 0 && legends.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
