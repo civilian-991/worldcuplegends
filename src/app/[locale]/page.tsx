@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import VideoPlayer from '@/components/VideoPlayer';
-import StandingsTable from '@/components/StandingsTable';
 import MaracanaShowcase from '@/components/MaracanaShowcase';
 import GlobalReach from '@/components/GlobalReach';
 import UpcomingMatches from '@/components/UpcomingMatches';
@@ -135,8 +134,6 @@ export default function Home() {
           ))}
         </motion.div>
       </div>
-
-      <StandingsTable />
 
       {/* Quote Section */}
       <section className="py-24 px-6 relative overflow-hidden bg-night-900">
