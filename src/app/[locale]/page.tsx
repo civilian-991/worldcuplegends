@@ -31,8 +31,8 @@ export default function Home() {
       <section className="py-24 px-6 relative overflow-hidden bg-night-900">
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent hidden md:block" />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent hidden md:block" />
         </div>
 
         {/* Decorative Lines */}
@@ -117,7 +117,7 @@ export default function Home() {
           className="flex whitespace-nowrap"
         >
           {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-8 px-8">
+            <div key={i} className="flex items-center gap-4 px-4 md:gap-8 md:px-8">
               {[
                 'PELÉ', 'MARADONA', 'ZIDANE', 'RONALDO', 'MESSI', 'BECKENBAUER',
                 'CRUYFF', 'RONALDINHO', 'HENRY', 'MALDINI'
@@ -138,7 +138,7 @@ export default function Home() {
       {/* Quote Section */}
       <section className="py-24 px-6 relative overflow-hidden bg-night-900">
         <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-gold-500/10 to-transparent opacity-50" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-gold-500/10 to-transparent opacity-50 hidden md:block" />
         </div>
 
         <motion.div
@@ -173,8 +173,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-night-700 to-night-900" />
 
         {/* Stadium Lights Effect */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[200px]" />
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[200px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[200px] hidden md:block" />
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[200px] hidden md:block" />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}

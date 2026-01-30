@@ -64,8 +64,8 @@ export default function LegendaryCoaches() {
     <section className="py-24 px-6 relative overflow-hidden bg-night-800">
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
+        <div className="hidden md:block absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
+        <div className="hidden md:block absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-radial from-gold-500/5 to-transparent" />
       </div>
 
       {/* Decorative Lines */}

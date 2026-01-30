@@ -690,7 +690,7 @@ export default function HallOfFame() {
       <section className="relative pt-32 pb-20 px-6">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-radial from-gold-500/5 via-transparent to-transparent" />
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gold-400/10 rounded-full blur-[150px]" />
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gold-400/10 rounded-full blur-[150px] hidden md:block" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div

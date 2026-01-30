@@ -129,8 +129,8 @@ export default function GlobalReach() {
       {/* Background effects */}
       <div className="absolute inset-0">
         {/* Gradient orbs */}
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-gold-500/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gold-500/5 rounded-full blur-[150px]" />
+        <div className="hidden md:block absolute top-0 left-1/4 w-[600px] h-[600px] bg-gold-500/5 rounded-full blur-[150px]" />
+        <div className="hidden md:block absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gold-500/5 rounded-full blur-[150px]" />
 
         {/* Grid pattern */}
         <div

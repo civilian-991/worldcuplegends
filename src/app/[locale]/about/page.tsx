@@ -236,8 +236,8 @@ export default function AboutPage() {
       {/* UNICEF School of Life Section */}
       <section className="py-24 px-6 bg-night-800 relative overflow-hidden">
         {/* UNICEF Blue accent glow */}
-        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#00AEEF]/10 rounded-full blur-[200px]" />
-        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold-400/10 rounded-full blur-[150px]" />
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#00AEEF]/10 rounded-full blur-[200px] hidden md:block" />
+        <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold-400/10 rounded-full blur-[150px] hidden md:block" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Section Header */}

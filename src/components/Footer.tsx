@@ -36,7 +36,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative bg-night-800 border-t border-gold-500/10">
+    <footer className="relative bg-night-800 border-t border-gold-500/10 overflow-hidden">
       {/* Top Accent Line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
 
@@ -178,7 +178,7 @@ export default function Footer() {
       </div>
 
       {/* Background Decoration */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-radial from-gold-500/5 to-transparent opacity-50 pointer-events-none" />
+      <div className="hidden md:block absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-radial from-gold-500/5 to-transparent opacity-50 pointer-events-none" />
     </footer>
   );
 }
