@@ -338,6 +338,38 @@ const images: ImageSpec[] = [
     prompt: 'Professional football training session, players practicing on green pitch, morning light, premium sports facility, dynamic action shot, cinematic sports photography'
   },
 
+  // COACHES - F1-Style Portraits for Legendary Coaches
+  {
+    filename: 'batistuta.png',
+    folder: 'coaches',
+    prompt: 'Professional sports portrait, Argentine football legend Gabriel Batistuta with long dark hair, HEAD TO WAIST shot showing full torso, wearing Argentina blue and white vertical striped jersey, intense passionate expression, arms at sides confident coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+  },
+  {
+    filename: 'vieira.png',
+    folder: 'coaches',
+    prompt: 'Professional sports portrait, French football legend Patrick Vieira, tall athletic Black player with bald head, HEAD TO WAIST shot showing full torso, wearing France blue national team jersey, commanding authoritative coaching presence, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+  },
+  {
+    filename: 'maldini.png',
+    folder: 'coaches',
+    prompt: 'Professional sports portrait, Italian football legend Paolo Maldini, elegant defender with classic Italian good looks and gray-streaked hair, HEAD TO WAIST shot showing full torso, wearing Italy azzurri blue jersey with number 3, dignified sophisticated coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+  },
+  {
+    filename: 'abdullah.png',
+    folder: 'coaches',
+    prompt: 'Professional sports portrait, Saudi Arabian football legend Sami Al-Jaber, Arabic midfielder with short dark hair and mustache, HEAD TO WAIST shot showing full torso, wearing Saudi Arabia green national team jersey, proud confident coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+  },
+  {
+    filename: 'fadiga.png',
+    folder: 'coaches',
+    prompt: 'Professional sports portrait, Senegalese football legend Khalilou Fadiga, athletic Black African midfielder, HEAD TO WAIST shot showing full torso, wearing Senegal white national team jersey with green trim, joyful confident coaching expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+  },
+  {
+    filename: 'hierro.png',
+    folder: 'coaches',
+    prompt: 'Professional sports portrait, Spanish football legend Fernando Hierro, defender with short dark hair and strong features, HEAD TO WAIST shot showing full torso, wearing Spain red national team jersey, commanding leadership presence coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+  },
+
   // VENUE IMAGES
   {
     filename: 'metlife.jpg',
@@ -455,6 +487,7 @@ async function main() {
   // Create directories
   await ensureDir('public/products');
   await ensureDir('public/legends');
+  await ensureDir('public/coaches');
   await ensureDir('public/teams');
   await ensureDir('public/banners');
   await ensureDir('public/news');
