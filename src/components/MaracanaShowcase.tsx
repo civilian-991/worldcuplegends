@@ -44,8 +44,8 @@ export default function MaracanaShowcase() {
           }}
         />
         {/* Dramatic overlay gradients */}
-        <div className="absolute inset-0 bg-gradient-to-b from-night-900 via-night-900/40 to-night-900" />
-        <div className="absolute inset-0 bg-gradient-to-r from-night-900/80 via-transparent to-night-900/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-night-900/80 via-night-900/20 to-night-900" />
+        <div className="absolute inset-0 bg-gradient-to-r from-night-900/60 via-transparent to-night-900/60" />
 
         {/* Brazilian flag color accents */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-green-500/50 to-transparent" />
