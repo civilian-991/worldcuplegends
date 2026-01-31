@@ -3,13 +3,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { createClient } from '@/lib/supabase/client';
 import Flag from './Flag';
 
 interface Team {
   id: number;
   name: string;
-  country_code: string;
+  countryCode: string;
   coach: string;
   captain: string;
   color: string;
@@ -34,14 +33,16 @@ export default function LegendaryCoaches() {
 
   useEffect(() => {
     async function fetchTeams() {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('teams')
-        .select('id, name, country_code, coach, captain, color')
-        .order('rating', { ascending: false });
-
-      if (!error && data) {
-        setTeams(data);
+      try {
+        const response = await fetch('/api/teams');
+        if (response.ok) {
+          const data = await response.json();
+          // Filter to only teams with coaches
+          const teamsWithCoaches = data.filter((team: Team) => team.coach);
+          setTeams(teamsWithCoaches);
+        }
+      } catch (error) {
+        console.error('Error fetching teams:', error);
       }
       setIsLoading(false);
     }
@@ -158,7 +159,7 @@ export default function LegendaryCoaches() {
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
                   {/* Flag */}
                   <div className="mb-2">
-                    <Flag countryCode={team.country_code} size="md" />
+                    <Flag countryCode={team.countryCode} size="md" />
                   </div>
 
                   {/* Coach Name */}
