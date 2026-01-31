@@ -109,7 +109,6 @@ export default function Footer() {
       { label: t('contact'), href: '/contact' },
       { label: t('press'), href: '/press' },
       { label: t('partners'), href: '/partners' },
-      { label: t('careers'), href: '/careers' },
     ],
   };
 
