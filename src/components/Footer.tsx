@@ -265,7 +265,7 @@ export default function Footer() {
             <p className="text-white/30 text-xs text-center mt-2">
               Powered by{' '}
               <a
-                href="https://bluedge.agency"
+                href="https://bluedge.me/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gold-400/70 hover:text-gold-400 transition-colors"
@@ -416,7 +416,7 @@ export default function Footer() {
             <p className="text-white/40 text-sm text-center mt-4">
               Powered by{' '}
               <a
-                href="https://bluedge.agency"
+                href="https://bluedge.me/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gold-400/70 hover:text-gold-400 transition-colors"
