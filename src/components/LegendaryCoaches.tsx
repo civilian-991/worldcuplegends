@@ -10,21 +10,10 @@ interface Team {
   name: string;
   countryCode: string;
   coach: string;
+  coachImage: string;
   captain: string;
   color: string;
 }
-
-// Coach images mapping - add actual images when available
-const coachImages: Record<string, string> = {
-  'Zico': '/legends/zico.png',
-  'Batistuta': '/coaches/batistuta.png',
-  'Vieira': '/coaches/vieira.png',
-  'Maldini': '/coaches/maldini.png',
-  'Gullit': '/legends/ruud-gullit.png',
-  'Abdullah': '/coaches/abdullah.png',
-  'Fadiga': '/coaches/fadiga.png',
-  'Hierro': '/coaches/hierro.png',
-};
 
 export default function LegendaryCoaches() {
   const t = useTranslations('home.coaches');
@@ -131,9 +120,9 @@ export default function LegendaryCoaches() {
               >
                 {/* Coach Image or Placeholder */}
                 <div className="absolute inset-0 flex items-end justify-center">
-                  {coachImages[team.coach] ? (
+                  {team.coachImage ? (
                     <img
-                      src={coachImages[team.coach]}
+                      src={team.coachImage}
                       alt={team.coach}
                       className="h-[85%] w-auto object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {

@@ -39,6 +39,7 @@ export async function GET() {
     rating: row.rating || 0,
     color: row.color || '#FFD700',
     coach: row.coach || '',
+    coachImage: row.coach_image || '',
     captain: row.captain || '',
     legends: legendsByCountry[row.country_code] || [],
   }));
