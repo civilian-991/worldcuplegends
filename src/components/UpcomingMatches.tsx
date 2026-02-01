@@ -5,21 +5,24 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getMatches, type Match } from '@/lib/api';
-import Flag from '@/components/Flag';
 
 export default function UpcomingMatches() {
   const t = useTranslations('sections.matches');
-  const [upcomingMatches, setUpcomingMatches] = useState<Match[]>([]);
+  const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchMatches() {
       const data = await getMatches();
-      setUpcomingMatches(data.slice(0, 4));
+      setMatches(data);
       setIsLoading(false);
     }
     fetchMatches();
   }, []);
+
+  // Separate final from other matches
+  const finalMatch = matches.find(m => m.stage === 'The Final');
+  const journeyMatches = matches.filter(m => m.stage !== 'The Final').slice(0, 3);
 
   if (isLoading) {
     return (
@@ -50,144 +53,176 @@ export default function UpcomingMatches() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between mb-12"
+          className="text-center mb-16"
         >
-          <div>
-            <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-2">{t('preTitle')}</p>
-            <h2
-              className="text-4xl md:text-5xl font-bold text-white line-accent"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              {t('title')}
-            </h2>
-          </div>
-          <Link
-            href="/schedule"
-            className="mt-6 md:mt-0 text-gold-400 hover:text-gold-300 transition-colors text-sm flex items-center gap-2 group"
+          <p className="text-gold-400 text-sm tracking-[0.3em] uppercase mb-4">{t('preTitle')}</p>
+          <h2
+            className="text-4xl md:text-6xl font-bold text-white mb-4"
+            style={{ fontFamily: 'var(--font-display)' }}
           >
-            {t('viewAll')}
-            <motion.span
-              animate={{ x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              →
-            </motion.span>
-          </Link>
+            {t('title')}
+          </h2>
+          <p className="text-white/50 text-lg max-w-2xl mx-auto">
+            7 legendary matches. 2 iconic venues. One unforgettable tournament.
+          </p>
         </motion.div>
 
-        {/* Matches Grid - Horizontal scroll on mobile */}
-        <div className="flex md:grid md:grid-cols-2 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0 snap-x snap-mandatory md:snap-none scrollbar-hide">
-          {upcomingMatches.map((match, index) => (
-            <motion.div
-              key={match.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              className="relative glass rounded-2xl p-6 overflow-hidden group cursor-pointer card-hover flex-shrink-0 w-80 md:w-auto snap-start"
-            >
-              {/* Live Badge */}
-              {match.isLive && (
-                <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 bg-red-500/20 rounded-full">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-red-400 text-xs font-semibold uppercase">{t('live')}</span>
-                </div>
-              )}
-
-              {/* Stage Badge */}
-              <div className="inline-block px-3 py-1 bg-gold-500/10 rounded-full mb-6">
-                <span className="text-gold-400 text-xs font-medium">{match.stage}</span>
+        {/* Tournament Structure */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* The Journey - Matches 1-6 */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-green-500 to-green-600 rounded-full" />
+            <div className="pl-8">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="px-4 py-1.5 bg-green-500/20 text-green-400 text-sm font-bold rounded-full border border-green-500/30">
+                  THE JOURNEY
+                </span>
+                <span className="text-white/40 text-sm">Estádio Nilton Santos</span>
               </div>
 
-              {/* Teams */}
-              <div className="flex items-center justify-between mb-6">
-                {/* Home Team */}
-                <div className="flex items-center gap-4 flex-1">
-                  {match.homeCountryCode === 'TBD' ? (
-                    <span className="text-4xl">🏆</span>
-                  ) : (
-                    <Flag countryCode={match.homeCountryCode} size="xl" />
-                  )}
-                  <div>
-                    <p className="text-white font-semibold text-lg">{match.homeTeam}</p>
-                    {match.homeScore !== undefined && (
-                      <p className="text-3xl font-bold text-gold-400" style={{ fontFamily: 'var(--font-display)' }}>
-                        {match.homeScore}
-                      </p>
-                    )}
-                  </div>
-                </div>
+              <div className="space-y-3">
+                {journeyMatches.map((match, index) => (
+                  <motion.div
+                    key={match.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="glass rounded-xl p-4 group hover:border-green-500/30 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <span
+                          className="text-2xl font-bold text-green-400/50"
+                          style={{ fontFamily: 'var(--font-display)' }}
+                        >
+                          #{index + 1}
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                            <span className="text-white/30">?</span>
+                          </div>
+                          <span className="text-white/50 font-medium">TBA</span>
+                          <span className="text-white/30 mx-2">vs</span>
+                          <span className="text-white/50 font-medium">TBA</span>
+                          <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                            <span className="text-white/30">?</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white/30 text-xs">Date TBA</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
 
-                {/* VS */}
-                <div className="px-6">
-                  {match.homeScore !== undefined ? (
-                    <span className="text-white/60 text-sm">-</span>
-                  ) : (
-                    <span className="text-white/70 text-lg font-bold" style={{ fontFamily: 'var(--font-display)' }}>
-                      {t('vs')}
+                {/* Show more indicator */}
+                {matches.filter(m => m.stage !== 'The Final').length > 3 && (
+                  <div className="text-center pt-2">
+                    <span className="text-white/40 text-sm">
+                      +{matches.filter(m => m.stage !== 'The Final').length - 3} more matches
                     </span>
-                  )}
-                </div>
-
-                {/* Away Team */}
-                <div className="flex items-center gap-4 flex-1 justify-end">
-                  <div className="text-right">
-                    <p className="text-white font-semibold text-lg">{match.awayTeam}</p>
-                    {match.awayScore !== undefined && (
-                      <p className="text-3xl font-bold text-gold-400" style={{ fontFamily: 'var(--font-display)' }}>
-                        {match.awayScore}
-                      </p>
-                    )}
                   </div>
-                  {match.awayCountryCode === 'TBD' ? (
-                    <span className="text-4xl">🏆</span>
-                  ) : (
-                    <Flag countryCode={match.awayCountryCode} size="xl" />
-                  )}
+                )}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* The Final */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {finalMatch && (
+              <div className="relative h-full">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-gold-400 to-gold-600 rounded-full" />
+                <div className="pl-8 h-full">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="px-4 py-1.5 bg-gold-500/20 text-gold-400 text-sm font-bold rounded-full border border-gold-500/30">
+                      THE FINAL
+                    </span>
+                    <span className="text-white/40 text-sm">Estádio Maracanã</span>
+                  </div>
+
+                  <div className="glass rounded-2xl p-8 border-gold-500/20 glow-gold h-[calc(100%-60px)] flex flex-col justify-center">
+                    {/* Trophy */}
+                    <div className="text-center mb-6">
+                      <motion.span
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="text-6xl inline-block"
+                      >
+                        🏆
+                      </motion.span>
+                    </div>
+
+                    {/* Teams */}
+                    <div className="flex items-center justify-center gap-6 mb-6">
+                      <div className="text-center">
+                        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
+                          <span className="text-white/30 text-2xl">?</span>
+                        </div>
+                        <p className="text-white/50 text-sm">TBA</p>
+                      </div>
+
+                      <span
+                        className="text-3xl font-bold text-gold-400"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
+                        VS
+                      </span>
+
+                      <div className="text-center">
+                        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
+                          <span className="text-white/30 text-2xl">?</span>
+                        </div>
+                        <p className="text-white/50 text-sm">TBA</p>
+                      </div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="text-center">
+                      <p className="text-gold-400/70 text-sm mb-1">Where Champions Are Crowned</p>
+                      <p className="text-white/30 text-xs">Date & Time TBA</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              {/* Match Info */}
-              <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                <div className="flex items-center gap-2 text-white/70 text-sm">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span>TBA</span>
-                </div>
-                <div className="flex items-center gap-2 text-white/70 text-sm">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>TBA</span>
-                </div>
-              </div>
-
-              {/* Venue */}
-              <div className="mt-3 flex items-center gap-2 text-white/60 text-sm">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>{match.venue}</span>
-              </div>
-
-              {/* Hover Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-r from-gold-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-            </motion.div>
-          ))}
+            )}
+          </motion.div>
         </div>
+
+        {/* View Full Schedule CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <Link href="/schedule">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-full inline-flex items-center gap-3"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              VIEW FULL SCHEDULE
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </motion.button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
 }
