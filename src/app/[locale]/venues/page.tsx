@@ -9,10 +9,19 @@ const venues = [
     city: 'Rio de Janeiro',
     countryCode: 'BR',
     capacity: '78,838',
-    matches: ['Semi-Final', 'Final'],
+    matches: ['Final'],
     image: '/stadium/maracana.jpg',
     description: 'The Temple of Football. Home to two World Cup Finals and where legends become immortal. The heart of WLC 2026.',
     featured: true,
+  },
+  {
+    name: 'Estádio Nilton Santos',
+    city: 'Rio de Janeiro',
+    countryCode: 'BR',
+    capacity: '46,831',
+    matches: ['Group Stage', 'Round of 16', 'Quarter-Final', 'Semi-Final'],
+    image: '/venues/nilton-santos.jpg',
+    description: 'Known as the Engenhão, this Olympic stadium combines modern architecture with Rio\'s passionate football culture. Host of 6 WLC 2026 matches.',
   },
   {
     name: 'Allianz Parque',
@@ -113,9 +122,9 @@ export default function VenuesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: '8', label: 'Venues' },
+              { value: '9', label: 'Venues' },
               { value: '8', label: 'Nations' },
-              { value: '420K+', label: 'Total Capacity' },
+              { value: '467K+', label: 'Total Capacity' },
               { value: '24', label: 'Matches' },
             ].map((stat, index) => (
               <motion.div
@@ -188,9 +197,6 @@ export default function VenuesPage() {
                 <div className="flex flex-wrap items-center gap-4">
                   <span className="px-4 py-2 bg-gold-500/20 backdrop-blur-sm text-gold-400 rounded-full">
                     78,838 capacity
-                  </span>
-                  <span className="px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-full">
-                    Semi-Final
                   </span>
                   <span className="px-4 py-2 bg-gold-500 text-night-900 font-bold rounded-full">
                     FINAL
