@@ -34,6 +34,14 @@ const socialLinks = [
   { label: 'Facebook', icon: <FacebookIcon />, href: 'https://www.facebook.com/worldlegendscupofficial' },
 ];
 
+const sponsors = [
+  { name: 'Red Sea Global', logo: '/sponsors/red-sea-global.png' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-2.png' },
+  { name: 'Van Wagner', logo: '/sponsors/van-wagner.png' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-4.png' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-5.png' },
+];
+
 // Accordion component for mobile link sections
 function MobileAccordion({
   title,
@@ -104,6 +112,29 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-night-800 border-t border-gold-500/10 overflow-hidden">
+      {/* Sponsors Section */}
+      <div className="bg-night-900/50 py-8 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <p className="text-center text-white/40 text-xs tracking-[0.3em] uppercase mb-6">
+            Official Partners
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+            {sponsors.map((sponsor, index) => (
+              <motion.img
+                key={index}
+                src={sponsor.logo}
+                alt={sponsor.name}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Top Accent Line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
 

@@ -2,25 +2,13 @@
 
 import { motion } from 'framer-motion';
 
-const partners = {
-  title: [
-    { name: 'Global Sports Corp', tier: 'Title Partner' },
-    { name: 'TechVision', tier: 'Title Partner' },
-  ],
-  official: [
-    { name: 'SportWear Pro', category: 'Official Kit Partner' },
-    { name: 'AirTravel Plus', category: 'Official Airline' },
-    { name: 'StayWorld Hotels', category: 'Official Hotel Partner' },
-    { name: 'DrinkFresh', category: 'Official Beverage' },
-    { name: 'AutoDrive', category: 'Official Automotive Partner' },
-    { name: 'BankGlobal', category: 'Official Banking Partner' },
-  ],
-  media: [
-    { name: 'SportTV Network', type: 'Broadcast Partner' },
-    { name: 'GlobalStream', type: 'Streaming Partner' },
-    { name: 'RadioSport', type: 'Radio Partner' },
-  ],
-};
+const sponsors = [
+  { name: 'Red Sea Global', logo: '/sponsors/red-sea-global.png', tier: 'Title Partner' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-2.png', tier: 'Official Partner' },
+  { name: 'Van Wagner', logo: '/sponsors/van-wagner.png', tier: 'Official Partner' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-4.png', tier: 'Official Partner' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-5.png', tier: 'Official Partner' },
+];
 
 export default function PartnersPage() {
   return (
@@ -51,122 +39,67 @@ export default function PartnersPage() {
         </div>
       </section>
 
-      {/* Title Partners */}
+      {/* Sponsors Grid */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
             <h2
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              TITLE PARTNERS
+              OUR SPONSORS
             </h2>
+            <p className="text-white/50 max-w-2xl mx-auto">
+              World-class brands supporting the celebration of football&apos;s greatest legends
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {partners.title.map((partner, index) => (
+          {/* Main Sponsors Display */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center">
+            {sponsors.map((sponsor, index) => (
               <motion.div
-                key={partner.name}
+                key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass rounded-2xl p-12 text-center glow-gold"
+                className="group"
               >
-                <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold-500/20 to-gold-600/20 flex items-center justify-center">
-                  <span className="text-5xl">🏆</span>
+                <div className="glass rounded-2xl p-8 h-40 flex items-center justify-center group-hover:bg-gold-500/5 transition-all duration-300 group-hover:border-gold-500/30">
+                  <img
+                    src={sponsor.logo}
+                    alt={sponsor.name}
+                    className="max-h-20 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                  />
                 </div>
-                <h3
-                  className="text-2xl font-bold text-gold-400 mb-2"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {partner.name.toUpperCase()}
-                </h3>
-                <p className="text-white/50">{partner.tier}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Official Partners */}
-      <section className="py-24 px-6 bg-night-800">
-        <div className="max-w-7xl mx-auto">
+      {/* Sponsor Marquee */}
+      <section className="py-16 bg-night-800 overflow-hidden">
+        <div className="relative">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
+            animate={{ x: [0, -1920] }}
+            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+            className="flex gap-16 items-center"
           >
-            <h2
-              className="text-4xl font-bold text-white mb-4"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              OFFICIAL PARTNERS
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {partners.official.map((partner, index) => (
-              <motion.div
-                key={partner.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass rounded-xl p-6 text-center group hover:bg-gold-500/5 transition-colors"
-              >
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-night-600 flex items-center justify-center">
-                  <span className="text-3xl">⭐</span>
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-1 group-hover:text-gold-400 transition-colors">
-                  {partner.name}
-                </h3>
-                <p className="text-gold-400/70 text-sm">{partner.category}</p>
-              </motion.div>
+            {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((sponsor, index) => (
+              <img
+                key={index}
+                src={sponsor.logo}
+                alt={sponsor.name}
+                className="h-12 w-auto object-contain opacity-50 flex-shrink-0"
+              />
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Media Partners */}
-      <section className="py-24 px-6">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2
-              className="text-4xl font-bold text-white mb-4"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              MEDIA PARTNERS
-            </h2>
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {partners.media.map((partner, index) => (
-              <motion.div
-                key={partner.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass rounded-xl p-6 text-center"
-              >
-                <span className="text-4xl block mb-4">📺</span>
-                <h3 className="text-white font-semibold">{partner.name}</h3>
-                <p className="text-white/50 text-sm">{partner.type}</p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
