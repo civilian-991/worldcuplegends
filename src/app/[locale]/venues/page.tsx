@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import Flag from '@/components/Flag';
 
@@ -10,37 +10,29 @@ const venues = [
     city: 'Rio de Janeiro',
     countryCode: 'BR',
     capacity: '78,838',
-    matches: ['Final'],
     matchCount: 1,
     image: '/stadium/maracana.jpg',
     description: 'The Temple of Football. Home to two World Cup Finals and where legends become immortal.',
     tagline: 'WHERE CHAMPIONS ARE CROWNED',
     role: 'THE FINAL',
+    matchLabel: 'Final Match',
   },
   {
     name: 'Estádio Nilton Santos',
     city: 'Rio de Janeiro',
     countryCode: 'BR',
     capacity: '46,831',
-    matches: ['Group Stage', 'Round of 16', 'Quarter-Final', 'Semi-Final'],
     matchCount: 6,
     image: '/venues/nilton-santos.jpg',
     description: 'Known as the Engenhão, this Olympic stadium combines modern architecture with Rio\'s passionate football culture.',
     tagline: 'WHERE LEGENDS ARE FORGED',
     role: 'THE JOURNEY',
+    matchLabel: 'Matches 1-6',
   },
 ];
 
 export default function VenuesPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const parallaxY1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const parallaxY2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.1]);
 
   return (
     <div className="min-h-screen bg-night-900" ref={containerRef}>
@@ -333,27 +325,18 @@ export default function VenuesPage() {
                       </div>
                     </div>
 
-                    {/* Matches Hosted */}
+                    {/* Match Label */}
                     <div className="pt-6 border-t border-white/10">
                       <p className="text-white/40 text-xs uppercase tracking-wider mb-3">Hosting</p>
-                      <div className="flex flex-wrap gap-2">
-                        {venue.matches.map((match, i) => (
-                          <motion.span
-                            key={match}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.3, delay: 0.6 + i * 0.1 }}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                              match === 'Final'
-                                ? 'bg-gold-500 text-night-900'
-                                : 'bg-night-600 text-white/70 border border-white/10'
-                            }`}
-                          >
-                            {match}
-                          </motion.span>
-                        ))}
-                      </div>
+                      <span
+                        className={`inline-block px-4 py-2 rounded-full text-sm font-medium ${
+                          index === 0
+                            ? 'bg-gold-500 text-night-900'
+                            : 'bg-night-600 text-white/70 border border-white/10'
+                        }`}
+                      >
+                        {venue.matchLabel}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -375,7 +358,7 @@ export default function VenuesPage() {
                   className="text-gold-400 text-2xl font-bold"
                   style={{ fontFamily: 'var(--font-display)' }}
                 >
-                  VS
+                  &
                 </span>
               </div>
               {/* Pulse Ring */}
@@ -389,16 +372,16 @@ export default function VenuesPage() {
         </div>
       </section>
 
-      {/* Journey Timeline */}
+      {/* Tournament Format */}
       <section className="relative py-24 px-6 bg-night-800/30">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <p className="text-gold-400 text-xs tracking-[0.4em] uppercase mb-4">Tournament Flow</p>
+            <p className="text-gold-400 text-xs tracking-[0.4em] uppercase mb-4">Tournament Format</p>
             <h2
               className="text-4xl md:text-5xl font-bold text-white"
               style={{ fontFamily: 'var(--font-display)' }}
@@ -407,70 +390,102 @@ export default function VenuesPage() {
             </h2>
           </motion.div>
 
-          {/* Timeline */}
-          <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-green-500/50 via-gold-500/50 to-gold-500" />
-
-            {/* Timeline Items */}
-            {[
-              { stage: 'Group Stage', venue: 'Nilton Santos', matches: 4, icon: '⚽' },
-              { stage: 'Round of 16', venue: 'Nilton Santos', matches: 1, icon: '🎯' },
-              { stage: 'Quarter-Finals', venue: 'Nilton Santos', matches: 1, icon: '🔥' },
-              { stage: 'Semi-Finals', venue: 'Nilton Santos', matches: 1, icon: '⭐' },
-              { stage: 'The Final', venue: 'Maracanã', matches: 1, icon: '🏆' },
-            ].map((item, index) => (
-              <motion.div
-                key={item.stage}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                className={`relative flex items-center gap-8 mb-12 ${
-                  index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
-                }`}
-              >
-                {/* Content Card */}
-                <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
-                  <div
-                    className={`inline-block glass rounded-xl p-6 ${
-                      item.stage === 'The Final' ? 'border border-gold-500/30 glow-gold-sm' : ''
-                    }`}
+          {/* Simple Two-Stage Format */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Stage 1: The Journey */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="glass rounded-2xl p-8 border border-green-500/20"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <span className="text-2xl">⚽</span>
+                </div>
+                <div>
+                  <p className="text-green-400 text-xs tracking-wider uppercase">Stage 1</p>
+                  <h3
+                    className="text-2xl font-bold text-white"
+                    style={{ fontFamily: 'var(--font-display)' }}
                   >
-                    <p className="text-3xl mb-2">{item.icon}</p>
-                    <h3
-                      className={`text-xl font-bold mb-1 ${
-                        item.stage === 'The Final' ? 'text-gold-400' : 'text-white'
-                      }`}
-                      style={{ fontFamily: 'var(--font-display)' }}
-                    >
-                      {item.stage.toUpperCase()}
-                    </h3>
-                    <p className="text-white/50 text-sm">{item.venue}</p>
-                    <p className="text-gold-400/70 text-xs mt-2">
-                      {item.matches} {item.matches === 1 ? 'Match' : 'Matches'}
-                    </p>
-                  </div>
+                    THE JOURNEY
+                  </h3>
                 </div>
-
-                {/* Timeline Node */}
-                <div className="relative z-10">
-                  <motion.div
-                    className={`w-4 h-4 rounded-full ${
-                      item.stage === 'The Final'
-                        ? 'bg-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.5)]'
-                        : 'bg-green-500/70'
-                    }`}
-                    whileInView={{ scale: [0, 1.2, 1] }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.15 + 0.3 }}
-                  />
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-white/10">
+                  <span className="text-white/60">Matches</span>
+                  <span className="text-white font-bold">6</span>
                 </div>
+                <div className="flex items-center justify-between py-3 border-b border-white/10">
+                  <span className="text-white/60">Venue</span>
+                  <span className="text-white font-bold">Nilton Santos</span>
+                </div>
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-white/60">Format</span>
+                  <span className="text-white font-bold">TBA</span>
+                </div>
+              </div>
+            </motion.div>
 
-                {/* Spacer */}
-                <div className="flex-1" />
-              </motion.div>
-            ))}
+            {/* Stage 2: The Final */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="glass rounded-2xl p-8 border border-gold-500/30 glow-gold-sm"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-gold-500/20 flex items-center justify-center">
+                  <span className="text-2xl">🏆</span>
+                </div>
+                <div>
+                  <p className="text-gold-400 text-xs tracking-wider uppercase">Stage 2</p>
+                  <h3
+                    className="text-2xl font-bold text-gold-400"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    THE FINAL
+                  </h3>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-white/10">
+                  <span className="text-white/60">Match</span>
+                  <span className="text-gold-400 font-bold">Grand Final</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-white/10">
+                  <span className="text-white/60">Venue</span>
+                  <span className="text-gold-400 font-bold">Maracanã</span>
+                </div>
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-white/60">Prize</span>
+                  <span className="text-gold-400 font-bold">Championship</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Arrow Connector */}
+          <div className="flex justify-center my-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="flex items-center gap-4"
+            >
+              <div className="h-px w-16 bg-gradient-to-r from-transparent via-green-500/50 to-green-500" />
+              <div className="w-10 h-10 rounded-full bg-night-700 border border-gold-500/30 flex items-center justify-center">
+                <svg className="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+              <div className="h-px w-16 bg-gradient-to-r from-gold-500 via-gold-500/50 to-transparent" />
+            </motion.div>
           </div>
         </div>
       </section>
