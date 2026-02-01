@@ -262,6 +262,17 @@ export default function Footer() {
             <p className="text-white/30 text-xs text-center">
               © {t('copyright')}
             </p>
+            <p className="text-white/30 text-xs text-center mt-2">
+              Powered by{' '}
+              <a
+                href="https://bluedge.agency"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold-400/70 hover:text-gold-400 transition-colors"
+              >
+                BLU EDGE Marketing Agency
+              </a>
+            </p>
           </div>
         </div>
 
@@ -385,21 +396,34 @@ export default function Footer() {
           </div>
 
           {/* Bottom Section - Desktop */}
-          <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-white/60 text-sm">
-              © {t('copyright')}
-            </p>
-            <div className="flex items-center gap-6">
-              <Link href="/privacy" className="text-white/60 hover:text-white text-sm transition-colors">
-                {t('privacyPolicy')}
-              </Link>
-              <Link href="/terms" className="text-white/60 hover:text-white text-sm transition-colors">
-                {t('termsOfService')}
-              </Link>
-              <Link href="/cookies" className="text-white/60 hover:text-white text-sm transition-colors">
-                {t('cookies')}
-              </Link>
+          <div className="mt-16 pt-8 border-t border-white/5">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="text-white/60 text-sm">
+                © {t('copyright')}
+              </p>
+              <div className="flex items-center gap-6">
+                <Link href="/privacy" className="text-white/60 hover:text-white text-sm transition-colors">
+                  {t('privacyPolicy')}
+                </Link>
+                <Link href="/terms" className="text-white/60 hover:text-white text-sm transition-colors">
+                  {t('termsOfService')}
+                </Link>
+                <Link href="/cookies" className="text-white/60 hover:text-white text-sm transition-colors">
+                  {t('cookies')}
+                </Link>
+              </div>
             </div>
+            <p className="text-white/40 text-sm text-center mt-4">
+              Powered by{' '}
+              <a
+                href="https://bluedge.agency"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gold-400/70 hover:text-gold-400 transition-colors"
+              >
+                BLU EDGE Marketing Agency
+              </a>
+            </p>
           </div>
         </div>
       </div>
