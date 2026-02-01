@@ -581,6 +581,7 @@ export default function VenuesPage() {
               Be part of the greatest gathering of football legends ever assembled.
               Two iconic stadiums. Seven unforgettable matches. One ultimate champion.
             </p>
+{/* Get Tickets button - hidden until ticket link is provided
             <motion.a
               href="/tickets"
               className="inline-flex items-center gap-3 px-8 py-4 bg-gold-500 text-night-900 font-bold rounded-full hover:bg-gold-400 transition-colors"
@@ -593,6 +594,7 @@ export default function VenuesPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </motion.a>
+            */}
           </motion.div>
         </div>
       </section>

@@ -173,6 +173,7 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {/* Get Tickets button - hidden until ticket link is provided
             <Link href="/tickets">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -182,6 +183,7 @@ export default function Home() {
                 {t('ctaSection.getTicketsNow')}
               </motion.button>
             </Link>
+            */}
             <Link href="/about">
               <motion.button
                 whileHover={{ scale: 1.05 }}

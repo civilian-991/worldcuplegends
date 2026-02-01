@@ -503,7 +503,7 @@ export default function AdvancedSearch({ isOpen: controlledIsOpen, onClose: cont
                           { label: 'Match Schedule', href: '/schedule', icon: '📅' },
                           { label: 'Latest News', href: '/news', icon: '📰' },
                           { label: 'All Teams', href: '/teams', icon: '🏆' },
-                          { label: 'Buy Tickets', href: '/tickets', icon: '🎟️' },
+                          // { label: 'Buy Tickets', href: '/tickets', icon: '🎟️' }, // Hidden until ticket link is provided
                         ].map((link, index) => (
                           <motion.a
                             key={link.href}

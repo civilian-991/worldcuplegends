@@ -91,7 +91,7 @@ export default function Footer() {
       { label: t('about'), href: '/about' },
       { label: t('schedule'), href: '/schedule' },
       { label: t('venues'), href: '/venues' },
-      { label: t('tickets'), href: '/tickets' },
+      // { label: t('tickets'), href: '/tickets' }, // Hidden until ticket link is provided
     ],
     discover: [
       { label: t('legends'), href: '/legends' },
