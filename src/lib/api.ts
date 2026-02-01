@@ -168,19 +168,19 @@ export async function getLegends(): Promise<Legend[]> {
 }
 
 export async function getLegendById(id: number): Promise<Legend | null> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('legends')
-    .select('*')
-    .eq('id', id)
-    .single();
-
-  if (error) {
+  try {
+    const response = await fetch(`/api/legends/${id}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
     console.error('Error fetching legend:', error);
     return null;
   }
-
-  return data ? transformLegend(data) : null;
 }
 
 export async function getTeams(): Promise<Team[]> {
