@@ -30,6 +30,7 @@ export interface Team {
   confederation: string;
   rating: number;
   color: string;
+  coach: string;
   legends: string[];
 }
 

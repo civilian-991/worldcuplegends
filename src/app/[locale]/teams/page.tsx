@@ -69,6 +69,55 @@ export default function TeamsPage() {
       {/* Teams Grid */}
       <section className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
+          {/* WLC 2026 Participating Nations */}
+          <div className="mb-16">
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-4xl">⚽</span>
+              <div>
+                <h2
+                  className="text-3xl font-bold text-white"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  WLC 2026 <span className="text-gradient-gold">TEAMS</span>
+                </h2>
+                <p className="text-white/50 text-sm">The 8 nations competing in Brazil</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {teams
+                .filter((t) => t.coach) // Teams with coaches are participating in WLC 2026
+                .sort((a, b) => b.rating - a.rating)
+                .map((team, index) => {
+                  const teamLegends = getTeamLegends(team.countryCode);
+                  return (
+                    <motion.div
+                      key={team.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="glass rounded-xl p-6 text-center group cursor-pointer hover:bg-gold-500/5 transition-colors border border-gold-500/20"
+                      onClick={() => setSelectedTeam(team)}
+                    >
+                      <div className="flex justify-center mb-3">
+                        <Flag countryCode={team.countryCode} size="xl" />
+                      </div>
+                      <h3
+                        className="text-white font-bold text-lg group-hover:text-gold-400 transition-colors"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
+                        {team.name.toUpperCase()}
+                      </h3>
+                      <p className="text-white/40 text-xs mt-1">Coach: {team.coach}</p>
+                      <div className="mt-3 pt-3 border-t border-white/10">
+                        <p className="text-gold-400 text-sm">{teamLegends.length} Legends</p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+            </div>
+          </div>
+
           {/* World Cup Winners Showcase */}
           <div className="mb-16">
             <div className="flex items-center gap-4 mb-8">
@@ -89,7 +138,8 @@ export default function TeamsPage() {
                   <motion.div
                     key={team.id}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="glass rounded-xl p-6 text-center group cursor-pointer hover:bg-gold-500/5 transition-colors"
                     onClick={() => setSelectedTeam(team)}
