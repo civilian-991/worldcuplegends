@@ -23,69 +23,6 @@ const venues = [
     image: '/venues/nilton-santos.jpg',
     description: 'Known as the Engenhão, this Olympic stadium combines modern architecture with Rio\'s passionate football culture. Host of 6 WLC 2026 matches.',
   },
-  {
-    name: 'Allianz Parque',
-    city: 'São Paulo',
-    countryCode: 'BR',
-    capacity: '43,713',
-    matches: ['Group Stage', 'Quarter-Final'],
-    image: '/venues/allianz-parque.jpg',
-    description: 'A modern arena combining world-class facilities with the passionate atmosphere of Brazilian football.',
-  },
-  {
-    name: 'Arena Corinthians',
-    city: 'São Paulo',
-    countryCode: 'BR',
-    capacity: '49,205',
-    matches: ['Group Stage', 'Quarter-Final'],
-    image: '/venues/arena-corinthians.jpg',
-    description: 'Host of the 2014 World Cup opening match, this iconic venue represents the soul of São Paulo football.',
-  },
-  {
-    name: 'Mineirão',
-    city: 'Belo Horizonte',
-    countryCode: 'BR',
-    capacity: '61,846',
-    matches: ['Group Stage', 'Semi-Final'],
-    image: '/venues/mineirao.jpg',
-    description: 'One of Brazil\'s most historic stadiums, witness to countless legendary moments in Brazilian football.',
-  },
-  {
-    name: 'Arena da Baixada',
-    city: 'Curitiba',
-    countryCode: 'BR',
-    capacity: '42,372',
-    matches: ['Group Stage'],
-    image: '/venues/arena-baixada.jpg',
-    description: 'A 2014 World Cup venue known for its intimate atmosphere and passionate southern Brazilian fans.',
-  },
-  {
-    name: 'Beira-Rio',
-    city: 'Porto Alegre',
-    countryCode: 'BR',
-    capacity: '50,128',
-    matches: ['Group Stage', 'Round of 16'],
-    image: '/venues/beira-rio.jpg',
-    description: 'Located on the banks of the Guaíba River, this stunning stadium offers breathtaking views and electric atmosphere.',
-  },
-  {
-    name: 'Arena Fonte Nova',
-    city: 'Salvador',
-    countryCode: 'BR',
-    capacity: '47,907',
-    matches: ['Group Stage'],
-    image: '/venues/fonte-nova.jpg',
-    description: 'Rising from the site of the original Fonte Nova, this modern arena brings Bahian passion to life.',
-  },
-  {
-    name: 'Arena Pernambuco',
-    city: 'Recife',
-    countryCode: 'BR',
-    capacity: '46,154',
-    matches: ['Group Stage'],
-    image: '/venues/arena-pernambuco.jpg',
-    description: 'A state-of-the-art venue in Brazil\'s northeast, bringing World Legends Cup action to Pernambuco.',
-  },
 ];
 
 export default function VenuesPage() {
@@ -122,10 +59,10 @@ export default function VenuesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: '9', label: 'Venues' },
+              { value: '2', label: 'Venues' },
               { value: '8', label: 'Nations' },
-              { value: '467K+', label: 'Total Capacity' },
-              { value: '24', label: 'Matches' },
+              { value: '125K+', label: 'Total Capacity' },
+              { value: '7', label: 'Matches' },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
