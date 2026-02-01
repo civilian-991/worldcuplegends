@@ -128,11 +128,20 @@ export default function LegendDetailPage() {
               {/* Name */}
               <p className="text-white/60 text-xl font-medium mb-1">{firstName}</p>
               <h1
-                className="text-6xl md:text-8xl font-black text-white mb-6 leading-none"
+                className="text-6xl md:text-8xl font-black text-white mb-2 leading-none"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
                 {lastName.toUpperCase()}
               </h1>
+              {/* Full Name - show if different from display name */}
+              {legend.fullName && legend.fullName !== legend.name && (
+                <p className="text-white/40 text-sm tracking-wide mb-6 italic">
+                  "{legend.fullName}"
+                </p>
+              )}
+              {(!legend.fullName || legend.fullName === legend.name) && (
+                <div className="mb-6" />
+              )}
 
               {/* Country & Position */}
               <div className="flex items-center gap-4 mb-8">

@@ -33,6 +33,7 @@ export async function GET(
   const legend = {
     id: data.id,
     name: data.name,
+    fullName: data.full_name || data.name,
     shortName: data.short_name || '',
     country: data.country,
     countryCode: data.country_code || '',

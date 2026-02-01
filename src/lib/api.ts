@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/client';
 export interface Legend {
   id: number;
   name: string;
+  fullName: string;
   shortName: string;
   country: string;
   countryCode: string;
@@ -68,6 +69,7 @@ function transformLegend(row: Record<string, unknown>): Legend {
   return {
     id: row.id as number,
     name: row.name as string,
+    fullName: (row.full_name as string) || (row.name as string),
     shortName: (row.short_name as string) || '',
     country: row.country as string,
     countryCode: (row.country_code as string) || '',

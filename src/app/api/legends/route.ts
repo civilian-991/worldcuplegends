@@ -18,6 +18,7 @@ export async function GET() {
   const legends = (data || []).map(row => ({
     id: row.id,
     name: row.name,
+    fullName: row.full_name || row.name,
     shortName: row.short_name || '',
     country: row.country,
     countryCode: row.country_code || '',
