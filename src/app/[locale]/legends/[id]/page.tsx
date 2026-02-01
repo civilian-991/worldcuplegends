@@ -291,6 +291,10 @@ export default function LegendDetailPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {relatedLegends.map((related) => {
                   const relatedColor = teamColors[related.countryCode] || '#d4af37';
+                  const nameParts = related.name.split(' ');
+                  const isSingleName = nameParts.length === 1;
+                  const displayFirstName = isSingleName ? null : nameParts[0];
+                  const displayLastName = isSingleName ? nameParts[0] : nameParts.slice(1).join(' ');
                   return (
                     <Link key={related.id} href={`/legends/${related.id}`}>
                       <div className="relative bg-night-800 rounded-xl overflow-hidden group cursor-pointer">
@@ -315,9 +319,11 @@ export default function LegendDetailPage() {
                           <div className="absolute inset-0 bg-gradient-to-t from-night-800 to-transparent" />
                         </div>
                         <div className="p-4">
-                          <p className="text-white/60 text-xs">{related.name.split(' ')[0]}</p>
+                          {displayFirstName && (
+                            <p className="text-white/60 text-xs">{displayFirstName}</p>
+                          )}
                           <p className="text-white font-bold group-hover:text-gold-400 transition-colors">
-                            {(related.name.split(' ').slice(1).join(' ') || related.name).toUpperCase()}
+                            {displayLastName.toUpperCase()}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <Flag countryCode={related.countryCode} size="sm" />
