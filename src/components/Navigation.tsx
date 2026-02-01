@@ -17,6 +17,7 @@ export default function Navigation() {
     { href: '/', label: t('home') },
     { href: '/legends', label: t('legends') },
     { href: '/teams', label: t('teams') },
+    { href: '/venues', label: t('venues') },
     { href: '/schedule', label: t('schedule') },
     { href: '/news', label: t('news') },
   ];
