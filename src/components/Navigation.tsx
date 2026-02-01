@@ -91,6 +91,7 @@ export default function Navigation() {
             {/* Language Switcher */}
             <LanguageSwitcher />
 
+{/* Get Tickets button - hidden until ticket link is provided
             <Link href="/tickets">
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -100,6 +101,7 @@ export default function Navigation() {
                 {t('getTickets')}
               </motion.button>
             </Link>
+            */}
           </div>
 
           {/* Mobile Menu */}
@@ -166,6 +168,7 @@ export default function Navigation() {
                   </Link>
                 </motion.div>
               ))}
+{/* Get Tickets button - hidden until ticket link is provided
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -177,6 +180,7 @@ export default function Navigation() {
                   </button>
                 </Link>
               </motion.div>
+              */}
             </motion.nav>
           </motion.div>
         )}
