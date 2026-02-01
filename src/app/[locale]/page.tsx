@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import VideoPlayer from '@/components/VideoPlayer';
-import MaracanaShowcase from '@/components/MaracanaShowcase';
+import StadiumCarousel from '@/components/StadiumCarousel';
 import GlobalReach from '@/components/GlobalReach';
 import UpcomingMatches from '@/components/UpcomingMatches';
 import TeamCarousel from '@/components/TeamCarousel';
@@ -136,7 +136,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <MaracanaShowcase />
+      <StadiumCarousel />
 
       <GlobalReach />
 
