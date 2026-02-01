@@ -297,17 +297,17 @@ export default function LegendDetailPage() {
                   const displayLastName = isSingleName ? nameParts[0] : nameParts.slice(1).join(' ');
                   return (
                     <Link key={related.id} href={`/legends/${related.id}`}>
-                      <div className="relative bg-night-800 rounded-xl overflow-hidden group cursor-pointer">
+                      <div className="relative bg-night-800 rounded-xl overflow-hidden group cursor-pointer hover:ring-1 hover:ring-gold-500/30 transition-all duration-300">
                         <div
-                          className="absolute left-0 top-0 bottom-0 w-1"
+                          className="absolute left-0 top-0 bottom-0 w-1 z-10"
                           style={{ backgroundColor: relatedColor }}
                         />
-                        <div className="relative h-40">
+                        <div className="relative h-40 overflow-hidden bg-night-700">
                           {related.image ? (
                             <img
                               src={related.image}
                               alt={related.name}
-                              className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                              className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500 ease-out"
                             />
                           ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -316,7 +316,7 @@ export default function LegendDetailPage() {
                               </span>
                             </div>
                           )}
-                          <div className="absolute inset-0 bg-gradient-to-t from-night-800 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-night-800 via-night-800/20 to-transparent pointer-events-none" />
                         </div>
                         <div className="p-4">
                           {displayFirstName && (
