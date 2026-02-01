@@ -141,8 +141,8 @@ export default function LegendaryCoaches() {
                   )}
                 </div>
 
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/50 to-transparent" />
+                {/* Gradient Overlay - only at bottom for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/30 via-40% to-transparent" />
 
                 {/* Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
