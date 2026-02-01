@@ -20,6 +20,7 @@ export default function Navigation() {
     { href: '/venues', label: t('venues') },
     { href: '/schedule', label: t('schedule') },
     { href: '/news', label: t('news') },
+    { href: '/partners', label: t('partners') },
   ];
 
   useEffect(() => {
