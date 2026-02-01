@@ -11,6 +11,7 @@ import UpcomingMatches from '@/components/UpcomingMatches';
 import TeamCarousel from '@/components/TeamCarousel';
 import LegendaryCoaches from '@/components/LegendaryCoaches';
 import NewsSection from '@/components/NewsSection';
+import LegendMarquee from '@/components/LegendMarquee';
 
 export default function Home() {
   const t = useTranslations('home');
@@ -108,32 +109,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Marquee Banner */}
-      <div className="bg-gold-500 py-3 overflow-hidden relative">
-        <motion.div
-          initial={{ x: '0%' }}
-          animate={{ x: '-50%' }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-          className="flex whitespace-nowrap"
-        >
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 px-4 md:gap-8 md:px-8">
-              {[
-                'PELÉ', 'MARADONA', 'ZIDANE', 'RONALDO', 'MESSI', 'BECKENBAUER',
-                'CRUYFF', 'RONALDINHO', 'HENRY', 'MALDINI'
-              ].map((name) => (
-                <span
-                  key={name}
-                  className="text-night-900 text-lg font-bold tracking-wider"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {name} ★
-                </span>
-              ))}
-            </div>
-          ))}
-        </motion.div>
-      </div>
+      {/* Marquee Banner - fetches legends from database */}
+      <LegendMarquee />
 
       {/* Quote Section */}
       <section className="py-24 px-6 relative overflow-hidden bg-night-900">
