@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'World Legends Cup',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'About - World Legends Cup 2026',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'About - World Legends Cup 2026',
     description: 'Learn about the World Legends Cup 2026 - a historic football tournament bringing together the greatest legends of the game in Brazil. Discover our mission, values, and the people behind the event.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${siteUrl}/og-image.png`],
   },
 };
 

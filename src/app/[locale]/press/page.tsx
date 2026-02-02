@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'World Legends Cup',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Press Room - World Legends Cup 2026',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Press Room - World Legends Cup 2026',
     description: 'Access official press releases, media resources, and accreditation information for journalists covering the World Legends Cup 2026.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${siteUrl}/og-image.png`],
   },
 };
 

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'World Legends Cup',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Contact Us - World Legends Cup 2026',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Contact Us - World Legends Cup 2026',
     description: 'Get in touch with the World Legends Cup 2026 team. Contact us for tickets, media inquiries, partnership opportunities, or general questions about the tournament.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${siteUrl}/og-image.png`],
   },
 };
 

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'World Legends Cup',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Official Partners - World Legends Cup 2026',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Official Partners - World Legends Cup 2026',
     description: 'Meet the official partners and sponsors of the World Legends Cup 2026. World-class brands supporting the celebration of football\'s greatest legends.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${siteUrl}/og-image.png`],
   },
 };
 

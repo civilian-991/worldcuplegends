@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     siteName: 'World Legends Cup',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'World Legends Cup 2026 Venues',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Venues - Maracana & Nilton Santos Stadiums',
     description: 'Discover the iconic venues hosting the World Legends Cup 2026. Experience football at the legendary Maracana Stadium and Nilton Santos Stadium in Rio de Janeiro, Brazil.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${siteUrl}/og-image.png`],
   },
 };
 
