@@ -42,7 +42,7 @@ const securityHeaders = [
       // Styles: self + unsafe-inline needed for styled components and inline styles
       "style-src 'self' 'unsafe-inline'",
       // Images: allow self, data (for base64), blob (for canvas), and trusted CDNs/news sources
-      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com",
+      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com https://img.youtube.com https://i.ytimg.com",
       // Fonts: self and data URIs for embedded fonts
       "font-src 'self' data:",
       // API connections: self and Supabase
@@ -55,7 +55,9 @@ const securityHeaders = [
       "base-uri 'self'",
       // Block all plugins/objects (Flash, Java, etc.)
       "object-src 'none'",
-      // Block all <frame>, <iframe>, <embed>, <object> sources
+      // Allow YouTube iframes for video embeds
+      "frame-src 'self' https://www.youtube.com https://youtube.com",
+      // Child sources (workers, etc.)
       "child-src 'self'",
       // Restrict where <a> and window.open can navigate
       "navigate-to 'self' https:",
