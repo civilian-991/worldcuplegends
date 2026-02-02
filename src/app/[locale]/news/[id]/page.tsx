@@ -148,17 +148,17 @@ export default function NewsArticlePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative h-64 md:h-96 rounded-3xl overflow-hidden"
+            className="relative h-64 md:h-96 rounded-3xl overflow-hidden bg-gradient-to-br from-night-700 to-night-800"
           >
             {article.image && (
               <img
                 src={article.image}
                 alt={article.title}
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-br from-gold-600/30 to-night-800 -z-10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-gold-600/10 to-transparent -z-10" />
           </motion.div>
         </div>
       </section>
