@@ -41,8 +41,8 @@ const securityHeaders = [
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       // Styles: self + unsafe-inline needed for styled components and inline styles
       "style-src 'self' 'unsafe-inline'",
-      // Images: allow self, data (for base64), blob (for canvas), and trusted CDNs
-      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com",
+      // Images: allow self, data (for base64), blob (for canvas), and trusted CDNs/news sources
+      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com",
       // Fonts: self and data URIs for embedded fonts
       "font-src 'self' data:",
       // API connections: self and Supabase
@@ -86,6 +86,37 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'flagcdn.com',
+        pathname: '/**',
+      },
+      // News source images
+      {
+        protocol: 'https',
+        hostname: 'rapgol.com.br',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'laluche.com.br',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'diariodoporto.com.br',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.magazineeacao.com.br',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cafecomshah.com.br',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.globo.com',
         pathname: '/**',
       },
     ],
