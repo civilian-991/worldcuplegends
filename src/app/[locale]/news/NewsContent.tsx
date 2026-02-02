@@ -6,13 +6,13 @@ import { Link } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
 import { getNews, type NewsArticle } from '@/lib/api';
 
-const categories = ['All', 'History', 'Events', 'Interview', 'Tournament', 'Analysis', 'Exclusive', 'general'];
+const ARTICLES_PER_PAGE = 6;
 
 export default function NewsContent() {
   const locale = useLocale();
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     async function fetchData() {
@@ -24,12 +24,12 @@ export default function NewsContent() {
     fetchData();
   }, [locale]);
 
-  const filteredNews = selectedCategory === 'All'
-    ? news
-    : news.filter((article) => article.category.toLowerCase() === selectedCategory.toLowerCase());
+  const totalPages = Math.ceil(news.length / ARTICLES_PER_PAGE);
+  const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+  const paginatedNews = news.slice(startIndex, startIndex + ARTICLES_PER_PAGE);
 
-  const featuredArticle = filteredNews[0];
-  const otherArticles = filteredNews.slice(1);
+  const featuredArticle = currentPage === 1 ? paginatedNews[0] : null;
+  const otherArticles = currentPage === 1 ? paginatedNews.slice(1) : paginatedNews;
 
   if (isLoading) {
     return (
@@ -64,27 +64,6 @@ export default function NewsContent() {
               from the world of legendary football.
             </p>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Category Filter */}
-      <section className="sticky top-20 z-30 py-6 px-6 glass">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap gap-3 justify-center">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                  selectedCategory === category
-                    ? 'bg-gold-500 text-night-900'
-                    : 'bg-night-600 text-white/70 hover:bg-night-500 hover:text-white'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -235,18 +214,54 @@ export default function NewsContent() {
           </div>
 
           {/* No Results */}
-          {filteredNews.length === 0 && (
+          {news.length === 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-20"
             >
-              <p className="text-white/50 text-xl">No articles found in this category.</p>
+              <p className="text-white/50 text-xl">No articles found.</p>
+            </motion.div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-center items-center gap-2 mt-16"
+            >
               <button
-                onClick={() => setSelectedCategory('All')}
-                className="mt-4 text-gold-400 hover:text-gold-300 transition-colors"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 rounded-full bg-night-600 text-white/70 hover:bg-night-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               >
-                View all articles
+                ← Previous
+              </button>
+
+              <div className="flex gap-2 mx-4">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-10 h-10 rounded-full font-semibold transition-colors ${
+                      currentPage === page
+                        ? 'bg-gold-500 text-night-900'
+                        : 'bg-night-600 text-white/70 hover:bg-night-500 hover:text-white'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 rounded-full bg-night-600 text-white/70 hover:bg-night-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              >
+                Next →
               </button>
             </motion.div>
           )}
