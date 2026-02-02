@@ -31,7 +31,7 @@ export const metadata: Metadata = {
       },
     ],
     locale: 'en',
-    alternateLocales: ['pt_BR'],
+    alternateLocale: ['pt_BR'],
   },
   twitter: {
     card: 'summary_large_image',
