@@ -89,17 +89,8 @@ export default function HeroSection() {
           </motion.p>
         </div>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="text-white/60 text-lg md:text-xl text-center max-w-2xl mb-10"
-        >
-          {t('heroSubtitle')}
-          <br />
-          <span className="text-gold-400">{t('hostNations')}</span>
-        </motion.p>
+        {/* Spacer to maintain hero size */}
+        <div className="h-16 md:h-20 mb-10" />
 
         {/* CTA Buttons */}
         <motion.div
