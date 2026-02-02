@@ -183,7 +183,7 @@ export default function NewsSection() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className={`group cursor-pointer flex-shrink-0 w-72 md:w-auto snap-start ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}
             >
-              <Link href={`/news/${article.id}`}>
+              <Link href={`/news/${article.slug}`}>
                 <div className={`relative overflow-hidden rounded-2xl ${index === 0 ? 'h-full min-h-[500px]' : 'h-64'}`}>
                   {/* Article Image or Gradient Fallback */}
                   {article.image ? (
