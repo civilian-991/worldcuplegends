@@ -7,8 +7,8 @@ const siteName = 'World Legends Cup';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "World Legends Cup 2026 | Legends Never Die",
-  description: "The greatest footballers in history unite for one legendary tournament. Experience the magic of Pelé, Maradona, Zidane, Messi, and more.",
-  keywords: ["World Cup", "Football", "Legends", "Soccer", "2026", "Tournament"],
+  description: "Football legends tournament in Brazil 2026. Watch Pelé, Maradona, Zidane, Messi and more compete at Maracanã Stadium.",
+  keywords: ["World Cup", "Football", "Legends", "Soccer", "2026", "Tournament", "Brazil", "Maracanã"],
   alternates: {
     canonical: siteUrl,
   },
@@ -19,15 +19,16 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   openGraph: {
     title: "World Legends Cup 2026",
-    description: "Legends Never Die - The ultimate celebration of football greatness",
+    description: "Football legends tournament in Brazil. Watch the greatest players compete at Maracanã.",
     type: "website",
     url: siteUrl,
     siteName: siteName,
     images: [
       {
-        url: '/og-image.png',
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
+        alt: 'World Legends Cup 2026 Trophy',
       },
     ],
     locale: 'en',
@@ -36,7 +37,9 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     site: '@worldlegendscup',
-    images: '/og-image.png',
+    title: "World Legends Cup 2026",
+    description: "Football legends tournament in Brazil. Watch the greatest players compete.",
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
