@@ -290,9 +290,9 @@ export async function getNews(locale: string = 'en'): Promise<NewsArticle[]> {
   }
 }
 
-export async function getNewsById(id: number): Promise<NewsArticle | null> {
+export async function getNewsBySlug(slug: string, locale: string = 'en'): Promise<NewsArticle | null> {
   try {
-    const response = await fetch(`/api/news/${id}`);
+    const response = await fetch(`/api/news/${slug}?locale=${locale}`);
     if (!response.ok) {
       if (response.status === 404) {
         return null;

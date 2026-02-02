@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
-import { getNewsById, getNews, type NewsArticle } from '@/lib/api';
+import { getNewsBySlug, getNews, type NewsArticle } from '@/lib/api';
 
 /**
  * Sanitizes HTML content to prevent XSS attacks by escaping HTML entities
@@ -24,7 +24,7 @@ function sanitizeHtml(html: string): string {
 export default function NewsArticlePage() {
   const params = useParams();
   const locale = useLocale();
-  const articleId = parseInt(params.id as string);
+  const slug = params.slug as string;
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<NewsArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,19 +32,19 @@ export default function NewsArticlePage() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const articleData = await getNewsById(articleId);
+      const articleData = await getNewsBySlug(slug, locale);
       setArticle(articleData);
 
       if (articleData) {
         // Fetch related articles in same locale
         const allNews = await getNews(locale);
         const related = allNews
-          .filter(a => a.id !== articleData.id && a.category === articleData.category)
+          .filter(a => a.slug !== articleData.slug && a.category === articleData.category)
           .slice(0, 3);
         // If not enough in same category, fill with other articles
         if (related.length < 3) {
           const others = allNews
-            .filter(a => a.id !== articleData.id && !related.some(r => r.id === a.id))
+            .filter(a => a.slug !== articleData.slug && !related.some(r => r.slug === a.slug))
             .slice(0, 3 - related.length);
           related.push(...others);
         }
@@ -53,7 +53,7 @@ export default function NewsArticlePage() {
       setIsLoading(false);
     }
     fetchData();
-  }, [articleId, locale]);
+  }, [slug, locale]);
 
   // Calculate read time based on content length
   const getReadTime = (content: string, excerpt: string) => {
@@ -324,7 +324,7 @@ export default function NewsArticlePage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Link href={`/news/${related.id}`}>
+                <Link href={`/news/${related.slug}`}>
                   <div className="group cursor-pointer">
                     <div className="relative h-48 rounded-xl overflow-hidden mb-4">
                       {related.image && (

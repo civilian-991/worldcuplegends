@@ -100,7 +100,7 @@ export default function NewsContent() {
                 transition={{ duration: 0.6 }}
                 className="mb-12"
               >
-                <Link href={`/news/${featuredArticle.id}`}>
+                <Link href={`/news/${featuredArticle.slug}`}>
                   <div className="relative overflow-hidden rounded-3xl glass group cursor-pointer">
                     <div className="flex flex-col lg:flex-row">
                       {/* Image */}
@@ -180,7 +180,7 @@ export default function NewsContent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Link href={`/news/${article.id}`}>
+                <Link href={`/news/${article.slug}`}>
                   <div className="group cursor-pointer">
                     {/* Image */}
                     <div className="relative h-48 overflow-hidden rounded-2xl mb-4">

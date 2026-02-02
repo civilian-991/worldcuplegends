@@ -3,21 +3,19 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const { id } = await params;
-  const articleId = parseInt(id, 10);
-
-  if (isNaN(articleId)) {
-    return NextResponse.json({ error: 'Invalid article ID' }, { status: 400 });
-  }
+  const { slug } = await params;
+  const { searchParams } = new URL(request.url);
+  const locale = searchParams.get('locale') || 'en';
 
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from('news')
     .select('*')
-    .eq('id', articleId)
+    .eq('slug', slug)
+    .eq('locale', locale)
     .is('deleted_at', null)
     .eq('published', true)
     .single();
