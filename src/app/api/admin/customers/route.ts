@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkAdmin } from '@/lib/admin'
+import { toCustomerDTOList, CUSTOMER_SELECT_FIELDS, CustomerListResponse } from '@/lib/dto/customer.dto'
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit'
+import { handleDatabaseError, CommonErrors } from '@/lib/api-errors'
 
 const sanitizeSearch = (search: string) => search.replace(/[%_\\'"(){}[\]]/g, '');
 
@@ -8,11 +11,7 @@ interface ProfileRow {
   email: string
   first_name: string | null
   last_name: string | null
-  phone: string | null
-  avatar_url: string | null
-  role: string
   created_at: string
-  updated_at: string
 }
 
 interface OrderRow {
@@ -21,10 +20,18 @@ interface OrderRow {
 }
 
 export async function GET(request: NextRequest) {
+  // Apply rate limiting for admin read operations - 100 requests per minute
+  const ip = getClientIP(request)
+  const rateLimitResult = rateLimiters.adminRead.check(ip)
+
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
   const { supabase, isAdmin } = await checkAdmin()
 
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return CommonErrors.unauthorized()
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -34,9 +41,10 @@ export async function GET(request: NextRequest) {
   const limit = isNaN(limitParam) || limitParam < 1 ? 50 : Math.min(limitParam, 100)
   const offset = isNaN(offsetParam) || offsetParam < 0 ? 0 : offsetParam
 
+  // Use explicit field selection instead of '*' to avoid exposing phone, avatar_url, etc.
   let query = supabase
     .from('profiles')
-    .select('*', { count: 'exact' })
+    .select(CUSTOMER_SELECT_FIELDS, { count: 'exact' })
     .eq('role', 'customer')
     .order('created_at', { ascending: false })
 
@@ -50,12 +58,12 @@ export async function GET(request: NextRequest) {
   const { data: customers, error, count } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return handleDatabaseError(error, 'customers')
   }
 
   const customersList = (customers || []) as ProfileRow[]
 
-  // Fetch all orders for these customers in a single query (fixes N+1 problem)
+  // Fetch order stats for these customers in a single query (fixes N+1 problem)
   const customerIds = customersList.map((c) => c.id)
 
   const { data: allOrders } = customerIds.length > 0
@@ -68,32 +76,22 @@ export async function GET(request: NextRequest) {
     : { data: [] }
 
   // Group orders by user_id in memory
-  const ordersByUserId = new Map<string, OrderRow[]>()
+  const ordersByUserId = new Map<string, { total: number; created_at: string }[]>()
   for (const order of (allOrders || []) as (OrderRow & { user_id: string })[]) {
     const existing = ordersByUserId.get(order.user_id) || []
     existing.push({ total: order.total, created_at: order.created_at })
     ordersByUserId.set(order.user_id, existing)
   }
 
-  // Map customers with their aggregated order stats
-  const customersWithStats = customersList.map((customer) => {
-    const ordersList = ordersByUserId.get(customer.id) || []
-    const totalOrders = ordersList.length
-    const totalSpent = ordersList.reduce((sum, order) => sum + Number(order.total), 0)
-    const lastOrderAt = ordersList.length > 0 ? ordersList[ordersList.length - 1].created_at : null
+  // Transform to safe DTOs - only includes necessary fields
+  const customersWithStats = toCustomerDTOList(customersList, ordersByUserId)
 
-    return {
-      ...customer,
-      totalOrders,
-      totalSpent,
-      lastOrderAt,
-    }
-  })
-
-  return NextResponse.json({
+  const response: CustomerListResponse = {
     customers: customersWithStats,
     total: count,
     limit,
     offset,
-  })
+  }
+
+  return NextResponse.json(response)
 }

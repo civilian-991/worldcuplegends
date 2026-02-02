@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -44,6 +45,7 @@ interface Profile {
 }
 
 export default function AdminCustomersPage() {
+  const { showToast } = useToast();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,6 +65,14 @@ export default function AdminCustomersPage() {
       supabase.from('profiles').select('*').order('created_at', { ascending: false }),
       supabase.from('orders').select('id, user_id, status, total, created_at'),
     ]);
+
+    // Check for errors and show toast notifications
+    if (profilesResult.error || ordersResult.error) {
+      console.error('Error fetching data:', profilesResult.error || ordersResult.error);
+      showToast('Failed to load customers. Please try again.', 'error');
+      setIsLoading(false);
+      return;
+    }
 
     const profiles = profilesResult.data || [];
     const ordersData = ordersResult.data || [];
@@ -100,7 +110,7 @@ export default function AdminCustomersPage() {
 
     setCustomers(customersWithStats);
     setIsLoading(false);
-  }, [supabase]);
+  }, [supabase, showToast]);
 
   useEffect(() => {
     fetchData();
@@ -221,7 +231,7 @@ export default function AdminCustomersPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4" role="region" aria-label="Customer statistics">
         {[
           { label: 'Total Customers', value: totalCustomers, icon: '👥' },
           { label: 'Active Customers', value: activeCustomers, icon: '✓' },
@@ -239,38 +249,43 @@ export default function AdminCustomersPage() {
                 <p className="text-white/50 text-sm">{stat.label}</p>
                 <p className="text-xl font-bold text-white mt-1">{stat.value}</p>
               </div>
-              <span className="text-2xl">{stat.icon}</span>
+              <span className="text-2xl" aria-hidden="true">{stat.icon}</span>
             </div>
           </motion.div>
         ))}
       </div>
 
       {/* Filters */}
-      <div className="glass rounded-2xl p-4 flex flex-col sm:flex-row gap-4">
+      <div className="glass rounded-2xl p-4 flex flex-col sm:flex-row gap-4" role="search">
         {/* Search */}
         <div className="relative flex-1">
+          <label htmlFor="customers-search" className="sr-only">Search customers</label>
           <input
+            id="customers-search"
             type="text"
             placeholder="Search customers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-10 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+            className="w-full px-4 py-3 pl-10 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
           />
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
 
         {/* Status */}
+        <label htmlFor="customers-status" className="sr-only">Filter by status</label>
         <select
+          id="customers-status"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer"
+          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
         >
           <option value="all">All Status</option>
           <option value="active">Active</option>
@@ -278,10 +293,12 @@ export default function AdminCustomersPage() {
         </select>
 
         {/* Sort */}
+        <label htmlFor="customers-sort" className="sr-only">Sort customers</label>
         <select
+          id="customers-sort"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer"
+          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
         >
           <option value="recent">Most Recent</option>
           <option value="spent">Highest Spent</option>
@@ -292,14 +309,15 @@ export default function AdminCustomersPage() {
         {/* Refresh */}
         <button
           onClick={fetchData}
-          className="px-6 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors"
+          aria-label="Refresh customer list"
+          className="px-6 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
         >
           Refresh
         </button>
       </div>
 
       {/* Customers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list" aria-label="Customers list">
         {paginatedCustomers.map((customer, index) => (
           <motion.div
             key={customer.id}
@@ -307,11 +325,15 @@ export default function AdminCustomersPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
             onClick={() => setSelectedCustomer(customer)}
-            className="glass rounded-xl p-5 cursor-pointer hover:border-gold-500/30 border border-transparent transition-colors"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedCustomer(customer); } }}
+            tabIndex={0}
+            role="listitem"
+            aria-label={`Customer ${getCustomerName(customer)}, ${customer.totalOrders} orders, $${customer.totalSpent.toFixed(0)} spent`}
+            className="glass rounded-xl p-5 cursor-pointer hover:border-gold-500/30 border border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900"
           >
             <div className="flex items-start gap-4">
               {/* Avatar */}
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                 <span className="text-night-900 font-bold text-lg">
                   {getCustomerName(customer).charAt(0).toUpperCase()}
                 </span>
@@ -353,23 +375,24 @@ export default function AdminCustomersPage() {
       </div>
 
       {filteredCustomers.length === 0 && (
-        <div className="glass rounded-2xl p-12 text-center">
-          <span className="text-4xl block mb-4">👥</span>
+        <div className="glass rounded-2xl p-12 text-center" role="status" aria-live="polite">
+          <span className="text-4xl block mb-4" aria-hidden="true">👥</span>
           <p className="text-white/50">No customers found</p>
         </div>
       )}
 
       {/* Pagination */}
       {filteredCustomers.length > 0 && (
-        <div className="glass rounded-2xl p-4 flex items-center justify-between">
-          <p className="text-white/50 text-sm">
+        <nav className="glass rounded-2xl p-4 flex items-center justify-between" aria-label="Customers pagination">
+          <p className="text-white/50 text-sm" aria-live="polite">
             Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredCustomers.length)} of {filteredCustomers.length} customers
           </p>
           <div className="flex gap-2 items-center">
             <button
               onClick={handlePreviousPage}
               disabled={currentPage === 1}
-              className={`px-4 py-2 rounded-lg transition-colors ${
+              aria-label="Go to previous page"
+              className={`px-4 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 ${
                 currentPage === 1
                   ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
                   : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -377,13 +400,14 @@ export default function AdminCustomersPage() {
             >
               Previous
             </button>
-            <span className="px-4 py-2 text-white/70 text-sm">
+            <span className="px-4 py-2 text-white/70 text-sm" aria-current="page">
               Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
-              className={`px-4 py-2 rounded-lg transition-colors ${
+              aria-label="Go to next page"
+              className={`px-4 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 ${
                 currentPage === totalPages
                   ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
                   : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -392,7 +416,7 @@ export default function AdminCustomersPage() {
               Next
             </button>
           </div>
-        </div>
+        </nav>
       )}
 
       {/* Customer Detail Modal */}
@@ -417,7 +441,7 @@ export default function AdminCustomersPage() {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gold-500 to-gold-600 flex items-center justify-center" aria-hidden="true">
                       <span className="text-night-900 font-bold text-2xl">
                         {getCustomerName(selectedCustomer).charAt(0).toUpperCase()}
                       </span>
@@ -429,9 +453,10 @@ export default function AdminCustomersPage() {
                   </div>
                   <button
                     onClick={() => setSelectedCustomer(null)}
-                    className="w-10 h-10 rounded-full bg-night-700 flex items-center justify-center text-white/50 hover:text-white transition-colors"
+                    aria-label="Close customer details"
+                    className="w-10 h-10 rounded-full bg-night-700 flex items-center justify-center text-white/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
                   >
-                    ✕
+                    <span aria-hidden="true">✕</span>
                   </button>
                 </div>
 
@@ -463,16 +488,16 @@ export default function AdminCustomersPage() {
                   <h3 className="text-white font-semibold mb-3">Contact Information</h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
-                      <span className="text-white/50">📧</span>
-                      <span className="text-white/70">{selectedCustomer.email}</span>
+                      <span className="text-white/50" aria-hidden="true">📧</span>
+                      <span className="text-white/70"><span className="sr-only">Email: </span>{selectedCustomer.email}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-white/50">📱</span>
-                      <span className="text-white/70">{selectedCustomer.phone || 'Not provided'}</span>
+                      <span className="text-white/50" aria-hidden="true">📱</span>
+                      <span className="text-white/70"><span className="sr-only">Phone: </span>{selectedCustomer.phone || 'Not provided'}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-white/50">📅</span>
-                      <span className="text-white/70">Joined {formatDate(selectedCustomer.created_at)}</span>
+                      <span className="text-white/50" aria-hidden="true">📅</span>
+                      <span className="text-white/70"><span className="sr-only">Member since: </span>Joined {formatDate(selectedCustomer.created_at)}</span>
                     </div>
                   </div>
                 </div>
@@ -519,10 +544,10 @@ export default function AdminCustomersPage() {
 
                 {/* Actions */}
                 <div className="mt-6 space-y-3">
-                  <button className="w-full py-3 bg-gold-500/20 text-gold-400 rounded-xl hover:bg-gold-500/30 transition-colors">
+                  <button className="w-full py-3 bg-gold-500/20 text-gold-400 rounded-xl hover:bg-gold-500/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800">
                     Send Email
                   </button>
-                  <button className="w-full py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors">
+                  <button className="w-full py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800">
                     View All Orders
                   </button>
                 </div>

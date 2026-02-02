@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 import { createCommentSchema, formatZodError } from '@/lib/validations';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 // GET /api/comments - Get comments for an entity
 export async function GET(request: Request) {
@@ -100,13 +101,24 @@ export async function POST(request: Request) {
 
   const { entityType, entityId, content, parentId } = validationResult.data;
 
+  // Sanitize comment content to prevent XSS
+  const sanitizedContent = sanitizeHtml(content);
+
+  // Reject if sanitized content is empty
+  if (!sanitizedContent.trim()) {
+    return NextResponse.json(
+      { error: 'Comment content is required' },
+      { status: 400 }
+    );
+  }
+
   const { data, error } = await supabase
     .from('comments')
     .insert({
       user_id: user.id,
       entity_type: entityType,
       entity_id: entityId,
-      content,
+      content: sanitizedContent,
       parent_id: parentId || null,
     })
     .select(`

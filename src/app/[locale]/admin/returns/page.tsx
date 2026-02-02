@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { useToast } from '@/context/ToastContext';
+import ConfirmationModal from '@/components/admin/ConfirmationModal';
 
 interface Return {
   id: string;
@@ -115,6 +116,7 @@ export default function AdminReturnsPage() {
   const [filter, setFilter] = useState<Return['status'] | 'all'>('all');
   const [selectedReturn, setSelectedReturn] = useState<Return | null>(null);
   const [actionNote, setActionNote] = useState('');
+  const [rejectModal, setRejectModal] = useState<string | null>(null);
 
   const filteredReturns = filter === 'all' ? returns : returns.filter((r) => r.status === filter);
 
@@ -324,11 +326,7 @@ export default function AdminReturnsPage() {
                             Review & Approve
                           </button>
                           <button
-                            onClick={() => {
-                              if (confirm('Reject this return request?')) {
-                                updateStatus(returnItem.id, 'rejected');
-                              }
-                            }}
+                            onClick={() => setRejectModal(returnItem.id)}
                             className="w-full py-2 bg-red-500/20 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-colors"
                           >
                             Reject
@@ -360,6 +358,23 @@ export default function AdminReturnsPage() {
             ))
           )}
         </div>
+
+        {/* Reject Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={rejectModal !== null}
+          onClose={() => setRejectModal(null)}
+          onConfirm={() => {
+            if (rejectModal) {
+              updateStatus(rejectModal, 'rejected');
+              setRejectModal(null);
+            }
+          }}
+          title="Reject Return Request?"
+          message="Are you sure you want to reject this return request? The customer will be notified of this decision."
+          confirmText="Reject"
+          cancelText="Cancel"
+          variant="danger"
+        />
 
         {/* Approval Modal */}
         <AnimatePresence>

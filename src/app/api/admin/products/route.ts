@@ -1,13 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkAdmin } from '@/lib/admin'
+import { checkAdmin, validateAdminCsrf } from '@/lib/admin'
+import { createProductSchema, formatZodError } from '@/lib/validations'
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit'
+import { logAdminAction, sanitizeForAudit } from '@/lib/audit'
+import { handleDatabaseError, CommonErrors } from '@/lib/api-errors'
+import {
+  toProductListDTOList,
+  PRODUCT_LIST_SELECT_FIELDS,
+  ProductListResponse
+} from '@/lib/dto/product.dto'
 
 const sanitizeSearch = (search: string) => search.replace(/[%_\\'"(){}[\]]/g, '');
 
 export async function GET(request: NextRequest) {
+  // Apply rate limiting for admin read operations - 100 requests per minute
+  const ip = getClientIP(request)
+  const rateLimitResult = rateLimiters.adminRead.check(ip)
+
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
   const { supabase, isAdmin } = await checkAdmin()
 
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return CommonErrors.unauthorized()
   }
 
   const searchParams = request.nextUrl.searchParams
@@ -18,9 +35,12 @@ export async function GET(request: NextRequest) {
   const limit = isNaN(limitParam) || limitParam < 1 ? 50 : Math.min(limitParam, 100)
   const offset = isNaN(offsetParam) || offsetParam < 0 ? 0 : offsetParam
 
+  // Use explicit field selection instead of '*' to only return needed fields for list view
+  // Filter out soft-deleted products
   let query = supabase
     .from('products')
-    .select('*', { count: 'exact' })
+    .select(PRODUCT_LIST_SELECT_FIELDS, { count: 'exact' })
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   if (category && category !== 'all') {
@@ -37,56 +57,101 @@ export async function GET(request: NextRequest) {
   const { data: products, error, count } = await query
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return handleDatabaseError(error, 'products')
   }
 
-  return NextResponse.json({
-    products,
+  // Transform to safe DTOs - only includes fields needed for list view
+  const safeProducts = toProductListDTOList(products || [])
+
+  const response: ProductListResponse = {
+    products: safeProducts,
     total: count,
     limit,
     offset,
-  })
+  }
+
+  return NextResponse.json(response)
 }
 
 export async function POST(request: NextRequest) {
-  const { supabase, isAdmin } = await checkAdmin()
-
-  if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Validate CSRF token for state-changing operations
+  const csrfError = validateAdminCsrf(request)
+  if (csrfError) {
+    return csrfError
   }
 
-  let body
+  // Apply rate limiting for admin write operations - 30 requests per minute
+  const ip = getClientIP(request)
+  const rateLimitResult = rateLimiters.adminWrite.check(ip)
+
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
+  const { supabase, isAdmin, user } = await checkAdmin()
+
+  if (!isAdmin || !user) {
+    return CommonErrors.unauthorized()
+  }
+
+  let body: unknown
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
+    return CommonErrors.invalidJson()
   }
+
+  // Validate request body with Zod
+  const validationResult = createProductSchema.safeParse(body)
+  if (!validationResult.success) {
+    return NextResponse.json(formatZodError(validationResult.error), { status: 400 })
+  }
+
+  const validatedData = validationResult.data
+
+  // Generate slug from name if not provided
+  const slug = validatedData.slug || validatedData.name.toLowerCase().replace(/\s+/g, '-')
 
   const { data: product, error } = await supabase
     .from('products')
     .insert({
-      name: body.name,
-      slug: body.slug || body.name.toLowerCase().replace(/\s+/g, '-'),
-      price: body.price,
-      original_price: body.originalPrice,
-      description: body.description,
-      category: body.category,
-      subcategory: body.subcategory,
-      images: body.images || [],
-      sizes: body.sizes || [],
-      colors: body.colors || [],
-      in_stock: body.inStock ?? true,
-      stock_quantity: body.stockQuantity || 0,
-      featured: body.featured ?? false,
-      tags: body.tags || [],
-      legend: body.legend,
-      team: body.team,
+      name: validatedData.name,
+      slug: slug,
+      price: validatedData.price,
+      original_price: validatedData.originalPrice,
+      description: validatedData.description,
+      category: validatedData.category,
+      subcategory: validatedData.subcategory,
+      images: validatedData.images,
+      sizes: validatedData.sizes,
+      colors: validatedData.colors,
+      in_stock: validatedData.inStock,
+      stock_quantity: validatedData.stockQuantity,
+      featured: validatedData.featured,
+      tags: validatedData.tags,
+      legend: validatedData.legend,
+      team: validatedData.team,
     } as never)
     .select()
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return handleDatabaseError(error, 'product')
+  }
+
+  // Log the create action to audit logs
+  const productData = product as { id: number | string } | null
+  if (productData) {
+    await logAdminAction(
+      supabase,
+      user.id,
+      'create',
+      'product',
+      String(productData.id),
+      null,
+      sanitizeForAudit(product),
+      request
+    )
   }
 
   return NextResponse.json({ product })

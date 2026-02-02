@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { sendContactConfirmation } from '@/lib/email'
 import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit'
 import { contactFormSchema, formatZodError } from '@/lib/validations'
+import { sanitizeText } from '@/lib/sanitize'
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,15 +26,21 @@ export async function POST(request: NextRequest) {
 
     const { firstName, lastName, email, subject, message } = validationResult.data
 
+    // Sanitize user input to prevent XSS
+    const sanitizedFirstName = sanitizeText(firstName)
+    const sanitizedLastName = sanitizeText(lastName)
+    const sanitizedSubject = sanitizeText(subject)
+    const sanitizedMessage = sanitizeText(message)
+
     // Save contact message
     const { error } = await supabase
       .from('contact_messages')
       .insert({
-        first_name: firstName,
-        last_name: lastName,
+        first_name: sanitizedFirstName,
+        last_name: sanitizedLastName,
         email,
-        subject,
-        message,
+        subject: sanitizedSubject,
+        message: sanitizedMessage,
       })
 
     if (error) {

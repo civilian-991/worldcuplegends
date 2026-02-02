@@ -6,6 +6,8 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
 import { use } from 'react';
+import { sanitizeText, sanitizeSlug } from '@/lib/sanitize';
+import ConfirmationModal from '@/components/admin/ConfirmationModal';
 
 interface ProductColor {
   name: string;
@@ -22,6 +24,7 @@ export default function AdminProductEditPage({ params }: { params: Promise<{ id:
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -81,21 +84,25 @@ export default function AdminProductEditPage({ params }: { params: Promise<{ id:
     setIsSaving(true);
 
     try {
+      // Sanitize all user inputs before storing
       const updateData = {
-        name: formData.name.trim(),
-        slug: formData.slug.trim(),
+        name: sanitizeText(formData.name),
+        slug: sanitizeSlug(formData.slug),
         price: parseFloat(formData.price),
         original_price: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-        category: formData.category,
-        description: formData.description.trim() || null,
+        category: sanitizeText(formData.category),
+        description: sanitizeText(formData.description) || null,
         stock_quantity: parseInt(formData.stockQuantity) || 0,
-        sizes: formData.sizes,
-        colors: formData.colors,
-        tags: formData.tags,
+        sizes: formData.sizes.map(s => sanitizeText(s)),
+        colors: formData.colors.map(c => ({
+          name: sanitizeText(c.name),
+          hex: c.hex,
+        })),
+        tags: formData.tags.map(t => sanitizeText(t)),
         featured: formData.featured,
         in_stock: formData.inStock,
-        legend: formData.legend.trim() || null,
-        team: formData.team.trim() || null,
+        legend: sanitizeText(formData.legend) || null,
+        team: sanitizeText(formData.team) || null,
         updated_at: new Date().toISOString(),
       };
 
@@ -120,8 +127,6 @@ export default function AdminProductEditPage({ params }: { params: Promise<{ id:
   };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
-
     setIsDeleting(true);
     try {
       const { error } = await supabase
@@ -141,6 +146,7 @@ export default function AdminProductEditPage({ params }: { params: Promise<{ id:
       showToast('An unexpected error occurred', 'error');
     } finally {
       setIsDeleting(false);
+      setShowDeleteModal(false);
     }
   };
 
@@ -201,18 +207,11 @@ export default function AdminProductEditPage({ params }: { params: Promise<{ id:
           <p className="text-white/50 mt-1">Update product information</p>
         </div>
         <button
-          onClick={handleDelete}
+          onClick={() => setShowDeleteModal(true)}
           disabled={isDeleting || isSaving}
           className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors disabled:opacity-50 flex items-center gap-2"
         >
-          {isDeleting ? (
-            <>
-              <div className="w-4 h-4 border-2 border-red-400/20 border-t-red-400 rounded-full animate-spin" />
-              Deleting...
-            </>
-          ) : (
-            'Delete Product'
-          )}
+          Delete Product
         </button>
       </div>
 
@@ -521,6 +520,19 @@ export default function AdminProductEditPage({ params }: { params: Promise<{ id:
           </motion.button>
         </div>
       </form>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        title="Delete Product?"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/context/ToastContext';
+import { sanitizeText, sanitizeSlug, sanitizeRichHtml, sanitizeImageUrl, isValidUrl } from '@/lib/sanitize';
 
 export default function NewArticlePage() {
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -40,22 +43,33 @@ export default function NewArticlePage() {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await supabase.from('news').insert({
-      title: formData.title,
-      slug: formData.slug || generateSlug(formData.title),
-      excerpt: formData.excerpt || null,
-      content: formData.content,
-      image: formData.image || null,
-      category: formData.category,
-      author: formData.author || null,
+    // Validate image URL if provided
+    if (formData.image && !isValidUrl(formData.image)) {
+      showToast('Invalid image URL. Only http:// and https:// URLs are allowed.', 'error');
+      setIsLoading(false);
+      return;
+    }
+
+    // Sanitize all inputs
+    const sanitizedData = {
+      title: sanitizeText(formData.title),
+      slug: sanitizeSlug(formData.slug) || sanitizeSlug(formData.title),
+      excerpt: sanitizeText(formData.excerpt) || null,
+      content: sanitizeRichHtml(formData.content),
+      image: sanitizeImageUrl(formData.image) || null,
+      category: sanitizeText(formData.category),
+      author: sanitizeText(formData.author) || null,
       published: formData.published,
       published_at: formData.published ? new Date().toISOString() : null,
-    });
+    };
+
+    const { error } = await supabase.from('news').insert(sanitizedData);
 
     if (error) {
       console.error('Error creating article:', error);
-      alert('Error creating article: ' + error.message);
+      showToast('Error creating article: ' + error.message, 'error');
     } else {
+      showToast('Article created successfully!', 'success');
       router.push('/admin/news');
     }
     setIsLoading(false);

@@ -1,38 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-
-// Toast notification component
-function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error'; onClose: () => void }) {
-  useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -50 }}
-      className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-xl shadow-lg ${
-        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
-      }`}
-    >
-      <div className="flex items-center gap-2">
-        <span>{type === 'success' ? '✓' : '✕'}</span>
-        <span>{message}</span>
-      </div>
-    </motion.div>
-  );
-}
+import { motion } from 'framer-motion';
+import { useToast } from '@/context/ToastContext';
 
 const SETTINGS_STORAGE_KEY = 'wlc_admin_settings';
 
 export default function AdminSettingsPage() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const [generalSettings, setGeneralSettings] = useState({
     storeName: 'World Legends Cup Shop',
@@ -98,10 +75,10 @@ export default function AdminSettingsPage() {
       };
 
       localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(allSettings));
-      setToast({ message: 'Settings saved successfully!', type: 'success' });
+      showToast('Settings saved successfully!', 'success');
     } catch (error) {
       console.error('Failed to save settings:', error);
-      setToast({ message: 'Failed to save settings. Please try again.', type: 'error' });
+      showToast('Failed to save settings. Please try again.', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -117,17 +94,6 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Header */}
       <div>
         <h1

@@ -1,8 +1,14 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { User as SupabaseUser, AuthChangeEvent, Session } from '@supabase/supabase-js';
+import {
+  checkAccountLockout,
+  recordFailedLoginAttempt,
+  clearFailedLoginAttempts,
+  GENERIC_LOGIN_ERROR,
+} from '@/lib/rate-limit';
 
 export interface User {
   id: string;
@@ -34,7 +40,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; warning?: string }>;
   register: (data: RegisterData) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<{ success: boolean; error?: string }>;
@@ -45,6 +51,8 @@ interface AuthContextType {
   deleteAddress: (id: string) => Promise<{ success: boolean; error?: string }>;
   setDefaultAddress: (id: string) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
+  lastActivity: number;
+  resetActivity: () => void;
 }
 
 interface RegisterData {
@@ -56,12 +64,68 @@ interface RegisterData {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Session timeout configuration (30 minutes of inactivity)
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const SESSION_WARNING_MS = 5 * 60 * 1000; // Warning 5 minutes before timeout
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastActivity, setLastActivity] = useState(Date.now());
+  const activityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const supabase = createClient();
+
+  // Reset activity timestamp
+  const resetActivity = useCallback(() => {
+    setLastActivity(Date.now());
+  }, []);
+
+  // Track user activity
+  useEffect(() => {
+    if (!user) return;
+
+    const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+
+    const handleActivity = () => {
+      resetActivity();
+    };
+
+    activityEvents.forEach((event) => {
+      window.addEventListener(event, handleActivity, { passive: true });
+    });
+
+    return () => {
+      activityEvents.forEach((event) => {
+        window.removeEventListener(event, handleActivity);
+      });
+    };
+  }, [user, resetActivity]);
+
+  // Check for session timeout
+  useEffect(() => {
+    if (!user) return;
+
+    const checkTimeout = () => {
+      const now = Date.now();
+      const timeSinceActivity = now - lastActivity;
+
+      if (timeSinceActivity >= SESSION_TIMEOUT_MS) {
+        // Auto-logout due to inactivity
+        logout();
+      }
+    };
+
+    activityTimeoutRef.current = setInterval(checkTimeout, 60000); // Check every minute
+
+    return () => {
+      if (activityTimeoutRef.current) {
+        clearInterval(activityTimeoutRef.current);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, lastActivity]);
 
   // Fetch user profile from database
   const fetchProfile = useCallback(async (supabaseUser: SupabaseUser) => {
@@ -176,6 +240,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(profile);
             const addrs = await fetchAddresses(session.user.id);
             setAddresses(addrs);
+            resetActivity(); // Reset activity on login
           }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
@@ -187,17 +252,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, fetchProfile, fetchAddresses]);
+  }, [supabase, fetchProfile, fetchAddresses, resetActivity]);
 
   const login = async (email: string, password: string) => {
+    // Check account lockout status first
+    const lockoutStatus = checkAccountLockout(email);
+    if (lockoutStatus.isLocked) {
+      return {
+        success: false,
+        error: lockoutStatus.message,
+      };
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return { success: false, error: error.message };
+      // Record failed attempt and get lockout status
+      const lockoutResult = recordFailedLoginAttempt(email);
+
+      // Always return generic error message (security best practice)
+      // Don't reveal whether email exists or password is wrong
+      if (lockoutResult.isLocked) {
+        return {
+          success: false,
+          error: lockoutResult.message,
+        };
+      }
+
+      return {
+        success: false,
+        error: GENERIC_LOGIN_ERROR,
+        warning: lockoutResult.message || undefined,
+      };
     }
+
+    // Clear failed login attempts on successful login
+    clearFailedLoginAttempts(email);
+    resetActivity();
 
     return { success: true };
   };
@@ -215,6 +309,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
+      // Return generic error for registration to avoid email enumeration
+      // Don't reveal if email already exists
+      if (error.message.toLowerCase().includes('already registered') ||
+          error.message.toLowerCase().includes('already exists') ||
+          error.message.toLowerCase().includes('user already')) {
+        return { success: false, error: 'Unable to create account. Please try again or use a different email.' };
+      }
       return { success: false, error: error.message };
     }
 
@@ -257,9 +358,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     if (error) {
-      return { success: false, error: error.message };
+      // Don't reveal if email exists or not
+      // Always return success to prevent email enumeration
+      console.error('Password reset error:', error);
     }
 
+    // Always return success to prevent email enumeration attacks
     return { success: true };
   };
 
@@ -442,6 +546,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         deleteAddress,
         setDefaultAddress,
         refreshUser,
+        lastActivity,
+        resetActivity,
       }}
     >
       {children}
@@ -456,3 +562,6 @@ export function useAuth() {
   }
   return context;
 }
+
+// Export session timeout constants for use in components
+export { SESSION_TIMEOUT_MS, SESSION_WARNING_MS };

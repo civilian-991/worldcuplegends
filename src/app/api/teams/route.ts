@@ -4,10 +4,10 @@ import { createClient } from '@/lib/supabase/server';
 export async function GET() {
   const supabase = await createClient();
 
-  // Fetch teams and legends in parallel
+  // Fetch teams and legends in parallel, filtering out soft-deleted records
   const [teamsResult, legendsResult] = await Promise.all([
-    supabase.from('teams').select('*').order('rating', { ascending: false }),
-    supabase.from('legends').select('name, country_code')
+    supabase.from('teams').select('*').is('deleted_at', null).order('rating', { ascending: false }),
+    supabase.from('legends').select('name, country_code').is('deleted_at', null)
   ]);
 
   if (teamsResult.error) {

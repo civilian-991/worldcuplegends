@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
+import ConfirmationModal from '@/components/admin/ConfirmationModal';
+import { useToast } from '@/context/ToastContext';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -41,12 +43,15 @@ interface Order {
 }
 
 export default function AdminOrdersPage() {
+  const { showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [cancelModal, setCancelModal] = useState<string | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const supabase = createClient();
 
@@ -58,12 +63,14 @@ export default function AdminOrdersPage() {
       .order('created_at', { ascending: false });
 
     if (error) {
+      // Log for debugging but show user-friendly message
       console.error('Error fetching orders:', error);
+      showToast('Failed to load orders. Please try again.', 'error');
     } else {
       setOrders(data || []);
     }
     setIsLoading(false);
-  }, [supabase]);
+  }, [supabase, showToast]);
 
   useEffect(() => {
     fetchOrders();
@@ -90,12 +97,38 @@ export default function AdminOrdersPage() {
 
     if (error) {
       console.error('Error updating order:', error);
+      showToast('Error updating order status', 'error');
     } else {
       setOrders(orders.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
       if (selectedOrder?.id === orderId) {
         setSelectedOrder({ ...selectedOrder, status: newStatus });
       }
+      showToast(`Order status updated to ${newStatus}`, 'success');
     }
+  };
+
+  const handleCancelOrder = async () => {
+    if (!cancelModal) return;
+    setIsCancelling(true);
+
+    const { error } = await supabase
+      .from('orders')
+      .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+      .eq('id', cancelModal);
+
+    if (error) {
+      console.error('Error cancelling order:', error);
+      showToast('Error cancelling order', 'error');
+    } else {
+      setOrders(orders.map(o => o.id === cancelModal ? { ...o, status: 'cancelled' } : o));
+      if (selectedOrder?.id === cancelModal) {
+        setSelectedOrder({ ...selectedOrder, status: 'cancelled' });
+      }
+      showToast('Order cancelled successfully', 'success');
+    }
+
+    setIsCancelling(false);
+    setCancelModal(null);
   };
 
   const filteredOrders = useMemo(() => {
@@ -203,14 +236,16 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Stats Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4" role="group" aria-label="Filter orders by status">
         {statusOptions.slice(1).map((status) => {
           const count = orders.filter((o) => o.status === status.value).length;
           return (
             <button
               key={status.value}
               onClick={() => setStatusFilter(status.value)}
-              className={`p-4 rounded-xl transition-all ${
+              aria-pressed={statusFilter === status.value}
+              aria-label={`Filter by ${status.label}: ${count} orders`}
+              className={`p-4 rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 ${
                 statusFilter === status.value
                   ? 'glass border border-gold-500/30'
                   : 'bg-night-800 hover:bg-night-700'
@@ -226,18 +261,22 @@ export default function AdminOrdersPage() {
       {/* Filters */}
       <div className="glass rounded-2xl p-4 flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
+          <label htmlFor="orders-search" className="sr-only">Search orders</label>
           <input
+            id="orders-search"
             type="text"
             placeholder="Search orders..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-10 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50"
+            className="w-full px-4 py-3 pl-10 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
           />
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
+        <label htmlFor="orders-status-filter" className="sr-only">Filter by status</label>
         <select
+          id="orders-status-filter"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50"
@@ -249,18 +288,18 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Orders Table */}
-      <div className="glass rounded-2xl overflow-hidden">
+      <div className="glass rounded-2xl overflow-hidden" role="region" aria-label="Orders table">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full" aria-label="Orders list">
             <thead>
               <tr className="border-b border-gold-500/10">
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Order ID</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Customer</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Total</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Status</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Payment</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Date</th>
-                <th className="p-4 text-right text-white/50 text-sm font-medium">Actions</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Order ID</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Customer</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Total</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Status</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Payment</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Date</th>
+                <th scope="col" className="p-4 text-right text-white/50 text-sm font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -269,6 +308,10 @@ export default function AdminOrdersPage() {
                   key={order.id}
                   className="border-b border-gold-500/5 hover:bg-night-700/50 transition-colors cursor-pointer"
                   onClick={() => handleSelectOrder(order)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelectOrder(order); } }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View order ${order.id} details`}
                 >
                   <td className="p-4">
                     <p className="text-gold-400 font-mono font-semibold">{order.id}</p>
@@ -295,7 +338,8 @@ export default function AdminOrdersPage() {
                   <td className="p-4">
                     <button
                       onClick={(e) => { e.stopPropagation(); handleSelectOrder(order); }}
-                      className="px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors text-sm"
+                      className="px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                      aria-label={`View order ${order.id}`}
                     >
                       View
                     </button>
@@ -307,23 +351,24 @@ export default function AdminOrdersPage() {
         </div>
 
         {filteredOrders.length === 0 && (
-          <div className="p-12 text-center">
-            <span className="text-4xl block mb-4">📦</span>
+          <div className="p-12 text-center" role="status" aria-live="polite">
+            <span className="text-4xl block mb-4" aria-hidden="true">📦</span>
             <p className="text-white/50">No orders found</p>
           </div>
         )}
 
         {/* Pagination */}
         {filteredOrders.length > 0 && (
-          <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
-            <p className="text-white/50 text-sm">
+          <nav className="p-4 border-t border-gold-500/10 flex items-center justify-between" aria-label="Orders pagination">
+            <p className="text-white/50 text-sm" aria-live="polite">
               Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredOrders.length)} of {filteredOrders.length} orders
             </p>
             <div className="flex gap-2 items-center">
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                aria-label="Go to previous page"
+                className={`px-4 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
                   currentPage === 1
                     ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
                     : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -331,13 +376,14 @@ export default function AdminOrdersPage() {
               >
                 Previous
               </button>
-              <span className="px-4 py-2 text-white/70 text-sm">
+              <span className="px-4 py-2 text-white/70 text-sm" aria-current="page">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                aria-label="Go to next page"
+                className={`px-4 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
                   currentPage === totalPages
                     ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
                     : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -346,7 +392,7 @@ export default function AdminOrdersPage() {
                 Next
               </button>
             </div>
-          </div>
+          </nav>
         )}
       </div>
 
@@ -376,9 +422,10 @@ export default function AdminOrdersPage() {
                   </div>
                   <button
                     onClick={() => setSelectedOrder(null)}
-                    className="w-10 h-10 rounded-full bg-night-700 flex items-center justify-center text-white/50 hover:text-white transition-colors"
+                    aria-label="Close order details"
+                    className="w-10 h-10 rounded-full bg-night-700 flex items-center justify-center text-white/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
                   >
-                    ✕
+                    <span aria-hidden="true">✕</span>
                   </button>
                 </div>
 
@@ -453,14 +500,15 @@ export default function AdminOrdersPage() {
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-3" role="group" aria-label="Update order status">
                   <h3 className="text-white font-semibold">Update Status</h3>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Order status options">
                     {['pending', 'processing', 'shipped', 'delivered'].map((status) => (
                       <button
                         key={status}
                         onClick={() => handleUpdateStatus(selectedOrder.id, status)}
-                        className={`py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
+                        aria-pressed={selectedOrder.status === status}
+                        className={`py-2 rounded-lg text-sm font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
                           selectedOrder.status === status
                             ? 'bg-gold-500 text-night-900'
                             : 'bg-night-600 text-white/70 hover:bg-night-500'
@@ -472,8 +520,8 @@ export default function AdminOrdersPage() {
                   </div>
                   {selectedOrder.status !== 'cancelled' && (
                     <button
-                      onClick={() => handleUpdateStatus(selectedOrder.id, 'cancelled')}
-                      className="w-full py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm"
+                      onClick={() => setCancelModal(selectedOrder.id)}
+                      className="w-full py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
                     >
                       Cancel Order
                     </button>
@@ -484,6 +532,19 @@ export default function AdminOrdersPage() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Cancel Order Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={cancelModal !== null}
+        onClose={() => setCancelModal(null)}
+        onConfirm={handleCancelOrder}
+        title="Cancel Order?"
+        message="Are you sure you want to cancel this order? This action will notify the customer and may require a refund to be processed."
+        confirmText="Cancel Order"
+        cancelText="Keep Order"
+        variant="warning"
+        isLoading={isCancelling}
+      />
     </div>
   );
 }

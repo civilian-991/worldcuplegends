@@ -7,16 +7,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 
 const sidebarItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/legends', label: 'Legends', icon: '⭐' },
-  { href: '/admin/teams', label: 'Teams', icon: '🏆' },
-  { href: '/admin/matches', label: 'Matches', icon: '⚽' },
-  { href: '/admin/news', label: 'News', icon: '📰' },
-  { href: '/admin/products', label: 'Products', icon: '📦' },
-  { href: '/admin/orders', label: 'Orders', icon: '🛒' },
-  { href: '/admin/customers', label: 'Customers', icon: '👥' },
-  { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
-  { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
+  { href: '/admin', label: 'Dashboard', icon: '📊', iconLabel: 'Chart' },
+  { href: '/admin/legends', label: 'Legends', icon: '⭐', iconLabel: 'Star' },
+  { href: '/admin/teams', label: 'Teams', icon: '🏆', iconLabel: 'Trophy' },
+  { href: '/admin/matches', label: 'Matches', icon: '⚽', iconLabel: 'Football' },
+  { href: '/admin/news', label: 'News', icon: '📰', iconLabel: 'Newspaper' },
+  { href: '/admin/products', label: 'Products', icon: '📦', iconLabel: 'Package' },
+  { href: '/admin/orders', label: 'Orders', icon: '🛒', iconLabel: 'Shopping cart' },
+  { href: '/admin/customers', label: 'Customers', icon: '👥', iconLabel: 'People' },
+  { href: '/admin/analytics', label: 'Analytics', icon: '📈', iconLabel: 'Graph' },
+  { href: '/admin/settings', label: 'Settings', icon: '⚙️', iconLabel: 'Gear' },
 ];
 
 export default function AdminLayout({
@@ -75,8 +75,19 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-night-900 pt-20">
+      {/* Skip Navigation Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-24 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-gold-500 focus:text-night-900 focus:rounded-lg focus:font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900"
+      >
+        Skip to main content
+      </a>
+
       {/* Desktop Sidebar */}
       <aside
+        role="navigation"
+        aria-label="Admin navigation"
+        aria-expanded={isSidebarOpen}
         className={`fixed left-0 top-20 bottom-0 z-40 hidden lg:block transition-all duration-300 ${
           isSidebarOpen ? 'w-64' : 'w-20'
         }`}
@@ -94,38 +105,40 @@ export default function AdminLayout({
             )}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="w-8 h-8 rounded-lg bg-night-700 flex items-center justify-center text-white/50 hover:text-white hover:bg-night-600 transition-colors"
+              aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+              aria-expanded={isSidebarOpen}
+              className="w-8 h-8 rounded-lg bg-night-700 flex items-center justify-center text-white/50 hover:text-white hover:bg-night-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
             >
-              {isSidebarOpen ? '◀' : '▶'}
+              <span aria-hidden="true">{isSidebarOpen ? '◀' : '▶'}</span>
             </button>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-1 p-4 space-y-2" aria-label="Main admin menu">
             {sidebarItems.map((item) => {
               const isActive = pathname === item.href ||
                 (item.href !== '/admin' && pathname.startsWith(item.href));
 
               return (
-                <Link key={item.href} href={item.href}>
-                  <div
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                      isActive
-                        ? 'bg-gold-500/20 text-gold-400'
-                        : 'text-white/60 hover:bg-night-700 hover:text-white'
-                    }`}
-                  >
-                    <span className="text-xl">{item.icon}</span>
-                    {isSidebarOpen && (
-                      <span className="font-medium">{item.label}</span>
-                    )}
-                    {isActive && isSidebarOpen && (
-                      <motion.div
-                        layoutId="activeAdminNav"
-                        className="ml-auto w-1.5 h-1.5 rounded-full bg-gold-400"
-                      />
-                    )}
-                  </div>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
+                    isActive
+                      ? 'bg-gold-500/20 text-gold-400'
+                      : 'text-white/60 hover:bg-night-700 hover:text-white'
+                  }`}
+                >
+                  <span className="text-xl" aria-hidden="true">{item.icon}</span>
+                  <span className={isSidebarOpen ? 'font-medium' : 'sr-only'}>{item.label}</span>
+                  {isActive && isSidebarOpen && (
+                    <motion.div
+                      layoutId="activeAdminNav"
+                      className="ml-auto w-1.5 h-1.5 rounded-full bg-gold-400"
+                      aria-hidden="true"
+                    />
+                  )}
                 </Link>
               );
             })}
@@ -133,17 +146,19 @@ export default function AdminLayout({
 
           {/* Quick Links */}
           <div className="p-4 border-t border-gold-500/10">
-            <Link href="/shop">
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-night-700 hover:text-white transition-all">
-                <span className="text-xl">🏪</span>
-                {isSidebarOpen && <span className="font-medium">View Store</span>}
-              </div>
+            <Link
+              href="/shop"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-night-700 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+            >
+              <span className="text-xl" aria-hidden="true">🏪</span>
+              <span className={isSidebarOpen ? 'font-medium' : 'sr-only'}>View Store</span>
             </Link>
-            <Link href="/">
-              <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-night-700 hover:text-white transition-all">
-                <span className="text-xl">🏠</span>
-                {isSidebarOpen && <span className="font-medium">Back to Site</span>}
-              </div>
+            <Link
+              href="/"
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-night-700 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+            >
+              <span className="text-xl" aria-hidden="true">🏠</span>
+              <span className={isSidebarOpen ? 'font-medium' : 'sr-only'}>Back to Site</span>
             </Link>
           </div>
         </div>
@@ -152,9 +167,12 @@ export default function AdminLayout({
       {/* Mobile Sidebar Toggle */}
       <button
         onClick={() => setIsMobileSidebarOpen(true)}
-        className="lg:hidden fixed left-4 top-24 z-30 w-12 h-12 rounded-xl bg-night-800 border border-gold-500/20 flex items-center justify-center text-gold-400"
+        aria-label="Open navigation menu"
+        aria-expanded={isMobileSidebarOpen}
+        aria-controls="mobile-sidebar"
+        className="lg:hidden fixed left-4 top-24 z-30 w-12 h-12 rounded-xl bg-night-800 border border-gold-500/20 flex items-center justify-center text-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900"
       >
-        ☰
+        <span aria-hidden="true">☰</span>
       </button>
 
       {/* Mobile Sidebar */}
@@ -167,8 +185,12 @@ export default function AdminLayout({
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileSidebarOpen(false)}
               className="lg:hidden fixed inset-0 bg-night-900/80 backdrop-blur-sm z-40"
+              aria-hidden="true"
             />
             <motion.aside
+              id="mobile-sidebar"
+              role="navigation"
+              aria-label="Mobile admin navigation"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
@@ -185,14 +207,15 @@ export default function AdminLayout({
                 </h2>
                 <button
                   onClick={() => setIsMobileSidebarOpen(false)}
-                  className="w-8 h-8 rounded-lg bg-night-700 flex items-center justify-center text-white/50 hover:text-white"
+                  aria-label="Close navigation menu"
+                  className="w-8 h-8 rounded-lg bg-night-700 flex items-center justify-center text-white/50 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
                 >
-                  ✕
+                  <span aria-hidden="true">✕</span>
                 </button>
               </div>
 
               {/* Mobile Navigation */}
-              <nav className="flex-1 p-4 space-y-2">
+              <nav className="flex-1 p-4 space-y-2" aria-label="Mobile admin menu">
                 {sidebarItems.map((item) => {
                   const isActive = pathname === item.href ||
                     (item.href !== '/admin' && pathname.startsWith(item.href));
@@ -202,17 +225,15 @@ export default function AdminLayout({
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsMobileSidebarOpen(false)}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
+                        isActive
+                          ? 'bg-gold-500/20 text-gold-400'
+                          : 'text-white/60 hover:bg-night-700 hover:text-white'
+                      }`}
                     >
-                      <div
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                          isActive
-                            ? 'bg-gold-500/20 text-gold-400'
-                            : 'text-white/60 hover:bg-night-700 hover:text-white'
-                        }`}
-                      >
-                        <span className="text-xl">{item.icon}</span>
-                        <span className="font-medium">{item.label}</span>
-                      </div>
+                      <span className="text-xl" aria-hidden="true">{item.icon}</span>
+                      <span className="font-medium">{item.label}</span>
                     </Link>
                   );
                 })}
@@ -220,11 +241,13 @@ export default function AdminLayout({
 
               {/* Mobile Quick Links */}
               <div className="p-4 border-t border-gold-500/10">
-                <Link href="/shop" onClick={() => setIsMobileSidebarOpen(false)}>
-                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-night-700 hover:text-white transition-all">
-                    <span className="text-xl">🏪</span>
-                    <span className="font-medium">View Store</span>
-                  </div>
+                <Link
+                  href="/shop"
+                  onClick={() => setIsMobileSidebarOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-white/40 hover:bg-night-700 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                >
+                  <span className="text-xl" aria-hidden="true">🏪</span>
+                  <span className="font-medium">View Store</span>
                 </Link>
               </div>
             </motion.aside>
@@ -234,12 +257,22 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <main
-        className={`transition-all duration-300 ${
+        id="main-content"
+        tabIndex={-1}
+        className={`transition-all duration-300 focus:outline-none ${
           isSidebarOpen ? 'lg:ml-64' : 'lg:ml-20'
         }`}
       >
         <div className="p-6 lg:p-8">{children}</div>
       </main>
+
+      {/* Aria Live Region for Announcements */}
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        id="admin-announcements"
+      />
     </div>
   );
 }

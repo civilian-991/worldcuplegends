@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { addToCartSchema, formatZodError } from '@/lib/validations'
+import { sanitizeText } from '@/lib/sanitize'
 
 // GET - Fetch user's cart
 export async function GET() {
@@ -47,14 +48,18 @@ export async function POST(request: NextRequest) {
 
   const { productId, quantity, size, color } = validationResult.data
 
+  // Sanitize user input to prevent XSS
+  const sanitizedSize = size ? sanitizeText(size) : null
+  const sanitizedColor = color ? sanitizeText(color) : null
+
   // Check if item already exists
   const { data: existing } = await supabase
     .from('cart_items')
     .select('id, quantity')
     .eq('user_id', user.id)
     .eq('product_id', productId)
-    .eq('size', size || '')
-    .eq('color', color || '')
+    .eq('size', sanitizedSize || '')
+    .eq('color', sanitizedColor || '')
     .single()
 
   if (existing) {
@@ -76,8 +81,8 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         product_id: productId,
         quantity: quantity,
-        size: size || null,
-        color: color || null,
+        size: sanitizedSize,
+        color: sanitizedColor,
       })
 
     if (error) {

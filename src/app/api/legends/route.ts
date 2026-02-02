@@ -7,6 +7,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from('legends')
     .select('*')
+    .is('deleted_at', null)
     .order('rating', { ascending: false });
 
   if (error) {

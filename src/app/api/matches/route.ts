@@ -23,6 +23,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from('matches')
     .select('*')
+    .is('deleted_at', null)
     .order('match_date', { ascending: true });
 
   if (error) {

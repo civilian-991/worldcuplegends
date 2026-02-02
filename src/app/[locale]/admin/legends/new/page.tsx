@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import { sanitizeText, sanitizeImageUrl, isValidUrl } from '@/lib/sanitize';
 
 export default function NewLegendPage() {
   const router = useRouter();
@@ -32,11 +33,32 @@ export default function NewLegendPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await supabase.from('legends').insert({
-      ...formData,
+    // Validate image URL if provided
+    if (formData.image && !isValidUrl(formData.image)) {
+      showToast('Invalid image URL. Only http:// and https:// URLs are allowed.', 'error');
+      setIsLoading(false);
+      return;
+    }
+
+    // Sanitize all inputs
+    const sanitizedData = {
+      name: sanitizeText(formData.name),
+      short_name: sanitizeText(formData.short_name),
+      country: sanitizeText(formData.country),
+      country_code: sanitizeText(formData.country_code).toUpperCase(),
+      position: sanitizeText(formData.position),
+      era: sanitizeText(formData.era),
+      goals: formData.goals,
+      assists: formData.assists,
+      appearances: formData.appearances,
+      world_cups: formData.world_cups,
+      image: sanitizeImageUrl(formData.image) || null,
+      team: sanitizeText(formData.team),
       jersey_number: formData.jersey_number ? parseInt(formData.jersey_number) : null,
       rating: formData.rating ? parseFloat(formData.rating) : null,
-    });
+    };
+
+    const { error } = await supabase.from('legends').insert(sanitizedData);
 
     if (error) {
       console.error('Error creating legend:', error);

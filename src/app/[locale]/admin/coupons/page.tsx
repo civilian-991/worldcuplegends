@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import ConfirmationModal from '@/components/admin/ConfirmationModal';
 
 interface Coupon {
   id: number;
@@ -26,6 +27,8 @@ export default function AdminCouponsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [deleteModal, setDeleteModal] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({
     code: '',
     type: 'percentage' as 'percentage' | 'fixed',
@@ -164,8 +167,7 @@ export default function AdminCouponsPage() {
   };
 
   const deleteCoupon = async (couponId: number) => {
-    if (!confirm('Are you sure you want to delete this coupon?')) return;
-
+    setIsDeleting(true);
     const { error } = await supabase.from('coupons').delete().eq('id', couponId);
 
     if (error) {
@@ -175,6 +177,8 @@ export default function AdminCouponsPage() {
       setCoupons((prev) => prev.filter((c) => c.id !== couponId));
       showToast('Coupon deleted', 'success');
     }
+    setIsDeleting(false);
+    setDeleteModal(null);
   };
 
   if (isLoading) {
@@ -337,7 +341,7 @@ export default function AdminCouponsPage() {
                     {coupon.is_active ? 'Deactivate' : 'Activate'}
                   </button>
                   <button
-                    onClick={() => deleteCoupon(coupon.id)}
+                    onClick={() => setDeleteModal(coupon.id)}
                     className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-colors"
                   >
                     Delete
@@ -348,7 +352,20 @@ export default function AdminCouponsPage() {
           </div>
         )}
 
-        {/* Modal */}
+        {/* Delete Confirmation Modal */}
+        <ConfirmationModal
+          isOpen={deleteModal !== null}
+          onClose={() => setDeleteModal(null)}
+          onConfirm={() => { if (deleteModal) deleteCoupon(deleteModal); }}
+          title="Delete Coupon?"
+          message="Are you sure you want to delete this coupon? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+          isLoading={isDeleting}
+        />
+
+        {/* Create/Edit Modal */}
         <AnimatePresence>
           {showModal && (
             <>

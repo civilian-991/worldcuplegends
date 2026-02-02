@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { checkAdmin } from '@/lib/admin'
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit'
+import { handleDatabaseError, CommonErrors } from '@/lib/api-errors'
 
 interface OrderRow {
   total: number
@@ -15,11 +17,19 @@ interface OrderItemRow {
   price: number
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Apply rate limiting for admin read operations - 100 requests per minute
+  const ip = getClientIP(request)
+  const rateLimitResult = rateLimiters.adminRead.check(ip)
+
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
   const { supabase, isAdmin } = await checkAdmin()
 
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return CommonErrors.unauthorized()
   }
 
   // Get order statistics
@@ -28,7 +38,7 @@ export async function GET() {
     .select('total, status, payment_status, created_at')
 
   if (ordersError) {
-    return NextResponse.json({ error: ordersError.message }, { status: 500 })
+    return handleDatabaseError(ordersError, 'analytics')
   }
 
   const ordersList = (orders || []) as OrderRow[]

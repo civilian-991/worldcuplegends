@@ -168,6 +168,145 @@ export function rateLimitResponse(result: RateLimitResult): Response {
   );
 }
 
+// ==========================================
+// Account Lockout System
+// ==========================================
+
+interface AccountLockoutEntry {
+  failedAttempts: number;
+  lockedUntil: number | null;
+  lastAttempt: number;
+}
+
+// Separate store for account lockout tracking (email-based)
+const accountLockoutStore = new Map<string, AccountLockoutEntry>();
+
+// Account lockout configuration
+const LOCKOUT_CONFIG = {
+  maxAttempts: 5,
+  lockoutDurationMs: 15 * 60 * 1000, // 15 minutes
+  attemptWindowMs: 30 * 60 * 1000, // 30 minutes - reset counter if no attempts in this window
+};
+
+export interface AccountLockoutResult {
+  isLocked: boolean;
+  remainingAttempts: number;
+  lockoutRemainingSeconds: number;
+  message: string;
+}
+
+/**
+ * Check if an account is locked and track failed login attempts
+ * Uses email as identifier for per-account lockout
+ */
+export function checkAccountLockout(email: string): AccountLockoutResult {
+  const key = `lockout:${email.toLowerCase()}`;
+  const now = Date.now();
+
+  let entry = accountLockoutStore.get(key);
+
+  // If no entry exists, create one
+  if (!entry) {
+    entry = {
+      failedAttempts: 0,
+      lockedUntil: null,
+      lastAttempt: now,
+    };
+    accountLockoutStore.set(key, entry);
+  }
+
+  // Check if account is currently locked
+  if (entry.lockedUntil && entry.lockedUntil > now) {
+    const lockoutRemainingSeconds = Math.ceil((entry.lockedUntil - now) / 1000);
+    return {
+      isLocked: true,
+      remainingAttempts: 0,
+      lockoutRemainingSeconds,
+      message: `Account temporarily locked. Please try again in ${Math.ceil(lockoutRemainingSeconds / 60)} minutes.`,
+    };
+  }
+
+  // If lockout has expired, reset the entry
+  if (entry.lockedUntil && entry.lockedUntil <= now) {
+    entry.failedAttempts = 0;
+    entry.lockedUntil = null;
+  }
+
+  // If last attempt was outside the window, reset the counter
+  if (now - entry.lastAttempt > LOCKOUT_CONFIG.attemptWindowMs) {
+    entry.failedAttempts = 0;
+  }
+
+  return {
+    isLocked: false,
+    remainingAttempts: LOCKOUT_CONFIG.maxAttempts - entry.failedAttempts,
+    lockoutRemainingSeconds: 0,
+    message: '',
+  };
+}
+
+/**
+ * Record a failed login attempt and potentially lock the account
+ */
+export function recordFailedLoginAttempt(email: string): AccountLockoutResult {
+  const key = `lockout:${email.toLowerCase()}`;
+  const now = Date.now();
+
+  let entry = accountLockoutStore.get(key);
+
+  if (!entry) {
+    entry = {
+      failedAttempts: 0,
+      lockedUntil: null,
+      lastAttempt: now,
+    };
+  }
+
+  // Increment failed attempts
+  entry.failedAttempts++;
+  entry.lastAttempt = now;
+
+  // Check if we should lock the account
+  if (entry.failedAttempts >= LOCKOUT_CONFIG.maxAttempts) {
+    entry.lockedUntil = now + LOCKOUT_CONFIG.lockoutDurationMs;
+    accountLockoutStore.set(key, entry);
+
+    const lockoutRemainingSeconds = Math.ceil(LOCKOUT_CONFIG.lockoutDurationMs / 1000);
+    return {
+      isLocked: true,
+      remainingAttempts: 0,
+      lockoutRemainingSeconds,
+      message: `Too many failed attempts. Account locked for ${Math.ceil(lockoutRemainingSeconds / 60)} minutes.`,
+    };
+  }
+
+  accountLockoutStore.set(key, entry);
+
+  const remainingAttempts = LOCKOUT_CONFIG.maxAttempts - entry.failedAttempts;
+  return {
+    isLocked: false,
+    remainingAttempts,
+    lockoutRemainingSeconds: 0,
+    message: remainingAttempts <= 2
+      ? `Warning: ${remainingAttempts} attempt${remainingAttempts === 1 ? '' : 's'} remaining before account lockout.`
+      : '',
+  };
+}
+
+/**
+ * Clear failed login attempts after successful login
+ */
+export function clearFailedLoginAttempts(email: string): void {
+  const key = `lockout:${email.toLowerCase()}`;
+  accountLockoutStore.delete(key);
+}
+
+/**
+ * Generic error message for login failures (security best practice)
+ * Always returns the same message regardless of whether email exists or password is wrong
+ */
+export const GENERIC_LOGIN_ERROR = 'Invalid email or password';
+
 // Pre-configured rate limiters for common use cases
 export const rateLimiters = {
   // Newsletter: 3 requests per hour per IP (prevent spam subscriptions)
@@ -202,6 +341,34 @@ export const rateLimiters = {
   pollVotes: createRateLimiter({
     prefix: 'poll-votes',
     limit: 5,
+    windowSeconds: 60, // 1 minute
+  }),
+
+  // Login: 5 attempts per 15 minutes per IP (prevent brute force attacks)
+  login: createRateLimiter({
+    prefix: 'login',
+    limit: 5,
+    windowSeconds: 15 * 60, // 15 minutes
+  }),
+
+  // Admin read operations: 100 requests per minute (GET requests)
+  adminRead: createRateLimiter({
+    prefix: 'admin-read',
+    limit: 100,
+    windowSeconds: 60, // 1 minute
+  }),
+
+  // Admin write operations: 30 requests per minute (POST, PATCH, PUT requests)
+  adminWrite: createRateLimiter({
+    prefix: 'admin-write',
+    limit: 30,
+    windowSeconds: 60, // 1 minute
+  }),
+
+  // Admin delete operations: 10 requests per minute (DELETE requests)
+  adminDelete: createRateLimiter({
+    prefix: 'admin-delete',
+    limit: 10,
     windowSeconds: 60, // 1 minute
   }),
 };

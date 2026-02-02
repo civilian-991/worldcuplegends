@@ -1,16 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkAdmin } from '@/lib/admin'
+import { checkAdmin, validateAdminCsrf } from '@/lib/admin'
 import { sendShippingNotification } from '@/lib/email'
+import { updateOrderSchema, formatZodError } from '@/lib/validations'
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit'
+import { handleDatabaseError, CommonErrors } from '@/lib/api-errors'
+import { logAdminAction, sanitizeForAudit } from '@/lib/audit'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Apply rate limiting for admin read operations - 100 requests per minute
+  const ip = getClientIP(request)
+  const rateLimitResult = rateLimiters.adminRead.check(ip)
+
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
   const { supabase, isAdmin } = await checkAdmin()
   const { id } = await params
 
   if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return CommonErrors.unauthorized()
   }
 
   const { data: order, error } = await supabase
@@ -23,7 +35,7 @@ export async function GET(
     .single()
 
   if (error || !order) {
-    return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+    return CommonErrors.notFound('Order')
   }
 
   return NextResponse.json({ order })
@@ -33,31 +45,60 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { supabase, isAdmin } = await checkAdmin()
-  const { id } = await params
-
-  if (!isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Validate CSRF token for state-changing operations
+  const csrfError = validateAdminCsrf(request)
+  if (csrfError) {
+    return csrfError
   }
 
-  let body
+  // Apply rate limiting for admin write operations - 30 requests per minute
+  const ip = getClientIP(request)
+  const rateLimitResult = rateLimiters.adminWrite.check(ip)
+
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
+  const { supabase, isAdmin, user } = await checkAdmin()
+  const { id } = await params
+
+  if (!isAdmin || !user) {
+    return CommonErrors.unauthorized()
+  }
+
+  // Fetch the existing order for audit logging
+  const { data: existingOrder } = await supabase
+    .from('orders')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  let body: unknown
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
-  }
-  const { status, tracking_number, notes } = body
-
-  // Validate status if provided
-  const validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled']
-  if (status && !validStatuses.includes(status)) {
-    return NextResponse.json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` }, { status: 400 })
+    return CommonErrors.invalidJson()
   }
 
+  // Validate request body with Zod
+  const validationResult = updateOrderSchema.safeParse(body)
+  if (!validationResult.success) {
+    return NextResponse.json(formatZodError(validationResult.error), { status: 400 })
+  }
+
+  const validatedData = validationResult.data
+  const { status, tracking_number, notes } = validatedData
+
+  // Only include fields that were actually provided
   const updateData: Record<string, unknown> = {}
-  if (status) updateData.status = status
-  if (tracking_number) updateData.tracking_number = tracking_number
+  if (status !== undefined) updateData.status = status
+  if (tracking_number !== undefined) updateData.tracking_number = tracking_number
   if (notes !== undefined) updateData.notes = notes
+
+  // Check if there's anything to update
+  if (Object.keys(updateData).length === 0) {
+    return CommonErrors.badRequest('No valid fields provided for update')
+  }
 
   const { data: order, error } = await supabase
     .from('orders')
@@ -67,8 +108,20 @@ export async function PATCH(
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return handleDatabaseError(error, 'order')
   }
+
+  // Log the update action to audit logs
+  await logAdminAction(
+    supabase,
+    user.id,
+    'update',
+    'order',
+    id,
+    sanitizeForAudit(existingOrder),
+    sanitizeForAudit(order),
+    request
+  )
 
   // Send shipping notification if status changed to shipped
   const orderData = order as { id: string; shipping_address: { firstName: string; lastName: string; email: string } } | null

@@ -18,6 +18,7 @@ export async function GET(
     .from('legends')
     .select('*')
     .eq('id', legendId)
+    .is('deleted_at', null)
     .single();
 
   if (error) {

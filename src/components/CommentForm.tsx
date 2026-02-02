@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import Link from 'next/link';
+import { escapeHtml } from '@/lib/sanitize';
 
 interface CommentFormProps {
   entityType: 'legend' | 'news' | 'match';
@@ -259,7 +260,7 @@ export default function CommentForm({
                   className="min-h-[80px] p-4 bg-night-600 rounded-xl border border-gold-500/10"
                 >
                   <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Preview</p>
-                  <p className="text-white/80 whitespace-pre-wrap break-words">{content}</p>
+                  <p className="text-white/80 whitespace-pre-wrap break-words">{escapeHtml(content)}</p>
                 </motion.div>
               ) : (
                 <motion.div

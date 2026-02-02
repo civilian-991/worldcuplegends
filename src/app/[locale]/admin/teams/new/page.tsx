@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import { sanitizeText, sanitizeImageUrl, isValidUrl } from '@/lib/sanitize';
 
 export default function NewTeamPage() {
   const router = useRouter();
@@ -26,16 +27,28 @@ export default function NewTeamPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await supabase.from('teams').insert({
-      name: formData.name,
-      country_code: formData.country_code || null,
-      flag: formData.flag || null,
+    // Validate flag URL if provided
+    if (formData.flag && !isValidUrl(formData.flag)) {
+      showToast('Invalid flag URL. Only http:// and https:// URLs are allowed.', 'error');
+      setIsLoading(false);
+      return;
+    }
+
+    // Sanitize all inputs
+    const sanitizedData = {
+      name: sanitizeText(formData.name),
+      country_code: sanitizeText(formData.country_code).toUpperCase() || null,
+      flag: sanitizeImageUrl(formData.flag) || null,
       world_cups: formData.world_cups,
-      world_cup_years: formData.world_cup_years ? formData.world_cup_years.split(',').map(y => y.trim()) : null,
-      confederation: formData.confederation || null,
+      world_cup_years: formData.world_cup_years
+        ? formData.world_cup_years.split(',').map(y => sanitizeText(y)).filter(y => y)
+        : null,
+      confederation: sanitizeText(formData.confederation) || null,
       rating: formData.rating ? parseFloat(formData.rating) : null,
       color: formData.color || null,
-    });
+    };
+
+    const { error } = await supabase.from('teams').insert(sanitizedData);
 
     if (error) {
       console.error('Error creating team:', error);

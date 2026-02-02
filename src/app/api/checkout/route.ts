@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getStripe } from '@/lib/stripe'
 import { checkoutSchema, formatZodError, type CheckoutInput } from '@/lib/validations'
+import { sanitizeText } from '@/lib/sanitize'
 
 function generateOrderId(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -25,6 +26,26 @@ export async function POST(request: NextRequest) {
     }
 
     const { items, shippingAddress, email, couponCode }: CheckoutInput = validationResult.data
+
+    // Sanitize shipping address to prevent XSS
+    const sanitizedShippingAddress = {
+      firstName: sanitizeText(shippingAddress.firstName),
+      lastName: sanitizeText(shippingAddress.lastName),
+      street: sanitizeText(shippingAddress.street),
+      city: sanitizeText(shippingAddress.city),
+      state: sanitizeText(shippingAddress.state),
+      zipCode: sanitizeText(shippingAddress.zipCode),
+      country: sanitizeText(shippingAddress.country),
+      phone: shippingAddress.phone ? sanitizeText(shippingAddress.phone) : undefined,
+    }
+
+    // Sanitize order items
+    const sanitizedItems = items.map(item => ({
+      ...item,
+      productName: sanitizeText(item.productName),
+      size: item.size ? sanitizeText(item.size) : undefined,
+      color: item.color ? sanitizeText(item.color) : undefined,
+    }))
 
     // Calculate totals
     const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -90,7 +111,7 @@ export async function POST(request: NextRequest) {
     // Generate order ID
     const orderId = generateOrderId()
 
-    // Create order in database
+    // Create order in database with sanitized data
     const { error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -103,7 +124,7 @@ export async function POST(request: NextRequest) {
         tax,
         total,
         shipping_address: {
-          ...shippingAddress,
+          ...sanitizedShippingAddress,
           email,
         },
         stripe_payment_intent_id: paymentIntent.id,
@@ -114,8 +135,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
     }
 
-    // Create order items
-    const orderItems = items.map(item => ({
+    // Create order items with sanitized data
+    const orderItems = sanitizedItems.map(item => ({
       order_id: orderId,
       product_id: item.productId,
       product_name: item.productName,

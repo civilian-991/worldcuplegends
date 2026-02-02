@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Link, useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import { sanitizeText, sanitizeSlug } from '@/lib/sanitize';
 
 const categories = [
   { slug: 'jerseys', name: 'Jerseys' },
@@ -43,21 +44,24 @@ export default function NewProductPage() {
     setIsLoading(true);
 
     try {
-      // Prepare product data for database
+      // Sanitize and prepare product data for database
       const productData = {
-        name: formData.name.trim(),
-        slug: formData.slug.trim() || formData.name.toLowerCase().replace(/\s+/g, '-'),
+        name: sanitizeText(formData.name),
+        slug: sanitizeSlug(formData.slug) || sanitizeSlug(formData.name),
         price: parseFloat(formData.price),
         original_price: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-        description: formData.description.trim() || null,
-        category: formData.category,
+        description: sanitizeText(formData.description) || null,
+        category: sanitizeText(formData.category),
         in_stock: formData.inStock,
         featured: formData.featured,
-        sizes: formData.sizes,
-        colors: formData.colors.filter(c => c.name.trim() !== ''),
-        tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(t => t !== '') : [],
-        legend: formData.legend.trim() || null,
-        team: formData.team.trim() || null,
+        sizes: formData.sizes.map(s => sanitizeText(s)),
+        colors: formData.colors.filter(c => c.name.trim() !== '').map(c => ({
+          name: sanitizeText(c.name),
+          hex: c.hex,
+        })),
+        tags: formData.tags ? formData.tags.split(',').map(t => sanitizeText(t)).filter(t => t !== '') : [],
+        legend: sanitizeText(formData.legend) || null,
+        team: sanitizeText(formData.team) || null,
         stock_quantity: parseInt(formData.stockQuantity) || 0,
         images: [],
         rating: 0,

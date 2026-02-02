@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import CommentForm from './CommentForm';
 import { Skeleton } from './Skeleton';
+import { escapeHtml } from '@/lib/sanitize';
 
 // Types
 export interface Comment {
@@ -279,7 +280,7 @@ function SingleComment({
               </div>
             ) : (
               <p className="text-white/80 leading-relaxed whitespace-pre-wrap break-words">
-                {comment.content}
+                {escapeHtml(comment.content)}
               </p>
             )}
           </div>

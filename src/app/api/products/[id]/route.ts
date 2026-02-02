@@ -12,18 +12,20 @@ export async function GET(
     .from('products')
     .select('*')
     .eq('id', parseInt(id))
+    .is('deleted_at', null)
     .single()
 
   if (error) {
     return NextResponse.json({ error: 'Product not found' }, { status: 404 })
   }
 
-  // Get related products
+  // Get related products (excluding soft-deleted)
   const { data: relatedProducts } = await supabase
     .from('products')
     .select('*')
     .eq('category', product.category)
     .neq('id', product.id)
+    .is('deleted_at', null)
     .eq('in_stock', true)
     .limit(4)
 

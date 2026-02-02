@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import ConfirmationModal from '@/components/admin/ConfirmationModal';
 
 interface Product {
   id: number;
@@ -41,7 +42,9 @@ export default function AdminProductsPage() {
   const [sortBy, setSortBy] = useState('name');
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [deleteModal, setDeleteModal] = useState<number | null>(null);
+  const [bulkDeleteModal, setBulkDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const supabase = createClient();
@@ -55,6 +58,7 @@ export default function AdminProductsPage() {
     const { data, error } = await supabase
       .from('products')
       .select('*')
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -157,7 +161,11 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (id: number) => {
     setIsDeleting(true);
-    const { error } = await supabase.from('products').delete().eq('id', id);
+    // Soft delete by setting deleted_at timestamp
+    const { error } = await supabase
+      .from('products')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting product:', error);
@@ -171,9 +179,13 @@ export default function AdminProductsPage() {
   };
 
   const handleBulkDelete = async () => {
-    if (!confirm(`Are you sure you want to delete ${selectedProducts.length} product(s)?`)) return;
-
-    const { error } = await supabase.from('products').delete().in('id', selectedProducts);
+    setIsBulkDeleting(true);
+    const deleteCount = selectedProducts.length;
+    // Soft delete by setting deleted_at timestamp for all selected products
+    const { error } = await supabase
+      .from('products')
+      .update({ deleted_at: new Date().toISOString() })
+      .in('id', selectedProducts);
 
     if (error) {
       console.error('Error deleting products:', error);
@@ -181,8 +193,10 @@ export default function AdminProductsPage() {
     } else {
       setProducts((prev) => prev.filter((p) => !selectedProducts.includes(p.id)));
       setSelectedProducts([]);
-      showToast(`${selectedProducts.length} products deleted`, 'success');
+      showToast(`${deleteCount} products deleted`, 'success');
     }
+    setIsBulkDeleting(false);
+    setBulkDeleteModal(false);
   };
 
   const getCategoryIcon = (category: string) => {
@@ -230,7 +244,8 @@ export default function AdminProductsPage() {
         <div className="flex gap-3">
           <button
             onClick={fetchProducts}
-            className="px-4 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors"
+            aria-label="Refresh product list"
+            className="px-4 py-3 bg-night-700 text-white/70 rounded-xl hover:bg-night-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900"
           >
             Refresh
           </button>
@@ -238,9 +253,9 @@ export default function AdminProductsPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2"
+              className="px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-night-900 font-bold rounded-xl flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900"
             >
-              <span>➕</span>
+              <span aria-hidden="true">➕</span>
               Add Product
             </motion.button>
           </Link>
@@ -248,21 +263,24 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Filters */}
-      <div className="glass rounded-2xl p-4 flex flex-col lg:flex-row gap-4">
+      <div className="glass rounded-2xl p-4 flex flex-col lg:flex-row gap-4" role="search">
         {/* Search */}
         <div className="relative flex-1">
+          <label htmlFor="products-search" className="sr-only">Search products</label>
           <input
+            id="products-search"
             type="text"
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-10 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors"
+            className="w-full px-4 py-3 pl-10 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 transition-colors focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
           />
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -274,10 +292,12 @@ export default function AdminProductsPage() {
         </div>
 
         {/* Category Filter */}
+        <label htmlFor="products-category" className="sr-only">Filter by category</label>
         <select
+          id="products-category"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer"
+          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
         >
           {categories.map((cat) => (
             <option key={cat.slug} value={cat.slug}>
@@ -287,10 +307,12 @@ export default function AdminProductsPage() {
         </select>
 
         {/* Sort */}
+        <label htmlFor="products-sort" className="sr-only">Sort products</label>
         <select
+          id="products-sort"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer"
+          className="px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
         >
           <option value="name">Name A-Z</option>
           <option value="price-asc">Price: Low to High</option>
@@ -314,7 +336,7 @@ export default function AdminProductsPage() {
               Export
             </button>
             <button
-              onClick={handleBulkDelete}
+              onClick={() => setBulkDeleteModal(true)}
               className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-colors"
             >
               Delete Selected
@@ -324,25 +346,26 @@ export default function AdminProductsPage() {
       )}
 
       {/* Products Table */}
-      <div className="glass rounded-2xl overflow-hidden">
+      <div className="glass rounded-2xl overflow-hidden" role="region" aria-label="Products table">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full" aria-label="Products list">
             <thead>
               <tr className="border-b border-gold-500/10">
-                <th className="p-4 text-left">
+                <th scope="col" className="p-4 text-left">
                   <input
                     type="checkbox"
                     checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
                     onChange={toggleSelectAll}
-                    className="w-4 h-4 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50"
+                    aria-label={selectedProducts.length === filteredProducts.length ? 'Deselect all products' : 'Select all products'}
+                    className="w-4 h-4 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50 focus-visible:ring-2 focus-visible:ring-gold-400"
                   />
                 </th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Product</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Category</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Price</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Stock</th>
-                <th className="p-4 text-left text-white/50 text-sm font-medium">Rating</th>
-                <th className="p-4 text-right text-white/50 text-sm font-medium">Actions</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Product</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Category</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Price</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Stock</th>
+                <th scope="col" className="p-4 text-left text-white/50 text-sm font-medium">Rating</th>
+                <th scope="col" className="p-4 text-right text-white/50 text-sm font-medium">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -356,12 +379,13 @@ export default function AdminProductsPage() {
                       type="checkbox"
                       checked={selectedProducts.includes(product.id)}
                       onChange={() => toggleSelectProduct(product.id)}
-                      className="w-4 h-4 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50"
+                      aria-label={`Select ${product.name}`}
+                      className="w-4 h-4 rounded border-gold-500/30 bg-night-700 text-gold-500 focus:ring-gold-500/50 focus-visible:ring-2 focus-visible:ring-gold-400"
                     />
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-gold-500/20 to-night-800 flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-gold-500/20 to-night-800 flex items-center justify-center flex-shrink-0" aria-hidden="true">
                         <span className="text-xl">{getCategoryIcon(product.category)}</span>
                       </div>
                       <div>
@@ -380,7 +404,7 @@ export default function AdminProductsPage() {
                       <p className="text-white font-semibold">${product.price.toFixed(2)}</p>
                       {product.original_price && (
                         <p className="text-white/40 text-sm line-through">
-                          ${product.original_price.toFixed(2)}
+                          <span className="sr-only">Original price: </span>${product.original_price.toFixed(2)}
                         </p>
                       )}
                     </div>
@@ -398,35 +422,35 @@ export default function AdminProductsPage() {
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-1">
-                      <span className="text-gold-400">★</span>
+                      <span className="text-gold-400" aria-hidden="true">★</span>
                       <span className="text-white">{product.rating.toFixed(1)}</span>
-                      <span className="text-white/40 text-sm">({product.review_count})</span>
+                      <span className="text-white/40 text-sm">({product.review_count}<span className="sr-only"> reviews</span>)</span>
                     </div>
                   </td>
                   <td className="p-4">
                     <div className="flex items-center justify-end gap-2">
                       <Link href={`/shop/${product.id}`}>
                         <button
-                          className="w-8 h-8 rounded-lg bg-night-600 flex items-center justify-center text-white/50 hover:text-white hover:bg-night-500 transition-colors"
-                          title="View"
+                          className="w-8 h-8 rounded-lg bg-night-600 flex items-center justify-center text-white/50 hover:text-white hover:bg-night-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                          aria-label={`View ${product.name} in store`}
                         >
-                          👁️
+                          <span aria-hidden="true">👁️</span>
                         </button>
                       </Link>
                       <Link href={`/admin/products/${product.id}`}>
                         <button
-                          className="w-8 h-8 rounded-lg bg-night-600 flex items-center justify-center text-white/50 hover:text-white hover:bg-night-500 transition-colors"
-                          title="Edit"
+                          className="w-8 h-8 rounded-lg bg-night-600 flex items-center justify-center text-white/50 hover:text-white hover:bg-night-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                          aria-label={`Edit ${product.name}`}
                         >
-                          ✏️
+                          <span aria-hidden="true">✏️</span>
                         </button>
                       </Link>
                       <button
                         onClick={() => setDeleteModal(product.id)}
-                        className="w-8 h-8 rounded-lg bg-night-600 flex items-center justify-center text-white/50 hover:text-red-400 hover:bg-red-500/20 transition-colors"
-                        title="Delete"
+                        className="w-8 h-8 rounded-lg bg-night-600 flex items-center justify-center text-white/50 hover:text-red-400 hover:bg-red-500/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                        aria-label={`Delete ${product.name}`}
                       >
-                        🗑️
+                        <span aria-hidden="true">🗑️</span>
                       </button>
                     </div>
                   </td>
@@ -437,23 +461,24 @@ export default function AdminProductsPage() {
         </div>
 
         {filteredProducts.length === 0 && (
-          <div className="p-12 text-center">
-            <span className="text-4xl block mb-4">📦</span>
+          <div className="p-12 text-center" role="status" aria-live="polite">
+            <span className="text-4xl block mb-4" aria-hidden="true">📦</span>
             <p className="text-white/50">No products found</p>
           </div>
         )}
 
         {/* Pagination */}
         {filteredProducts.length > 0 && (
-          <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
-            <p className="text-white/50 text-sm">
+          <nav className="p-4 border-t border-gold-500/10 flex items-center justify-between" aria-label="Products pagination">
+            <p className="text-white/50 text-sm" aria-live="polite">
               Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} products
             </p>
             <div className="flex gap-2 items-center">
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                aria-label="Go to previous page"
+                className={`px-4 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
                   currentPage === 1
                     ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
                     : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -461,13 +486,14 @@ export default function AdminProductsPage() {
               >
                 Previous
               </button>
-              <span className="px-4 py-2 text-white/70 text-sm">
+              <span className="px-4 py-2 text-white/70 text-sm" aria-current="page">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                aria-label="Go to next page"
+                className={`px-4 py-2 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
                   currentPage === totalPages
                     ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
                     : 'bg-night-700 text-white/50 hover:bg-night-600'
@@ -476,58 +502,35 @@ export default function AdminProductsPage() {
                 Next
               </button>
             </div>
-          </div>
+          </nav>
         )}
       </div>
 
-      {/* Delete Modal */}
-      <AnimatePresence>
-        {deleteModal && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setDeleteModal(null)}
-              className="fixed inset-0 bg-night-900/80 backdrop-blur-sm z-50"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-night-800 rounded-2xl p-6 z-50"
-            >
-              <h3 className="text-xl font-bold text-white mb-4">Delete Product?</h3>
-              <p className="text-white/60 mb-6">
-                Are you sure you want to delete this product? This action cannot be undone.
-              </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setDeleteModal(null)}
-                  disabled={isDeleting}
-                  className="flex-1 py-3 bg-night-600 text-white rounded-xl hover:bg-night-500 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDelete(deleteModal)}
-                  disabled={isDeleting}
-                  className="flex-1 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {isDeleting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                      Deleting...
-                    </>
-                  ) : (
-                    'Delete'
-                  )}
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Single Delete Modal */}
+      <ConfirmationModal
+        isOpen={deleteModal !== null}
+        onClose={() => setDeleteModal(null)}
+        onConfirm={() => { if (deleteModal) handleDelete(deleteModal); }}
+        title="Delete Product?"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
+
+      {/* Bulk Delete Modal */}
+      <ConfirmationModal
+        isOpen={bulkDeleteModal}
+        onClose={() => setBulkDeleteModal(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete Multiple Products?"
+        message={`You are about to delete ${selectedProducts.length} product(s). This action cannot be undone and will remove all selected items permanently.`}
+        confirmText={`Delete ${selectedProducts.length} Products`}
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isBulkDeleting}
+      />
     </div>
   );
 }

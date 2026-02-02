@@ -7,6 +7,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from('news')
     .select('*')
+    .is('deleted_at', null)
     .eq('published', true)
     .order('published_at', { ascending: false });
 

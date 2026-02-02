@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
+import ConfirmationModal from '@/components/admin/ConfirmationModal';
+import { useToast } from '@/context/ToastContext';
 
 interface Match {
   id: number;
@@ -21,10 +23,12 @@ interface Match {
 }
 
 export default function AdminMatchesPage() {
+  const { showToast } = useToast();
   const [matches, setMatches] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [filter, setFilter] = useState<'all' | 'upcoming' | 'completed' | 'live'>('all');
 
   const supabase = createClient();
@@ -38,10 +42,13 @@ export default function AdminMatchesPage() {
     const { data, error } = await supabase
       .from('matches')
       .select('*')
+      .is('deleted_at', null)
       .order('match_date', { ascending: false });
 
     if (error) {
+      // Log for debugging but show user-friendly message
       console.error('Error fetching matches:', error);
+      showToast('Failed to load matches. Please try again.', 'error');
     } else {
       setMatches(data || []);
     }
@@ -49,13 +56,21 @@ export default function AdminMatchesPage() {
   };
 
   const handleDelete = async (id: number) => {
-    const { error } = await supabase.from('matches').delete().eq('id', id);
+    setIsDeleting(true);
+    // Soft delete by setting deleted_at timestamp
+    const { error } = await supabase
+      .from('matches')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id);
     if (error) {
       console.error('Error deleting match:', error);
+      showToast('Error deleting match', 'error');
     } else {
       setMatches(matches.filter((m) => m.id !== id));
-      setDeleteId(null);
+      showToast('Match deleted successfully', 'success');
     }
+    setIsDeleting(false);
+    setDeleteId(null);
   };
 
   const filteredMatches = matches.filter((match) => {
@@ -112,20 +127,23 @@ export default function AdminMatchesPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 glass rounded-xl p-4">
+          <label htmlFor="matches-search" className="sr-only">Search matches</label>
           <input
+            id="matches-search"
             type="text"
             placeholder="Search matches..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50"
+            className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-gold-500/50 focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
           />
         </div>
-        <div className="glass rounded-xl p-4 flex gap-2">
+        <div className="glass rounded-xl p-4 flex gap-2" role="group" aria-label="Filter matches by status">
           {(['all', 'upcoming', 'live', 'completed'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              aria-pressed={filter === f}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800 ${
                 filter === f
                   ? 'bg-gold-500 text-night-900'
                   : 'bg-night-700 text-white/70 hover:text-white'
@@ -138,24 +156,27 @@ export default function AdminMatchesPage() {
       </div>
 
       {/* Matches List */}
-      <div className="space-y-4">
+      <div className="space-y-4" role="list" aria-label="Matches list">
         {isLoading ? (
-          <div className="p-12 text-center">
-            <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin mx-auto" />
+          <div className="p-12 text-center" role="status" aria-live="polite">
+            <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin mx-auto" aria-hidden="true" />
+            <span className="sr-only">Loading matches...</span>
           </div>
         ) : filteredMatches.length === 0 ? (
-          <div className="glass rounded-2xl p-12 text-center text-white/50">
+          <div className="glass rounded-2xl p-12 text-center text-white/50" role="status" aria-live="polite">
             {searchQuery || filter !== 'all'
               ? 'No matches found'
               : 'No matches yet. Add your first match!'}
           </div>
         ) : (
           filteredMatches.map((match) => (
-            <motion.div
+            <motion.article
               key={match.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass rounded-2xl p-6"
+              className="glass rounded-2xl p-6 focus-within:ring-2 focus-within:ring-gold-400"
+              role="listitem"
+              aria-label={`${match.home_team} vs ${match.away_team}, ${formatDate(match.match_date)}${match.is_live ? ', Live' : ''}`}
             >
               <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                 {/* Match Info */}
@@ -207,59 +228,46 @@ export default function AdminMatchesPage() {
                   </div>
 
                   {match.venue && (
-                    <p className="text-white/40 text-sm mt-2">📍 {match.venue}</p>
+                    <p className="text-white/40 text-sm mt-2"><span aria-hidden="true">📍</span> <span className="sr-only">Venue: </span>{match.venue}</p>
                   )}
                 </div>
 
                 {/* Actions */}
                 <div className="flex gap-2 lg:flex-col">
                   <Link href={`/admin/matches/${match.id}`} className="flex-1">
-                    <button className="w-full px-4 py-2 bg-blue-500/20 text-blue-400 rounded-xl hover:bg-blue-500/30 transition-colors text-sm">
+                    <button
+                      className="w-full px-4 py-2 bg-blue-500/20 text-blue-400 rounded-xl hover:bg-blue-500/30 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                      aria-label={`Edit match ${match.home_team} vs ${match.away_team}`}
+                    >
                       Edit
                     </button>
                   </Link>
                   <button
                     onClick={() => setDeleteId(match.id)}
-                    className="flex-1 px-4 py-2 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition-colors text-sm"
+                    className="flex-1 px-4 py-2 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400 focus-visible:ring-offset-2 focus-visible:ring-offset-night-800"
+                    aria-label={`Delete match ${match.home_team} vs ${match.away_team}`}
                   >
                     Delete
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))
         )}
       </div>
 
       {/* Delete Confirmation Modal */}
-      {deleteId && (
-        <div className="fixed inset-0 bg-night-900/80 backdrop-blur-sm flex items-center justify-center z-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass rounded-2xl p-6 max-w-md w-full mx-4"
-          >
-            <h3 className="text-xl font-bold text-white mb-4">Confirm Delete</h3>
-            <p className="text-white/70 mb-6">
-              Are you sure you want to delete this match? This action cannot be undone.
-            </p>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setDeleteId(null)}
-                className="flex-1 px-4 py-2 bg-night-700 text-white rounded-xl hover:bg-night-600 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDelete(deleteId)}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={deleteId !== null}
+        onClose={() => setDeleteId(null)}
+        onConfirm={() => { if (deleteId) handleDelete(deleteId); }}
+        title="Delete Match?"
+        message="Are you sure you want to delete this match? This action cannot be undone and will remove all match data."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        isLoading={isDeleting}
+      />
     </div>
   );
 }

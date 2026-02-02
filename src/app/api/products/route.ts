@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from('products')
     .select('*', { count: 'exact' })
+    .is('deleted_at', null)
     .eq('in_stock', true)
     .order('created_at', { ascending: false })
 

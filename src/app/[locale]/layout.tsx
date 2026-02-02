@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import CartSidebar from "@/components/CartSidebar";
+import SessionTimeoutWarning from "@/components/SessionTimeoutWarning";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
@@ -52,6 +53,7 @@ export default async function LocaleLayout({
                       </main>
                       <Footer />
                       <CartSidebar />
+                      <SessionTimeoutWarning />
                     </ToastProvider>
                   </PollProvider>
                 </RecentlyViewedProvider>

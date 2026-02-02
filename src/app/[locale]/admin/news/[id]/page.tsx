@@ -5,11 +5,14 @@ import { motion } from 'framer-motion';
 import { useRouter } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { use } from 'react';
+import { useToast } from '@/context/ToastContext';
+import { sanitizeText, sanitizeSlug, sanitizeRichHtml, sanitizeImageUrl, isValidUrl } from '@/lib/sanitize';
 
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const supabase = createClient();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,25 +59,36 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     e.preventDefault();
     setIsSaving(true);
 
+    // Validate image URL if provided
+    if (formData.image && !isValidUrl(formData.image)) {
+      showToast('Invalid image URL. Only http:// and https:// URLs are allowed.', 'error');
+      setIsSaving(false);
+      return;
+    }
+
+    // Sanitize all inputs
+    const sanitizedData = {
+      title: sanitizeText(formData.title),
+      slug: sanitizeSlug(formData.slug),
+      excerpt: sanitizeText(formData.excerpt) || null,
+      content: sanitizeRichHtml(formData.content),
+      image: sanitizeImageUrl(formData.image) || null,
+      category: sanitizeText(formData.category),
+      author: sanitizeText(formData.author) || null,
+      published: formData.published,
+      published_at: formData.published ? new Date().toISOString() : null,
+    };
+
     const { error } = await supabase
       .from('news')
-      .update({
-        title: formData.title,
-        slug: formData.slug,
-        excerpt: formData.excerpt || null,
-        content: formData.content,
-        image: formData.image || null,
-        category: formData.category,
-        author: formData.author || null,
-        published: formData.published,
-        published_at: formData.published ? new Date().toISOString() : null,
-      })
+      .update(sanitizedData)
       .eq('id', id);
 
     if (error) {
       console.error('Error updating article:', error);
-      alert('Error updating article');
+      showToast('Error updating article: ' + error.message, 'error');
     } else {
+      showToast('Article updated successfully!', 'success');
       router.push('/admin/news');
     }
     setIsSaving(false);
