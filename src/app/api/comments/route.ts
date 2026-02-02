@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
+import { createCommentSchema, formatZodError } from '@/lib/validations';
 
 // GET /api/comments - Get comments for an entity
 export async function GET(request: Request) {
@@ -74,22 +76,29 @@ export async function GET(request: Request) {
 
 // POST /api/comments - Create a comment
 export async function POST(request: Request) {
-  const body = await request.json();
-  const { entityType, entityId, content, parentId } = body;
-
-  if (!entityType || !entityId || !content) {
-    return NextResponse.json(
-      { error: 'entityType, entityId, and content are required' },
-      { status: 400 }
-    );
-  }
-
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
   }
+
+  // Rate limit: 10 requests per minute per user
+  const rateLimitResult = rateLimiters.comments.check(user.id)
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult)
+  }
+
+  const body = await request.json();
+
+  // Validate request body
+  const validationResult = createCommentSchema.safeParse(body);
+
+  if (!validationResult.success) {
+    return NextResponse.json(formatZodError(validationResult.error), { status: 400 });
+  }
+
+  const { entityType, entityId, content, parentId } = validationResult.data;
 
   const { data, error } = await supabase
     .from('comments')

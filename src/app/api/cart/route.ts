@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { addToCartSchema, formatZodError } from '@/lib/validations'
 
 // GET - Fetch user's cart
 export async function GET() {
@@ -36,7 +37,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { productId, quantity, size, color } = await request.json()
+  // Parse and validate request body
+  const body = await request.json()
+  const validationResult = addToCartSchema.safeParse(body)
+
+  if (!validationResult.success) {
+    return NextResponse.json(formatZodError(validationResult.error), { status: 400 })
+  }
+
+  const { productId, quantity, size, color } = validationResult.data
 
   // Check if item already exists
   const { data: existing } = await supabase
@@ -49,10 +58,11 @@ export async function POST(request: NextRequest) {
     .single()
 
   if (existing) {
-    // Update quantity
+    // Update quantity (ensure total doesn't exceed 99)
+    const newQuantity = Math.min(existing.quantity + quantity, 99)
     const { error } = await supabase
       .from('cart_items')
-      .update({ quantity: existing.quantity + (quantity || 1) })
+      .update({ quantity: newQuantity })
       .eq('id', existing.id)
 
     if (error) {
@@ -65,7 +75,7 @@ export async function POST(request: NextRequest) {
       .insert({
         user_id: user.id,
         product_id: productId,
-        quantity: quantity || 1,
+        quantity: quantity,
         size: size || null,
         color: color || null,
       })

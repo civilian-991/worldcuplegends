@@ -464,6 +464,11 @@
     "all": "All",
     "loading": "Loading...",
     "error": "Error",
+    "errorLoadingData": "Unable to load data",
+    "errorLoadingCoaches": "Unable to load coaches",
+    "errorLoadingLegends": "Unable to load legends",
+    "errorLoadingNews": "Unable to load news",
+    "tryAgain": "Try Again",
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
@@ -479,6 +484,48 @@
     "language": "Language",
     "english": "English",
     "portuguese": "Português"
+  },
+  "newsletter": {
+    "preTitle": "Newsletter",
+    "pageTitle": "STAY",
+    "pageTitleHighlight": "UPDATED",
+    "description": "Join thousands of fans receiving exclusive news, match updates, and behind-the-scenes content from the World Legends Cup.",
+    "benefitsTitle": "WHY SUBSCRIBE?",
+    "benefitsSubtitle": "Get exclusive access to everything World Legends Cup",
+    "benefits": {
+      "exclusiveNews": {
+        "title": "Exclusive News",
+        "description": "Be the first to know about announcements, transfers, and tournament updates before anyone else."
+      },
+      "matchUpdates": {
+        "title": "Match Updates",
+        "description": "Receive real-time match schedules, results, and highlights delivered straight to your inbox."
+      },
+      "legendInterviews": {
+        "title": "Legend Interviews",
+        "description": "Access exclusive interviews and behind-the-scenes content with football's greatest icons."
+      },
+      "earlyTicketAccess": {
+        "title": "Early Ticket Access",
+        "description": "Get priority access to ticket sales and exclusive pre-sale opportunities."
+      }
+    },
+    "formTitle": "JOIN THE LEGENDS COMMUNITY",
+    "formSubtitle": "Subscribe now and never miss a moment",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "Enter your email address",
+    "subscribeButton": "Subscribe Now",
+    "subscribingButton": "Subscribing...",
+    "successTitle": "You're In!",
+    "successMessage": "Thank you for subscribing! Check your inbox for a welcome email and get ready for legendary updates.",
+    "errorMessage": "Something went wrong. Please try again later.",
+    "privacyNote": "We respect your privacy. Unsubscribe at any time.",
+    "stats": {
+      "subscribers": "Subscribers",
+      "teams": "Teams",
+      "legends": "Legends",
+      "venues": "Venues"
+    }
   },
   "sections": {
     "standings": {

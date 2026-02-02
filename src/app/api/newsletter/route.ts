@@ -1,15 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { sendNewsletterWelcome } from '@/lib/email'
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit'
+import { newsletterSubscribeSchema, formatZodError } from '@/lib/validations'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
-    const { email } = await request.json()
-
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+    // Rate limit: 3 requests per hour per IP
+    const ip = getClientIP(request)
+    const rateLimitResult = rateLimiters.newsletter.check(ip)
+    if (!rateLimitResult.success) {
+      return rateLimitResponse(rateLimitResult)
     }
+
+    const supabase = await createClient()
+    const body = await request.json()
+
+    // Validate request body
+    const validationResult = newsletterSubscribeSchema.safeParse(body)
+
+    if (!validationResult.success) {
+      return NextResponse.json(formatZodError(validationResult.error), { status: 400 })
+    }
+
+    const { email } = validationResult.data
 
     // Check if already subscribed
     const { data: existing } = await supabase

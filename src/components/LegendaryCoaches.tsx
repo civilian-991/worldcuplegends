@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Flag from './Flag';
@@ -17,26 +17,34 @@ interface Team {
 
 export default function LegendaryCoaches() {
   const t = useTranslations('home.coaches');
+  const tCommon = useTranslations('common');
   const [teams, setTeams] = useState<Team[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchTeams() {
-      try {
-        const response = await fetch('/api/teams');
-        if (response.ok) {
-          const data = await response.json();
-          // Filter to only teams with coaches
-          const teamsWithCoaches = data.filter((team: Team) => team.coach);
-          setTeams(teamsWithCoaches);
-        }
-      } catch (error) {
-        console.error('Error fetching teams:', error);
+  const fetchTeams = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/teams');
+      if (!response.ok) {
+        throw new Error('Failed to fetch teams');
       }
+      const data = await response.json();
+      // Filter to only teams with coaches
+      const teamsWithCoaches = data.filter((team: Team) => team.coach);
+      setTeams(teamsWithCoaches);
+    } catch (err) {
+      console.error('Error fetching teams:', err);
+      setError(tCommon('errorLoadingCoaches'));
+    } finally {
       setIsLoading(false);
     }
+  }, [tCommon]);
+
+  useEffect(() => {
     fetchTeams();
-  }, []);
+  }, [fetchTeams]);
 
   if (isLoading) {
     return (
@@ -45,6 +53,69 @@ export default function LegendaryCoaches() {
           <div className="flex justify-center">
             <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin" />
           </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-24 px-6 bg-night-800">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center justify-center"
+          >
+            <div className="relative p-8 rounded-2xl bg-gradient-to-br from-night-700/80 to-night-800/80 backdrop-blur-sm border border-red-500/20 shadow-xl max-w-md w-full text-center">
+              {/* Error Icon */}
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center">
+                <svg
+                  className="w-8 h-8 text-red-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+              </div>
+
+              {/* Error Message */}
+              <h3
+                className="text-xl font-bold text-white mb-2"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {tCommon('error')}
+              </h3>
+              <p className="text-white/60 mb-6">{error}</p>
+
+              {/* Retry Button */}
+              <button
+                onClick={fetchTeams}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 text-night-900 font-semibold rounded-lg transition-all duration-300 shadow-lg shadow-gold-500/20"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                {tCommon('tryAgain')}
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
     );

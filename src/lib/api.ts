@@ -18,6 +18,8 @@ export interface Legend {
   team: string;
   jerseyNumber: number;
   rating: number;
+  isCaptain: boolean;
+  isCoach: boolean;
 }
 
 export interface Team {
@@ -31,6 +33,8 @@ export interface Team {
   rating: number;
   color: string;
   coach: string;
+  coachImage: string;
+  captain: string;
   legends: string[];
 }
 
@@ -84,6 +88,8 @@ function transformLegend(row: Record<string, unknown>): Legend {
     team: (row.team as string) || '',
     jerseyNumber: (row.jersey_number as number) || 0,
     rating: (row.rating as number) || 0,
+    isCaptain: (row.is_captain as boolean) || false,
+    isCoach: (row.is_coach as boolean) || false,
   };
 }
 
@@ -98,6 +104,9 @@ function transformTeam(row: Record<string, unknown>): Team {
     confederation: (row.confederation as string) || '',
     rating: (row.rating as number) || 0,
     color: (row.color as string) || '#FFD700',
+    coach: (row.coach as string) || '',
+    coachImage: (row.coach_image as string) || '',
+    captain: (row.captain as string) || '',
     legends: (row.legends as string[]) || [],
   };
 }

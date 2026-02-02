@@ -419,6 +419,7 @@ export interface Database {
         Row: {
           id: number
           name: string
+          full_name: string | null
           short_name: string | null
           country: string
           country_code: string | null
@@ -432,10 +433,13 @@ export interface Database {
           team: string | null
           jersey_number: number | null
           rating: number | null
+          is_captain: boolean | null
+          is_coach: boolean | null
         }
         Insert: {
           id?: number
           name: string
+          full_name?: string | null
           short_name?: string | null
           country: string
           country_code?: string | null
@@ -449,10 +453,13 @@ export interface Database {
           team?: string | null
           jersey_number?: number | null
           rating?: number | null
+          is_captain?: boolean | null
+          is_coach?: boolean | null
         }
         Update: {
           id?: number
           name?: string
+          full_name?: string | null
           short_name?: string | null
           country?: string
           country_code?: string | null
@@ -466,6 +473,8 @@ export interface Database {
           team?: string | null
           jersey_number?: number | null
           rating?: number | null
+          is_captain?: boolean | null
+          is_coach?: boolean | null
         }
       }
       teams: {
@@ -479,6 +488,9 @@ export interface Database {
           confederation: string | null
           rating: number | null
           color: string | null
+          coach: string | null
+          captain: string | null
+          coach_image: string | null
         }
         Insert: {
           id?: number
@@ -490,6 +502,9 @@ export interface Database {
           confederation?: string | null
           rating?: number | null
           color?: string | null
+          coach?: string | null
+          captain?: string | null
+          coach_image?: string | null
         }
         Update: {
           id?: number
@@ -501,6 +516,9 @@ export interface Database {
           confederation?: string | null
           rating?: number | null
           color?: string | null
+          coach?: string | null
+          captain?: string | null
+          coach_image?: string | null
         }
       }
       matches: {

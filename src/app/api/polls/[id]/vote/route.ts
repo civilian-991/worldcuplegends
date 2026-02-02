@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
+import { pollVoteSchema, formatZodError } from '@/lib/validations';
 
 // POST /api/polls/[id]/vote - Vote on a poll
 export async function POST(
@@ -7,17 +9,28 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = await request.json();
-  const { optionId, anonymousId } = body;
-
-  if (!optionId) {
-    return NextResponse.json({ error: 'Option ID is required' }, { status: 400 });
-  }
-
   const supabase = await createClient();
 
   // Get current user if authenticated
   const { data: { user } } = await supabase.auth.getUser();
+
+  // Rate limit: 5 requests per minute per user/IP
+  const identifier = user?.id || getClientIP(request);
+  const rateLimitResult = rateLimiters.pollVotes.check(identifier);
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult);
+  }
+
+  const body = await request.json();
+
+  // Validate request body
+  const validationResult = pollVoteSchema.safeParse(body);
+
+  if (!validationResult.success) {
+    return NextResponse.json(formatZodError(validationResult.error), { status: 400 });
+  }
+
+  const { optionId, anonymousId } = validationResult.data;
 
   // Check if poll exists and is active
   const { data: poll, error: pollError } = await supabase

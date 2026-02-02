@@ -177,45 +177,45 @@
       "venues": "Estádios"
     },
     "board": {
-      "preTitle": "Lideranca",
-      "title": "CONSELHO DE ADMINISTRACAO",
-      "subtitle": "Conheca os lideres visionarios que impulsionam a World Legends Cup",
+      "preTitle": "Liderança",
+      "title": "CONSELHO DE ADMINISTRAÇÃO",
+      "subtitle": "Conheça os líderes visionários que impulsionam a World Legends Cup",
       "chairman": "Presidente do Conselho",
       "ceo": "CEO",
       "boardMember": "Conselheiro",
-      "cso": "Diretor de Estrategia",
-      "coo": "Diretor de Operacoes",
-      "clo": "Diretor Juridico"
+      "cso": "Diretor de Estratégia",
+      "coo": "Diretor de Operações",
+      "clo": "Diretor Jurídico"
     },
     "unicef": {
       "preTitle": "Impacto Social",
       "title": "UNICEF",
       "titleHighlight": "ESCOLA DA VIDA",
-      "description": "Atraves de nossa parceria global com a UNICEF, estamos comprometidos em apoiar o desenvolvimento social e economico de longo prazo do Brasil, usando o poder do futebol para inspirar e educar a proxima geracao.",
+      "description": "Através de nossa parceria global com a UNICEF, estamos comprometidos em apoiar o desenvolvimento social e econômico de longo prazo do Brasil, usando o poder do futebol para inspirar e educar a próxima geração.",
       "partnership": {
         "title": "Parceria com a UNICEF",
         "subtitle": "Parceria Global",
-        "description": "A World Legends Cup formou uma parceria estrategica com a UNICEF para apoiar o desenvolvimento social e economico de longo prazo do Brasil. Juntos, aproveitamos o apelo universal do futebol para criar mudancas significativas nas comunidades em todo o pais.",
-        "tag1": "Educacao",
+        "description": "A World Legends Cup formou uma parceria estratégica com a UNICEF para apoiar o desenvolvimento social e econômico de longo prazo do Brasil. Juntos, aproveitamos o apelo universal do futebol para criar mudanças significativas nas comunidades em todo o país.",
+        "tag1": "Educação",
         "tag2": "Desenvolvimento Juvenil",
-        "tag3": "Impacto Comunitario",
+        "tag3": "Impacto Comunitário",
         "impactTitle": "Impacto Global",
-        "impactDescription": "Empoderando criancas e comunidades atraves de programas de futebol e educacao em todo o Brasil"
+        "impactDescription": "Empoderando crianças e comunidades através de programas de futebol e educação em todo o Brasil"
       },
-      "valuesTitle": "OS 8 VALORES DO FUTEBOL LENDARIO",
-      "valuesSubtitle": "Principios fundamentais que guiam nossos programas de desenvolvimento juvenil",
+      "valuesTitle": "OS 8 VALORES DO FUTEBOL LENDÁRIO",
+      "valuesSubtitle": "Princípios fundamentais que guiam nossos programas de desenvolvimento juvenil",
       "legendsValues": {
         "teamwork": {
           "title": "Trabalho em Equipe",
-          "description": "Trabalhando juntos em direcao a objetivos comuns"
+          "description": "Trabalhando juntos em direção a objetivos comuns"
         },
         "respect": {
           "title": "Respeito",
           "description": "Tratando os outros com dignidade e honra"
         },
         "dedication": {
-          "title": "Dedicacao",
-          "description": "Comprometendo-se totalmente com a excelencia"
+          "title": "Dedicação",
+          "description": "Comprometendo-se totalmente com a excelência"
         },
         "fairPlay": {
           "title": "Fair Play",
@@ -230,32 +230,32 @@
           "description": "Mantendo foco e compromisso"
         },
         "perseverance": {
-          "title": "Perseveranca",
+          "title": "Perseverança",
           "description": "Nunca desistindo dos seus sonhos"
         },
         "unity": {
-          "title": "Uniao",
-          "description": "Permanecendo juntos como um so time"
+          "title": "União",
+          "description": "Permanecendo juntos como um só time"
         }
       },
       "programTitle": "ELEMENTOS DO PROGRAMA",
-      "programSubtitle": "Como fazemos a diferenca durante todo o torneio",
+      "programSubtitle": "Como fazemos a diferença durante todo o torneio",
       "program": {
         "yearRound": {
           "title": "Programa Anual",
-          "description": "Programas educacionais e esportivos continuos durante todo o ano, fornecendo apoio constante a juventude brasileira"
+          "description": "Programas educacionais e esportivos contínuos durante todo o ano, fornecendo apoio constante à juventude brasileira"
         },
         "schoolVisits": {
           "title": "Visitas das Lendas",
-          "description": "Lendas do futebol visitam escolas e clubes em todo o Brasil, inspirando criancas atraves de interacao pessoal e mentoria"
+          "description": "Lendas do futebol visitam escolas e clubes em todo o Brasil, inspirando crianças através de interação pessoal e mentoria"
         },
         "galaAuction": {
-          "title": "Leilao de Gala",
-          "description": "Eventos exclusivos de leilao com memorabilia unica, com toda a arrecadacao beneficiando programas da UNICEF no Brasil"
+          "title": "Leilão de Gala",
+          "description": "Eventos exclusivos de leilão com memorabilia única, com toda a arrecadação beneficiando programas da UNICEF no Brasil"
         },
         "manOfMatch": {
-          "title": "Doacoes Craque do Jogo",
-          "description": "Cada premio de Craque do Jogo gera uma doacao para a UNICEF, apoiando diretamente a educacao e bem-estar das criancas"
+          "title": "Doações Craque do Jogo",
+          "description": "Cada prêmio de Craque do Jogo gera uma doação para a UNICEF, apoiando diretamente a educação e bem-estar das crianças"
         }
       }
     }
@@ -263,7 +263,7 @@
   "contact": {
     "preTitle": "Entre em Contato",
     "pageTitle": "CONTATO",
-    "pageTitleHighlight": "",
+    "pageTitleHighlight": "NÓS",
     "heroDescription": "Tem dúvidas sobre a World Legends Cup? Estamos aqui para ajudar. Entre em contato com nossa equipe.",
     "form": {
       "title": "ENVIE UMA MENSAGEM",
@@ -464,6 +464,11 @@
     "all": "Todos",
     "loading": "Carregando...",
     "error": "Erro",
+    "errorLoadingData": "Não foi possível carregar os dados",
+    "errorLoadingCoaches": "Não foi possível carregar os técnicos",
+    "errorLoadingLegends": "Não foi possível carregar as lendas",
+    "errorLoadingNews": "Não foi possível carregar as notícias",
+    "tryAgain": "Tentar Novamente",
     "back": "Voltar",
     "next": "Próximo",
     "previous": "Anterior",
@@ -479,6 +484,48 @@
     "language": "Idioma",
     "english": "English",
     "portuguese": "Português"
+  },
+  "newsletter": {
+    "preTitle": "Newsletter",
+    "pageTitle": "FIQUE",
+    "pageTitleHighlight": "ATUALIZADO",
+    "description": "Junte-se a milhares de fas recebendo noticias exclusivas, atualizacoes de partidas e conteudo dos bastidores da World Legends Cup.",
+    "benefitsTitle": "POR QUE SE INSCREVER?",
+    "benefitsSubtitle": "Tenha acesso exclusivo a tudo sobre a World Legends Cup",
+    "benefits": {
+      "exclusiveNews": {
+        "title": "Noticias Exclusivas",
+        "description": "Seja o primeiro a saber sobre anuncios, transferencias e atualizacoes do torneio antes de todos."
+      },
+      "matchUpdates": {
+        "title": "Atualizacoes de Partidas",
+        "description": "Receba calendarios de jogos em tempo real, resultados e destaques diretamente na sua caixa de entrada."
+      },
+      "legendInterviews": {
+        "title": "Entrevistas com Lendas",
+        "description": "Acesse entrevistas exclusivas e conteudo dos bastidores com os maiores icones do futebol."
+      },
+      "earlyTicketAccess": {
+        "title": "Acesso Antecipado a Ingressos",
+        "description": "Tenha acesso prioritario as vendas de ingressos e oportunidades exclusivas de pre-venda."
+      }
+    },
+    "formTitle": "JUNTE-SE A COMUNIDADE LEGENDS",
+    "formSubtitle": "Inscreva-se agora e nunca perca um momento",
+    "emailLabel": "Endereco de E-mail",
+    "emailPlaceholder": "Digite seu endereco de e-mail",
+    "subscribeButton": "Inscrever-se Agora",
+    "subscribingButton": "Inscrevendo...",
+    "successTitle": "Voce Esta Dentro!",
+    "successMessage": "Obrigado por se inscrever! Verifique sua caixa de entrada para um e-mail de boas-vindas e prepare-se para atualizacoes lendarias.",
+    "errorMessage": "Algo deu errado. Por favor, tente novamente mais tarde.",
+    "privacyNote": "Respeitamos sua privacidade. Cancele a inscricao a qualquer momento.",
+    "stats": {
+      "subscribers": "Inscritos",
+      "teams": "Times",
+      "legends": "Lendas",
+      "venues": "Estadios"
+    }
   },
   "sections": {
     "standings": {

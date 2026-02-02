@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimiters, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
+import { createPredictionSchema, formatZodError } from '@/lib/validations';
 
 // GET /api/predictions - Get user's predictions
 export async function GET(request: Request) {
@@ -35,18 +37,26 @@ export async function GET(request: Request) {
 
 // POST /api/predictions - Create or update a prediction
 export async function POST(request: Request) {
-  const body = await request.json();
-  const { matchId, homeScore, awayScore, anonymousId } = body;
-
-  if (matchId === undefined || homeScore === undefined || awayScore === undefined) {
-    return NextResponse.json(
-      { error: 'matchId, homeScore, and awayScore are required' },
-      { status: 400 }
-    );
-  }
-
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  // Rate limit: 20 requests per minute per user/IP
+  const identifier = user?.id || getClientIP(request);
+  const rateLimitResult = rateLimiters.predictions.check(identifier);
+  if (!rateLimitResult.success) {
+    return rateLimitResponse(rateLimitResult);
+  }
+
+  const body = await request.json();
+
+  // Validate request body
+  const validationResult = createPredictionSchema.safeParse(body);
+
+  if (!validationResult.success) {
+    return NextResponse.json(formatZodError(validationResult.error), { status: 400 });
+  }
+
+  const { matchId, homeScore, awayScore, anonymousId } = validationResult.data;
 
   // Check if match exists and hasn't started
   const { data: match, error: matchError } = await supabase

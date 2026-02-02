@@ -32,6 +32,8 @@ export async function GET() {
     team: row.team || '',
     jerseyNumber: row.jersey_number || 0,
     rating: row.rating || 0,
+    isCaptain: row.is_captain || false,
+    isCoach: row.is_coach || false,
   }));
 
   return NextResponse.json(legends);

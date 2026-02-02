@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 
+const ITEMS_PER_PAGE = 10;
+
 interface OrderItem {
   id: number;
   product_id: number;
@@ -44,6 +46,7 @@ export default function AdminOrdersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const supabase = createClient();
 
@@ -114,6 +117,26 @@ export default function AdminOrdersPage() {
 
     return filtered;
   }, [orders, searchQuery, statusFilter]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -241,7 +264,7 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredOrders.map((order) => (
+              {paginatedOrders.map((order) => (
                 <tr
                   key={order.id}
                   className="border-b border-gold-500/5 hover:bg-night-700/50 transition-colors cursor-pointer"
@@ -287,6 +310,42 @@ export default function AdminOrdersPage() {
           <div className="p-12 text-center">
             <span className="text-4xl block mb-4">📦</span>
             <p className="text-white/50">No orders found</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {filteredOrders.length > 0 && (
+          <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
+            <p className="text-white/50 text-sm">
+              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredOrders.length)} of {filteredOrders.length} orders
+            </p>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === 1
+                    ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                    : 'bg-night-700 text-white/50 hover:bg-night-600'
+                }`}
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2 text-white/70 text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                    : 'bg-night-700 text-white/50 hover:bg-night-600'
+                }`}
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

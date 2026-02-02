@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createClient } from '@/lib/supabase/client';
 
+const ITEMS_PER_PAGE = 10;
+
 interface Customer {
   id: string;
   email: string;
@@ -49,6 +51,7 @@ export default function AdminCustomersPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [sortBy, setSortBy] = useState('recent');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const supabase = createClient();
 
@@ -149,6 +152,26 @@ export default function AdminCustomersPage() {
 
     return filtered;
   }, [customers, searchQuery, statusFilter, sortBy]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, sortBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredCustomers.length / ITEMS_PER_PAGE);
+  const paginatedCustomers = filteredCustomers.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   const getCustomerOrders = (customerId: string) => {
     return orders.filter((o) => o.user_id === customerId);
@@ -277,7 +300,7 @@ export default function AdminCustomersPage() {
 
       {/* Customers Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredCustomers.map((customer, index) => (
+        {paginatedCustomers.map((customer, index) => (
           <motion.div
             key={customer.id}
             initial={{ opacity: 0, y: 20 }}
@@ -333,6 +356,42 @@ export default function AdminCustomersPage() {
         <div className="glass rounded-2xl p-12 text-center">
           <span className="text-4xl block mb-4">👥</span>
           <p className="text-white/50">No customers found</p>
+        </div>
+      )}
+
+      {/* Pagination */}
+      {filteredCustomers.length > 0 && (
+        <div className="glass rounded-2xl p-4 flex items-center justify-between">
+          <p className="text-white/50 text-sm">
+            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredCustomers.length)} of {filteredCustomers.length} customers
+          </p>
+          <div className="flex gap-2 items-center">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                currentPage === 1
+                  ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                  : 'bg-night-700 text-white/50 hover:bg-night-600'
+              }`}
+            >
+              Previous
+            </button>
+            <span className="px-4 py-2 text-white/70 text-sm">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-lg transition-colors ${
+                currentPage === totalPages
+                  ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                  : 'bg-night-700 text-white/50 hover:bg-night-600'
+              }`}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
 

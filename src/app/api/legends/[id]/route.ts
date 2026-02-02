@@ -47,6 +47,8 @@ export async function GET(
     team: data.team || '',
     jerseyNumber: data.jersey_number || 0,
     rating: data.rating || 0,
+    isCaptain: data.is_captain || false,
+    isCoach: data.is_coach || false,
   };
 
   return NextResponse.json(legend);

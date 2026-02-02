@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
+
+const ITEMS_PER_PAGE = 10;
 
 interface Legend {
   id: number;
@@ -28,6 +30,7 @@ export default function AdminLegendsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const supabase = createClient();
 
@@ -60,12 +63,34 @@ export default function AdminLegendsPage() {
     }
   };
 
-  const filteredLegends = legends.filter(
-    (legend) =>
-      legend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      legend.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      legend.position?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredLegends = useMemo(() => {
+    return legends.filter(
+      (legend) =>
+        legend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        legend.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        legend.position?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [legends, searchQuery]);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredLegends.length / ITEMS_PER_PAGE);
+  const paginatedLegends = filteredLegends.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
   );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   return (
     <div className="space-y-6">
@@ -105,7 +130,7 @@ export default function AdminLegendsPage() {
           <div className="p-12 text-center">
             <div className="w-12 h-12 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin mx-auto" />
           </div>
-        ) : filteredLegends.length === 0 ? (
+        ) : paginatedLegends.length === 0 ? (
           <div className="p-12 text-center text-white/50">
             {searchQuery ? 'No legends found matching your search' : 'No legends yet. Add your first legend!'}
           </div>
@@ -123,7 +148,7 @@ export default function AdminLegendsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gold-500/10">
-                {filteredLegends.map((legend) => (
+                {paginatedLegends.map((legend) => (
                   <tr key={legend.id} className="hover:bg-night-700/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -182,6 +207,42 @@ export default function AdminLegendsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {filteredLegends.length > 0 && (
+          <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
+            <p className="text-white/50 text-sm">
+              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredLegends.length)} of {filteredLegends.length} legends
+            </p>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === 1
+                    ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                    : 'bg-night-700 text-white/50 hover:bg-night-600'
+                }`}
+              >
+                Previous
+              </button>
+              <span className="px-4 py-2 text-white/70 text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                    : 'bg-night-700 text-white/50 hover:bg-night-600'
+                }`}
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

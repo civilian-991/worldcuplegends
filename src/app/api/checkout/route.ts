@@ -1,31 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getStripe } from '@/lib/stripe'
-
-interface CartItem {
-  productId: number
-  productName: string
-  quantity: number
-  price: number
-  size?: string
-  color?: string
-}
-
-interface CheckoutData {
-  items: CartItem[]
-  shippingAddress: {
-    firstName: string
-    lastName: string
-    street: string
-    city: string
-    state: string
-    zipCode: string
-    country: string
-    phone?: string
-  }
-  email: string
-  couponCode?: string
-}
+import { checkoutSchema, formatZodError, type CheckoutInput } from '@/lib/validations'
 
 function generateOrderId(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -39,13 +15,16 @@ function generateOrderId(): string {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
-    const body: CheckoutData = await request.json()
+    const body = await request.json()
 
-    const { items, shippingAddress, email, couponCode } = body
+    // Validate request body
+    const validationResult = checkoutSchema.safeParse(body)
 
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: 'Cart is empty' }, { status: 400 })
+    if (!validationResult.success) {
+      return NextResponse.json(formatZodError(validationResult.error), { status: 400 })
     }
+
+    const { items, shippingAddress, email, couponCode }: CheckoutInput = validationResult.data
 
     // Calculate totals
     const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)

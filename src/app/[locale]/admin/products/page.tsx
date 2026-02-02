@@ -30,6 +30,8 @@ interface Product {
   updated_at: string;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export default function AdminProductsPage() {
   const { showToast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,6 +42,7 @@ export default function AdminProductsPage() {
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [deleteModal, setDeleteModal] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const supabase = createClient();
 
@@ -117,6 +120,26 @@ export default function AdminProductsPage() {
 
     return filtered;
   }, [products, searchQuery, selectedCategory, sortBy]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, sortBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   const toggleSelectProduct = (id: number) => {
     setSelectedProducts((prev) =>
@@ -323,7 +346,7 @@ export default function AdminProductsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((product) => (
+              {paginatedProducts.map((product) => (
                 <tr
                   key={product.id}
                   className="border-b border-gold-500/5 hover:bg-night-700/50 transition-colors"
@@ -424,14 +447,32 @@ export default function AdminProductsPage() {
         {filteredProducts.length > 0 && (
           <div className="p-4 border-t border-gold-500/10 flex items-center justify-between">
             <p className="text-white/50 text-sm">
-              Showing {filteredProducts.length} of {products.length} products
+              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} products
             </p>
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-night-700 text-white/50 rounded-lg hover:bg-night-600 transition-colors">
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === 1
+                    ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                    : 'bg-night-700 text-white/50 hover:bg-night-600'
+                }`}
+              >
                 Previous
               </button>
-              <button className="px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg">1</button>
-              <button className="px-4 py-2 bg-night-700 text-white/50 rounded-lg hover:bg-night-600 transition-colors">
+              <span className="px-4 py-2 text-white/70 text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === totalPages
+                    ? 'bg-night-700/50 text-white/30 cursor-not-allowed'
+                    : 'bg-night-700 text-white/50 hover:bg-night-600'
+                }`}
+              >
                 Next
               </button>
             </div>
