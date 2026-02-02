@@ -2,12 +2,12 @@
 
 import { motion } from 'framer-motion';
 
-const sponsors = [
+const partners = [
   { name: 'Red Sea Global', logo: '/sponsors/red-sea-global.png', tier: 'Title Partner' },
-  { name: 'Sponsor', logo: '/sponsors/sponsor-2.png', tier: 'Official Partner' },
+  { name: 'Partner', logo: '/sponsors/sponsor-2.png', tier: 'Official Partner' },
   { name: 'Van Wagner', logo: '/sponsors/van-wagner.png', tier: 'Official Partner' },
-  { name: 'Sponsor', logo: '/sponsors/sponsor-4.png', tier: 'Official Partner' },
-  { name: 'Sponsor', logo: '/sponsors/sponsor-5.png', tier: 'Official Partner' },
+  { name: 'Partner', logo: '/sponsors/sponsor-4.png', tier: 'Official Partner' },
+  { name: 'Partner', logo: '/sponsors/sponsor-5.png', tier: 'Official Partner' },
 ];
 
 export default function PartnersContent() {
@@ -33,13 +33,13 @@ export default function PartnersContent() {
             </h1>
             <p className="text-white/60 text-xl max-w-2xl">
               The World Legends Cup is made possible by the support of our
-              world-class partners and sponsors.
+              world-class partners.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Sponsors Grid */}
+      {/* Partners Grid */}
       <section className="py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
@@ -52,16 +52,16 @@ export default function PartnersContent() {
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              OUR SPONSORS
+              OUR PARTNERS
             </h2>
             <p className="text-white/50 max-w-2xl mx-auto">
               World-class brands supporting the celebration of football&apos;s greatest legends
             </p>
           </motion.div>
 
-          {/* Main Sponsors Display */}
+          {/* Main Partners Display */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 items-center">
-            {sponsors.map((sponsor, index) => (
+            {partners.map((partner, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
@@ -72,8 +72,8 @@ export default function PartnersContent() {
               >
                 <div className="glass rounded-2xl p-8 h-40 flex items-center justify-center group-hover:bg-gold-500/5 transition-all duration-300 group-hover:border-gold-500/30">
                   <img
-                    src={sponsor.logo}
-                    alt={sponsor.name}
+                    src={partner.logo}
+                    alt={partner.name}
                     className="max-h-20 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                   />
                 </div>
@@ -83,7 +83,7 @@ export default function PartnersContent() {
         </div>
       </section>
 
-      {/* Sponsor Marquee */}
+      {/* Partner Marquee */}
       <section className="py-16 bg-night-800 overflow-hidden">
         <div className="relative">
           <motion.div
@@ -91,11 +91,11 @@ export default function PartnersContent() {
             transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
             className="flex gap-16 items-center"
           >
-            {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((sponsor, index) => (
+            {[...partners, ...partners, ...partners, ...partners].map((partner, index) => (
               <img
                 key={index}
-                src={sponsor.logo}
-                alt={sponsor.name}
+                src={partner.logo}
+                alt={partner.name}
                 className="h-12 w-auto object-contain opacity-50 flex-shrink-0"
               />
             ))}
