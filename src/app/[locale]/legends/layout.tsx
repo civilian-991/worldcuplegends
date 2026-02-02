@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 // Site URL for canonical and structured data
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://worldcuplegends.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://wlc.world';
 
 export const metadata: Metadata = {
   title: 'Legends | World Legends Cup 2026',

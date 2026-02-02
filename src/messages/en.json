@@ -287,7 +287,7 @@
     "info": {
       "title": "CONTACT INFORMATION",
       "emailTitle": "Email",
-      "emailContent": "info@worldlegendscup.com",
+      "emailContent": "info@wlc.world",
       "emailSub": "We respond within 24 hours",
       "phoneTitle": "Phone",
       "phoneContent": "+1 (800) WLC-2026",
@@ -390,7 +390,7 @@
           },
           "authentic": {
             "question": "Are the jerseys authentic?",
-            "answer": "All our jerseys are officially licensed World Cup Legends merchandise. They feature authentic embroidery, premium materials, and official competition specifications. Each jersey comes with a certificate of authenticity."
+            "answer": "All our jerseys are officially licensed World Legends Cup merchandise. They feature authentic embroidery, premium materials, and official competition specifications. Each jersey comes with a certificate of authenticity."
           },
           "customize": {
             "question": "Can I customize my jersey?",
@@ -408,7 +408,7 @@
         "items": {
           "purchaseTickets": {
             "question": "How do I purchase tickets?",
-            "answer": "Tickets for the World Cup Legends 2026 can be purchased directly through our Tickets page. We offer various packages including single match tickets, multi-game passes, and VIP experiences."
+            "answer": "Tickets for the World Legends Cup 2026 can be purchased directly through our Tickets page. We offer various packages including single match tickets, multi-game passes, and VIP experiences."
           },
           "transferable": {
             "question": "Are tickets transferable?",

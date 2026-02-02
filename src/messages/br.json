@@ -287,7 +287,7 @@
     "info": {
       "title": "INFORMAÇÕES DE CONTATO",
       "emailTitle": "E-mail",
-      "emailContent": "info@worldlegendscup.com",
+      "emailContent": "info@wlc.world",
       "emailSub": "Respondemos em até 24 horas",
       "phoneTitle": "Telefone",
       "phoneContent": "+1 (800) WLC-2026",
@@ -390,7 +390,7 @@
           },
           "authentic": {
             "question": "As camisas são autênticas?",
-            "answer": "Todas as nossas camisas são produtos oficialmente licenciados da World Cup Legends. Elas apresentam bordados autênticos, materiais premium e especificações oficiais de competição. Cada camisa vem com um certificado de autenticidade."
+            "answer": "Todas as nossas camisas são produtos oficialmente licenciados da World Legends Cup. Elas apresentam bordados autênticos, materiais premium e especificações oficiais de competição. Cada camisa vem com um certificado de autenticidade."
           },
           "customize": {
             "question": "Posso personalizar minha camisa?",
@@ -408,7 +408,7 @@
         "items": {
           "purchaseTickets": {
             "question": "Como compro ingressos?",
-            "answer": "Ingressos para a World Cup Legends 2026 podem ser comprados diretamente através da nossa página de Ingressos. Oferecemos vários pacotes incluindo ingressos para partidas individuais, passes multi-jogos e experiências VIP."
+            "answer": "Ingressos para a World Legends Cup 2026 podem ser comprados diretamente através da nossa página de Ingressos. Oferecemos vários pacotes incluindo ingressos para partidas individuais, passes multi-jogos e experiências VIP."
           },
           "transferable": {
             "question": "Os ingressos são transferíveis?",

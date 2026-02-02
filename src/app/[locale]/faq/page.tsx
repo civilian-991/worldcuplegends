@@ -232,7 +232,7 @@ export default function FAQPage() {
                   {t('contactSupport')}
                 </motion.button>
               </Link>
-              <a href="mailto:support@worldcuplegends.com">
+              <a href="mailto:support@wlc.world">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

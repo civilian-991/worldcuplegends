@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import PressContent from './PressContent';
 
-const siteUrl = 'https://worldcuplegends.vercel.app';
+const siteUrl = 'https://wlc.world';
 
 export const metadata: Metadata = {
   title: 'Press Room - World Legends Cup 2026',

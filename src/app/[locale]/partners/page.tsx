@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import PartnersContent from './PartnersContent';
 
-const siteUrl = 'https://worldcuplegends.vercel.app';
+const siteUrl = 'https://wlc.world';
 
 export const metadata: Metadata = {
   title: 'Official Partners - World Legends Cup 2026',

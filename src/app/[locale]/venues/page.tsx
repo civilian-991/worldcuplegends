@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import VenuesContent from './VenuesContent';
 
-const siteUrl = 'https://worldcuplegends.vercel.app';
+const siteUrl = 'https://wlc.world';
 
 export const metadata: Metadata = {
   title: 'Venues - Maracana & Nilton Santos Stadiums',

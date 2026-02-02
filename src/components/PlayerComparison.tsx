@@ -618,14 +618,14 @@ export default function PlayerComparison() {
   const handleShare = async () => {
     if (!player1 || !player2) return;
 
-    const shareText = `${player1.name} vs ${player2.name} - World Cup Legends Comparison\n\nWinner: ${
+    const shareText = `${player1.name} vs ${player2.name} - World Legends Cup Comparison\n\nWinner: ${
       player1Score > player2Score ? player1.name : player2Score > player1Score ? player2.name : "It's a tie!"
-    }\n\nCompare legends at worldcuplegends.com`;
+    }\n\nCompare legends at wlc.world`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'World Cup Legends Comparison',
+          title: 'World Legends Cup Comparison',
           text: shareText,
           url: window.location.href,
         });

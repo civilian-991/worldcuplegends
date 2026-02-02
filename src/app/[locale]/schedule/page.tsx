@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import ScheduleContent from './ScheduleContent';
 
-const siteUrl = 'https://worldcuplegends.vercel.app';
+const siteUrl = 'https://wlc.world';
 
 export const metadata: Metadata = {
   title: 'Match Schedule - World Legends Cup 2026',

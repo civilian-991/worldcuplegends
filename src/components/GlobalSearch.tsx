@@ -3,7 +3,7 @@
 import AdvancedSearch from './AdvancedSearch';
 
 /**
- * GlobalSearch - Enhanced search component for the World Cup Legends website.
+ * GlobalSearch - Enhanced search component for the World Legends Cup website.
  *
  * Features:
  * - Full-page search overlay (Cmd+K or click to open)

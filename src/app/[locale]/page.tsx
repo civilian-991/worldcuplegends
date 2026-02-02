@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import HomeContent from './HomeContent';
 
-const siteUrl = 'https://worldcuplegends.vercel.app';
+const siteUrl = 'https://wlc.world';
 
 export const metadata: Metadata = {
   title: 'World Legends Cup 2026 - Football Legends Tournament in Brazil',
