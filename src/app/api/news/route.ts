@@ -29,6 +29,7 @@ export async function GET() {
     publishedAt: row.published_at || row.created_at || '',
     sourceUrl: row.source_url || null,
     sourceName: row.source_name || null,
+    tags: row.tags || [],
   }));
 
   return NextResponse.json(news);

@@ -104,9 +104,19 @@ export default function NewsArticlePage() {
               <span>Back to News</span>
             </Link>
 
-            <span className="inline-block px-4 py-2 bg-gold-500 text-night-900 text-sm font-bold rounded-full mb-6">
-              {article.category}
-            </span>
+            <div className="flex flex-wrap items-center gap-2 mb-6">
+              <span className="px-4 py-2 bg-gold-500 text-night-900 text-sm font-bold rounded-full">
+                {article.category}
+              </span>
+              {article.tags && article.tags.length > 0 && article.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1.5 bg-night-600 text-white/70 text-sm rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
 
             <h1
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"

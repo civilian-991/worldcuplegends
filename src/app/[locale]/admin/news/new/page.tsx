@@ -21,7 +21,9 @@ export default function NewArticlePage() {
     category: 'general',
     author: '',
     published: false,
+    tags: [] as string[],
   });
+  const [tagInput, setTagInput] = useState('');
 
   const generateSlug = (title: string) => {
     return title
@@ -36,6 +38,24 @@ export default function NewArticlePage() {
       ...formData,
       title,
       slug: formData.slug || generateSlug(title),
+    });
+  };
+
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault();
+      const newTag = tagInput.trim();
+      if (!formData.tags.includes(newTag)) {
+        setFormData({ ...formData, tags: [...formData.tags, newTag] });
+      }
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setFormData({
+      ...formData,
+      tags: formData.tags.filter((tag) => tag !== tagToRemove),
     });
   };
 
@@ -61,6 +81,7 @@ export default function NewArticlePage() {
       author: sanitizeText(formData.author) || null,
       published: formData.published,
       published_at: formData.published ? new Date().toISOString() : null,
+      tags: formData.tags.map(tag => sanitizeText(tag)),
     };
 
     const { error } = await supabase.from('news').insert(sanitizedData);
@@ -150,6 +171,38 @@ export default function NewArticlePage() {
               placeholder="https://example.com/image.jpg"
             />
           </div>
+        </div>
+
+        {/* Tags Input */}
+        <div>
+          <label className="text-white/50 text-sm mb-2 block">Entity Tags</label>
+          <p className="text-white/30 text-xs mb-2">Add tags for legends, teams, events, etc. Press Enter to add.</p>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {formData.tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1.5 bg-gold-500/20 text-gold-400 rounded-full text-sm flex items-center gap-2"
+              >
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveTag(tag)}
+                  className="text-gold-400/60 hover:text-gold-400 transition-colors"
+                  aria-label={`Remove tag ${tag}`}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleAddTag}
+            className="w-full px-4 py-3 bg-night-700 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50"
+            placeholder="Type a tag and press Enter (e.g., Romário, Brazil, WLC 2026)"
+          />
         </div>
 
         <div>
