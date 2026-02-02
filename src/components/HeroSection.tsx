@@ -55,7 +55,7 @@ export default function HeroSection() {
         className="relative z-20 h-full flex flex-col items-center justify-center px-6"
       >
         {/* Main Title with cycling words */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-10">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -88,9 +88,6 @@ export default function HeroSection() {
             {t('neverDie')}
           </motion.p>
         </div>
-
-        {/* Spacer to maintain hero size */}
-        <div className="h-16 md:h-20 mb-10" />
 
         {/* CTA Buttons */}
         <motion.div
