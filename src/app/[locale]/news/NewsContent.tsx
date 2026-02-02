@@ -143,6 +143,12 @@ export default function NewsContent() {
                           <span>{featuredArticle.author}</span>
                           <span>•</span>
                           <span>{formatDate(featuredArticle.publishedAt)}</span>
+                          {featuredArticle.sourceName && (
+                            <>
+                              <span>•</span>
+                              <span className="text-gold-400">via {featuredArticle.sourceName}</span>
+                            </>
+                          )}
                         </div>
 
                         <span className="text-gold-400 font-semibold group-hover:gap-3 flex items-center gap-2 transition-all">
@@ -208,10 +214,16 @@ export default function NewsContent() {
                         {article.excerpt}
                       </p>
 
-                      <div className="flex items-center gap-3 text-white/40 text-xs">
+                      <div className="flex flex-wrap items-center gap-2 text-white/40 text-xs">
                         <span>{article.author}</span>
                         <span>•</span>
                         <span>{formatDate(article.publishedAt)}</span>
+                        {article.sourceName && (
+                          <>
+                            <span>•</span>
+                            <span className="text-gold-400">via {article.sourceName}</span>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

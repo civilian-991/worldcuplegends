@@ -27,6 +27,8 @@ export async function GET() {
     category: row.category || 'general',
     author: row.author || '',
     publishedAt: row.published_at || row.created_at || '',
+    sourceUrl: row.source_url || null,
+    sourceName: row.source_name || null,
   }));
 
   return NextResponse.json(news);

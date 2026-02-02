@@ -194,6 +194,29 @@ export default function NewsArticlePage() {
             )}
           </motion.div>
 
+          {/* Source Attribution */}
+          {article.sourceUrl && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-12 p-6 bg-night-700/50 rounded-2xl border border-gold-500/20"
+            >
+              <p className="text-white/50 text-sm mb-2">Originally published by</p>
+              <a
+                href={article.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 font-semibold transition-colors"
+              >
+                <span>📰</span>
+                <span>{article.sourceName || 'External Source'}</span>
+                <span className="text-white/40">↗</span>
+              </a>
+              <p className="text-white/40 text-xs mt-2 break-all">{article.sourceUrl}</p>
+            </motion.div>
+          )}
+
           {/* Share */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

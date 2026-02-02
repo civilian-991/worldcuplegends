@@ -67,6 +67,8 @@ export interface NewsArticle {
   category: string;
   author: string;
   publishedAt: string;
+  sourceUrl?: string | null;
+  sourceName?: string | null;
 }
 
 // Transform database row to frontend type
@@ -162,6 +164,8 @@ function transformNews(row: Record<string, unknown>): NewsArticle {
     category: (row.category as string) || 'general',
     author: (row.author as string) || '',
     publishedAt: (row.published_at as string) || (row.created_at as string) || '',
+    sourceUrl: (row.sourceUrl as string) || (row.source_url as string) || null,
+    sourceName: (row.sourceName as string) || (row.source_name as string) || null,
   };
 }
 
