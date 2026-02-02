@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
+import { useLocale } from 'next-intl';
 import { getNews, type NewsArticle } from '@/lib/api';
 
 const categories = ['All', 'History', 'Events', 'Interview', 'Tournament', 'Analysis', 'Exclusive', 'general'];
 
 export default function NewsContent() {
+  const locale = useLocale();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,12 +17,12 @@ export default function NewsContent() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const data = await getNews();
+      const data = await getNews(locale);
       setNews(data);
       setIsLoading(false);
     }
     fetchData();
-  }, []);
+  }, [locale]);
 
   const filteredNews = selectedCategory === 'All'
     ? news

@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const locale = searchParams.get('locale') || 'en';
+
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -9,6 +12,7 @@ export async function GET() {
     .select('*')
     .is('deleted_at', null)
     .eq('published', true)
+    .eq('locale', locale)
     .order('published_at', { ascending: false });
 
   if (error) {

@@ -277,9 +277,9 @@ export async function getLiveMatches(): Promise<Match[]> {
   return (data || []).map(transformMatch);
 }
 
-export async function getNews(): Promise<NewsArticle[]> {
+export async function getNews(locale: string = 'en'): Promise<NewsArticle[]> {
   try {
-    const response = await fetch('/api/news');
+    const response = await fetch(`/api/news?locale=${locale}`);
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
     }

@@ -44,6 +44,7 @@ export async function GET(
     sourceUrl: data.source_url || null,
     sourceName: data.source_name || null,
     tags: data.tags || [],
+    locale: data.locale || 'en',
   };
 
   return NextResponse.json(article);
