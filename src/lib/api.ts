@@ -291,20 +291,19 @@ export async function getNews(): Promise<NewsArticle[]> {
 }
 
 export async function getNewsById(id: number): Promise<NewsArticle | null> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
-    .eq('id', id)
-    .eq('published', true)
-    .single();
-
-  if (error) {
+  try {
+    const response = await fetch(`/api/news/${id}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
     console.error('Error fetching news article:', error);
     return null;
   }
-
-  return data ? transformNews(data) : null;
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
