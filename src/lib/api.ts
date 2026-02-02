@@ -306,23 +306,6 @@ export async function getNewsBySlug(slug: string, locale: string = 'en'): Promis
   }
 }
 
-export async function getNewsBySlug(slug: string): Promise<NewsArticle | null> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from('news')
-    .select('*')
-    .eq('slug', slug)
-    .eq('published', true)
-    .single();
-
-  if (error) {
-    console.error('Error fetching news article:', error);
-    return null;
-  }
-
-  return data ? transformNews(data) : null;
-}
-
 export async function getLatestNews(limit: number = 6): Promise<NewsArticle[]> {
   try {
     const news = await getNews();
