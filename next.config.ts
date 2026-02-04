@@ -42,7 +42,7 @@ const securityHeaders = [
       // Styles: self + unsafe-inline needed for styled components and inline styles
       "style-src 'self' 'unsafe-inline'",
       // Images: allow self, data (for base64), blob (for canvas), and trusted CDNs/news sources
-      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com https://img.youtube.com https://i.ytimg.com",
+      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com https://*.glbimg.com https://img.youtube.com https://i.ytimg.com",
       // Fonts: self and data URIs for embedded fonts
       "font-src 'self' data:",
       // API connections: self and Supabase
@@ -119,6 +119,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: '*.globo.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.glbimg.com',
         pathname: '/**',
       },
     ],
