@@ -64,6 +64,15 @@ const UnityValueIcon = () => (
 export default function AboutContent() {
   const t = useTranslations('about');
 
+  const boardMembers = [
+    { name: 'H.H. Prince Khalid Al Saud', role: t('board.chairman'), initials: 'KA', image: '/board/khalid-al-saud.jpeg' },
+    { name: 'Nasr Jawid Bunyadi', role: t('board.ceo'), initials: 'NB', image: '/board/nasr-bunyadi.jpeg' },
+    { name: 'Clarence Seedorf', role: t('board.boardMember'), initials: 'CS', image: '/board/clarence-seedorf.jpeg' },
+    { name: 'Raafat Hatoum', role: t('board.cso'), initials: 'RH', image: '/board/raafat-hatoum.jpeg' },
+    { name: 'Rami Salman', role: t('board.coo'), initials: 'RS', image: '/board/rami-salman.jpeg' },
+    { name: 'Rutger Schouten', role: t('board.clo'), initials: 'RS', image: '/board/rutger-schouten.jpeg' },
+  ];
+
   const values = [
     { icon: '🌍', title: t('values.unity.title'), description: t('values.unity.description') },
     { icon: '🏆', title: t('values.legacy.title'), description: t('values.legacy.description') },
@@ -506,6 +515,89 @@ export default function AboutContent() {
                 </div>
                 <div className="relative z-10 w-4 h-4 rounded-full bg-gold-500 glow-gold-sm" />
                 <div className="flex-1" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Board of Directors Section */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <p className="text-gold-400 text-sm tracking-[0.4em] uppercase mb-4">{t('board.preTitle')}</p>
+            <h2
+              className="text-4xl font-bold text-white mb-4"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              {t('board.title')}
+            </h2>
+            <p className="text-white/50 max-w-2xl mx-auto">{t('board.subtitle')}</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {boardMembers.map((member, index) => (
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className="group relative"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-gold-500/20 to-gold-600/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="relative glass rounded-2xl p-8 border border-white/5 group-hover:border-gold-500/30 transition-all duration-500 overflow-hidden">
+                  {/* Decorative corner accent */}
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gold-500/10 to-transparent" />
+
+                  {/* Avatar with image or initials */}
+                  <div className="relative mb-6">
+                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-gold-400 to-gold-600 p-[2px] group-hover:shadow-lg group-hover:shadow-gold-500/25 transition-shadow duration-500">
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full rounded-full object-cover object-top"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-night-800 flex items-center justify-center">
+                          <span
+                            className="text-2xl font-bold text-gold-400 group-hover:text-gold-300 transition-colors"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                          >
+                            {member.initials}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {/* Subtle ring effect on hover */}
+                    <div className="absolute inset-0 w-24 h-24 mx-auto rounded-full border-2 border-gold-500/0 group-hover:border-gold-500/30 group-hover:scale-110 transition-all duration-500" />
+                  </div>
+
+                  {/* Name */}
+                  <h3
+                    className="text-xl font-bold text-white text-center mb-2 group-hover:text-gold-100 transition-colors"
+                    style={{ fontFamily: 'var(--font-display)' }}
+                  >
+                    {member.name}
+                  </h3>
+
+                  {/* Role badge */}
+                  <div className="flex justify-center">
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-sm font-medium group-hover:bg-gold-500/20 group-hover:border-gold-500/40 transition-all duration-300">
+                      {member.role}
+                    </span>
+                  </div>
+
+                  {/* Bottom accent line */}
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent group-hover:w-3/4 transition-all duration-500" />
+                </div>
               </motion.div>
             ))}
           </div>
