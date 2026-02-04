@@ -547,10 +547,17 @@ export default function AboutContent() {
               BRAZIL
             </h3>
             <p className="text-gold-400 text-xl mb-6">2 Venues</p>
-            <div className="glass-gold rounded-lg p-6 max-w-sm mx-auto">
-              <p className="text-gold-400 font-bold text-2xl mb-1" style={{ fontFamily: 'var(--font-display)' }}>Maracana Stadium</p>
-              <p className="text-white/60">Rio de Janeiro</p>
-              <p className="text-white/40 text-sm mt-2">The Temple of Football</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+              <div className="glass-gold rounded-lg p-6">
+                <p className="text-gold-400 font-bold text-xl mb-1" style={{ fontFamily: 'var(--font-display)' }}>Maracanã Stadium</p>
+                <p className="text-white/60">Rio de Janeiro</p>
+                <p className="text-white/40 text-sm mt-2">The Temple of Football</p>
+              </div>
+              <div className="glass-gold rounded-lg p-6">
+                <p className="text-gold-400 font-bold text-xl mb-1" style={{ fontFamily: 'var(--font-display)' }}>Estádio Nilton Santos</p>
+                <p className="text-white/60">Rio de Janeiro</p>
+                <p className="text-white/40 text-sm mt-2">Engenhão</p>
+              </div>
             </div>
           </motion.div>
         </div>
