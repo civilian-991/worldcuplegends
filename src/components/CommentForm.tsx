@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
@@ -235,10 +236,12 @@ export default function CommentForm({
           {/* User Avatar */}
           <div className="flex-shrink-0">
             {user?.avatar ? (
-              <img
+              <Image
                 src={user.avatar}
                 alt={`${user.firstName} ${user.lastName}`}
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-gold-500/20"
+                width={40}
+                height={40}
+                className="rounded-full object-cover ring-2 ring-gold-500/20"
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-500/30 to-gold-600/30 flex items-center justify-center text-gold-400 font-bold text-sm ring-2 ring-gold-500/20">

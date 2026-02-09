@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import Flag from '@/components/Flag';
@@ -219,14 +220,19 @@ export default function VenuesContent() {
                 <div className="relative rounded-2xl overflow-hidden bg-night-800 border border-white/5 hover:border-gold-500/30 transition-all duration-500">
                   {/* Image Section */}
                   <div className="relative h-72 md:h-96 overflow-hidden">
-                    <motion.img
-                      src={venue.image}
-                      alt={venue.name}
-                      className="absolute inset-0 w-full h-full object-cover"
+                    <motion.div
+                      className="absolute inset-0"
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.6 }}
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
-                    />
+                    >
+                      <Image
+                        src={venue.image}
+                        alt={venue.name}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover"
+                      />
+                    </motion.div>
 
                     {/* Gradient Overlays */}
                     <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/60 to-transparent" />
@@ -530,13 +536,18 @@ export default function VenuesContent() {
                   className="glass rounded-xl p-5 md:p-6 cursor-pointer group border border-transparent hover:border-gold-500/20 transition-all duration-300"
                 >
                   <div className="mb-3 flex justify-center">
-                    <motion.img
-                      src={`https://flagcdn.com/w80/${nation.countryCode.toLowerCase()}.png`}
-                      alt={nation.name}
-                      className="w-12 h-auto rounded shadow-lg"
+                    <motion.div
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.2 }}
-                    />
+                    >
+                      <Image
+                        src={`https://flagcdn.com/w80/${nation.countryCode.toLowerCase()}.png`}
+                        alt={nation.name}
+                        width={48}
+                        height={32}
+                        className="rounded shadow-lg"
+                      />
+                    </motion.div>
                   </div>
                   <h3
                     className="text-lg md:text-xl font-bold text-white group-hover:text-gold-400 transition-colors"
@@ -556,10 +567,13 @@ export default function VenuesContent() {
       <section className="relative py-24 px-6 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img
+          <Image
             src="/stadium/maracana.jpg"
             alt=""
-            className="w-full h-full object-cover opacity-20"
+            fill
+            sizes="100vw"
+            className="object-cover opacity-20"
+            aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/90 to-night-900" />
         </div>

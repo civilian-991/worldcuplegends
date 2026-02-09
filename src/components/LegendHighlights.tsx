@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { type VideoData } from './VideoPlayer';
 
@@ -187,10 +188,12 @@ export default function LegendHighlights({
               className="absolute inset-0"
             >
               {/* Thumbnail */}
-              <img
+              <Image
                 src={getThumbnail(currentVideo)}
                 alt={currentVideo.title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
               />
 
               {/* Gradient Overlays */}
@@ -335,10 +338,12 @@ export default function LegendHighlights({
                   index === currentIndex ? 'ring-2 ring-gold-500' : 'opacity-60 hover:opacity-100'
                 } transition-all duration-300`}
               >
-                <img
+                <Image
                   src={getThumbnail(video)}
                   alt={video.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 96px, 112px"
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-night-900/30 flex items-center justify-center">
                   <div className="w-6 h-6 rounded-full bg-white/80 flex items-center justify-center">
@@ -445,10 +450,12 @@ export function LegendHighlightsMini({
             onClick={() => setIsPlaying(index)}
             className="relative aspect-video rounded-lg overflow-hidden cursor-pointer group"
           >
-            <img
+            <Image
               src={getThumbnail(video)}
               alt={video.title}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 50vw, 200px"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-night-900/40 flex items-center justify-center group-hover:bg-night-900/20 transition-colors">
               <div className="w-8 h-8 rounded-full bg-gold-500/90 flex items-center justify-center transform group-hover:scale-110 transition-transform">

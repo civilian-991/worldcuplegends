@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLegends, type Legend } from '@/lib/api';
 import Flag from '@/components/Flag';
@@ -515,9 +516,11 @@ function PlayerCard({
             } bg-gradient-to-br from-night-500 to-night-700`}
           >
             {legend.image ? (
-              <img
+              <Image
                 src={legend.image}
                 alt={legend.name}
+                width={112}
+                height={112}
                 className="w-full h-full object-cover"
               />
             ) : (

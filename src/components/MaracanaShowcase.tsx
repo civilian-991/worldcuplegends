@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Flag from '@/components/Flag';
 
@@ -36,14 +37,16 @@ export default function MaracanaShowcase() {
         style={{ y, scale }}
         className="absolute inset-0 z-0"
       >
-        {/* Stadium Image Placeholder - Using gradient as fallback */}
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('/stadium/maracana.jpg')`,
-            backgroundPosition: 'center 30%',
-          }}
-        />
+        {/* Stadium Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/stadium/maracana.jpg"
+            alt="Maracana Stadium"
+            fill
+            sizes="100vw"
+            className="object-cover object-[center_30%]"
+          />
+        </div>
         {/* Dramatic overlay gradients */}
         <div className="absolute inset-0 bg-gradient-to-b from-night-900/80 via-night-900/20 to-night-900" />
         <div className="absolute inset-0 bg-gradient-to-r from-night-900/60 via-transparent to-night-900/60" />

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -187,14 +188,12 @@ export default function NewsSection() {
                 <div className={`relative overflow-hidden rounded-2xl ${index === 0 ? 'h-full min-h-[500px]' : 'h-64'}`}>
                   {/* Article Image or Gradient Fallback */}
                   {article.image ? (
-                    <img
+                    <Image
                       src={article.image}
                       alt={article.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
+                      fill
+                      sizes={index === 0 ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 288px, (max-width: 1024px) 50vw, 25vw"}
+                      className="object-cover"
                     />
                   ) : null}
                   <div className={`absolute inset-0 bg-gradient-to-br from-gold-600/30 to-night-800 ${article.image ? 'hidden' : ''}`} />

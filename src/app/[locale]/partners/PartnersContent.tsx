@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const partners = [
@@ -71,10 +72,13 @@ export default function PartnersContent() {
                 className="group"
               >
                 <div className="glass rounded-2xl p-8 h-40 flex items-center justify-center group-hover:bg-gold-500/5 transition-all duration-300 group-hover:border-gold-500/30">
-                  <img
+                  <Image
                     src={partner.logo}
-                    alt={partner.name}
+                    alt={partner.name === 'Partner' ? '' : partner.name}
+                    width={160}
+                    height={80}
                     className="max-h-20 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                    aria-hidden={partner.name === 'Partner' ? true : undefined}
                   />
                 </div>
               </motion.div>
@@ -92,11 +96,14 @@ export default function PartnersContent() {
             className="flex gap-16 items-center"
           >
             {[...partners, ...partners, ...partners, ...partners].map((partner, index) => (
-              <img
+              <Image
                 key={index}
                 src={partner.logo}
-                alt={partner.name}
+                alt={partner.name === 'Partner' ? '' : partner.name}
+                width={120}
+                height={48}
                 className="h-12 w-auto object-contain opacity-50 flex-shrink-0"
+                aria-hidden={partner.name === 'Partner' ? true : undefined}
               />
             ))}
           </motion.div>

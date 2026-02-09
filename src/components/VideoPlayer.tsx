@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 
 export interface VideoData {
@@ -166,18 +167,13 @@ export default function VideoPlayer({
               transition={{ duration: 0.6 }}
               className="absolute inset-0"
             >
-              <img
+              <Image
                 src={thumbnail}
                 alt={video.title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover"
                 onLoad={() => setIsLoaded(true)}
-                onError={(e) => {
-                  // Fallback to lower quality thumbnail
-                  const target = e.target as HTMLImageElement;
-                  if (video.type === 'youtube' && target.src.includes('maxresdefault')) {
-                    target.src = getYouTubeThumbnail(video.id, 'hq');
-                  }
-                }}
               />
 
               {/* Gradient Overlays */}
@@ -406,13 +402,19 @@ export function VideoCard({
     >
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden">
-        <motion.img
-          src={thumbnail}
-          alt={video.title}
-          className="w-full h-full object-cover"
+        <motion.div
+          className="absolute inset-0"
           animate={{ scale: isHovered ? 1.05 : 1 }}
           transition={{ duration: 0.4 }}
-        />
+        >
+          <Image
+            src={thumbnail}
+            alt={video.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
+          />
+        </motion.div>
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/30 to-transparent" />

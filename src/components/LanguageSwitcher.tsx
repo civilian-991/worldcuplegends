@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -44,9 +45,11 @@ export default function LanguageSwitcher() {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-night-600 hover:bg-night-500 transition-colors"
       >
-        <img
+        <Image
           src={`https://flagcdn.com/w20/${currentLocale.flag}.png`}
           alt={currentLocale.label}
+          width={20}
+          height={15}
           className="w-5 h-auto rounded-sm"
         />
         <span className="text-white/70 text-sm hidden sm:inline">{currentLocale.code.toUpperCase()}</span>
@@ -79,9 +82,11 @@ export default function LanguageSwitcher() {
                     : 'text-white/70 hover:bg-night-600 hover:text-white'
                 }`}
               >
-                <img
+                <Image
                   src={`https://flagcdn.com/w20/${localeOption.flag}.png`}
                   alt={localeOption.label}
+                  width={20}
+                  height={15}
                   className="w-5 h-auto rounded-sm"
                 />
                 <span className="text-sm">{localeOption.label}</span>

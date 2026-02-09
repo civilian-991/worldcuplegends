@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { TrendingItemWithData, TrendDirection, formatViewCount } from '@/context/TrendingContext';
@@ -175,13 +176,12 @@ export default function TrendingCard({ item, index }: TrendingCardProps) {
           {/* Thumbnail */}
           <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-night-700">
             {cardData.image ? (
-              <img
+              <Image
                 src={cardData.image}
                 alt={cardData.title}
+                width={56}
+                height={56}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
               />
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-br from-gold-500/20 to-night-800/50" />

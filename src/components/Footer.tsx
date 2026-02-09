@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Link } from '@/i18n/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -120,16 +121,23 @@ export default function Footer() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
             {sponsors.map((sponsor, index) => (
-              <motion.img
+              <motion.div
                 key={index}
-                src={sponsor.logo}
-                alt={sponsor.name}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="h-8 md:h-10 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
-              />
+                className="relative h-8 md:h-10 w-24 md:w-32 opacity-60 hover:opacity-100 transition-opacity duration-300"
+              >
+                <Image
+                  src={sponsor.logo}
+                  alt={sponsor.name === 'Sponsor' ? '' : sponsor.name}
+                  fill
+                  sizes="(max-width: 768px) 96px, 128px"
+                  className="object-contain"
+                  {...(sponsor.name === 'Sponsor' ? { 'aria-hidden': true as unknown as boolean } : {})}
+                />
+              </motion.div>
             ))}
           </div>
         </div>
@@ -160,9 +168,11 @@ export default function Footer() {
               viewport={{ once: true }}
               className="inline-block mb-6"
             >
-              <img
+              <Image
                 src="/wlc-logo-vertical.png"
                 alt="World Legends Cup"
+                width={96}
+                height={96}
                 className="h-24 w-auto mx-auto"
               />
             </motion.div>
@@ -313,9 +323,11 @@ export default function Footer() {
             {/* Brand Section */}
             <div className="lg:col-span-2">
               <div className="mb-6">
-                <img
+                <Image
                   src="/wlc-logo-vertical.png"
                   alt="World Legends Cup"
+                  width={128}
+                  height={128}
                   className="h-32 w-auto"
                 />
               </div>

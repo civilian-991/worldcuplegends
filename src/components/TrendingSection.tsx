@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, ReactNode } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -330,23 +331,29 @@ function TrendingSectionContent() {
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg overflow-hidden bg-night-700 flex-shrink-0">
                       {tab.id === 'legends' && (
-                        <img
+                        <Image
                           src={(topItem.data as { image: string }).image}
                           alt={(topItem.data as { name: string }).name}
+                          width={40}
+                          height={40}
                           className="w-full h-full object-cover"
                         />
                       )}
                       {tab.id === 'products' && (
-                        <img
+                        <Image
                           src={(topItem.data as { images: string[] }).images[0]}
                           alt={(topItem.data as { name: string }).name}
+                          width={40}
+                          height={40}
                           className="w-full h-full object-cover"
                         />
                       )}
                       {tab.id === 'news' && (
-                        <img
+                        <Image
                           src={(topItem.data as { image: string }).image}
                           alt={(topItem.data as { title: string }).title}
+                          width={40}
+                          height={40}
                           className="w-full h-full object-cover"
                         />
                       )}

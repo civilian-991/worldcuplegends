@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Flag from './Flag';
@@ -192,13 +193,12 @@ export default function LegendaryCoaches() {
                 {/* Coach Image or Placeholder */}
                 <div className="absolute inset-0 flex items-end justify-center">
                   {team.coachImage ? (
-                    <img
+                    <Image
                       src={team.coachImage}
                       alt={team.coach}
-                      className="h-[85%] w-auto object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">

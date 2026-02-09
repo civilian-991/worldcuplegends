@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Flag from '@/components/Flag';
@@ -173,10 +174,12 @@ export default function AboutContent() {
             >
               <div className="glass rounded-3xl p-8 glow-gold">
                 <div className="text-center">
-                  <img
+                  <Image
                     src="/wlc-logo-vertical.png"
                     alt="World Legends Cup"
-                    className="h-32 mx-auto mb-6"
+                    width={128}
+                    height={128}
+                    className="mx-auto mb-6"
                   />
                   <h3
                     className="text-3xl font-bold text-gold-400 mb-4"
@@ -560,9 +563,11 @@ export default function AboutContent() {
                   <div className="relative mb-6">
                     <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-gold-400 to-gold-600 p-[2px] group-hover:shadow-lg group-hover:shadow-gold-500/25 transition-shadow duration-500">
                       {member.image ? (
-                        <img
+                        <Image
                           src={member.image}
                           alt={member.name}
+                          width={96}
+                          height={96}
                           className="w-full h-full rounded-full object-cover object-top"
                         />
                       ) : (
@@ -630,7 +635,7 @@ export default function AboutContent() {
             className="glass rounded-3xl p-12 text-center max-w-2xl mx-auto glow-gold"
           >
             <div className="mb-6">
-              <img src="https://flagcdn.com/w160/br.png" alt="Brazil flag" className="w-32 h-auto mx-auto rounded-lg shadow-lg" />
+              <Image src="https://flagcdn.com/w160/br.png" alt="Brazil flag" width={128} height={90} className="mx-auto rounded-lg shadow-lg" />
             </div>
             <h3
               className="text-4xl font-bold text-white mb-4"

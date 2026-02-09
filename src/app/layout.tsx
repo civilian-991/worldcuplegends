@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 
 const siteUrl = 'https://wlc.world';
 const siteName = 'World Legends Cup';
@@ -47,35 +46,73 @@ export const metadata: Metadata = {
   },
 };
 
-const organizationJsonLd = {
+const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "World Legends Cup",
-  url: "https://wlc.world",
-  logo: "https://wlc.world/og-image.png",
-};
-
-const sportsEventJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SportsEvent",
-  name: "World Legends Cup 2026",
-  description: "The ultimate football legends tournament bringing together the greatest players in history",
-  startDate: "2026-06-01",
-  endDate: "2026-07-15",
-  location: {
-    "@type": "Place",
-    name: "Maracanã Stadium",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Rio de Janeiro",
-      addressCountry: "Brazil",
+  "@graph": [
+    {
+      "@type": "SportsOrganization",
+      "@id": `${siteUrl}/#organization`,
+      "name": "World Legends Cup",
+      "alternateName": "WLC 2026",
+      "url": siteUrl,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/og-image.png`,
+        "width": 1200,
+        "height": 630,
+      },
+      "description": "The ultimate football legends tournament bringing together the greatest players of all time.",
+      "sport": "Football",
+      "sameAs": [
+        "https://twitter.com/worldlegendscup"
+      ],
     },
-  },
-  organizer: {
-    "@type": "Organization",
-    name: "World Legends Cup",
-    url: "https://wlc.world",
-  },
+    {
+      "@type": "SportsEvent",
+      "@id": `${siteUrl}/#event`,
+      "name": "World Legends Cup 2026",
+      "description": "The ultimate football legends tournament featuring the greatest players in history.",
+      "startDate": "2026-06-01",
+      "endDate": "2026-07-15",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "image": `${siteUrl}/og-image.png`,
+      "location": {
+        "@type": "StadiumOrArena",
+        "name": "Maracanã Stadium",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Av. Pres. Castelo Branco, Portão 3",
+          "addressLocality": "Rio de Janeiro",
+          "addressRegion": "RJ",
+          "addressCountry": "BR",
+        },
+      },
+      "organizer": {
+        "@type": "SportsOrganization",
+        "@id": `${siteUrl}/#organization`,
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "url": `${siteUrl}/en/tickets`,
+        "lowPrice": "150",
+        "highPrice": "1500",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      "name": "World Legends Cup",
+      "url": siteUrl,
+      "publisher": {
+        "@type": "SportsOrganization",
+        "@id": `${siteUrl}/#organization`,
+      },
+      "inLanguage": ["en", "pt-BR"],
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -85,17 +122,9 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <Script
-        id="organization-jsonld"
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-      />
-      <Script
-        id="sports-event-jsonld"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(sportsEventJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       {children}
     </>

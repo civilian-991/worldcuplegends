@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { getLegends, type Legend } from '@/lib/api';
 import Flag from '@/components/Flag';
@@ -164,10 +165,12 @@ function AwardDetailCard({ award, onClose }: { award: Award; onClose: () => void
       {/* Background with Winner Image */}
       <div className="absolute inset-0">
         {award.winner.image && (
-          <img
+          <Image
             src={award.winner.image}
             alt={award.winner.name}
-            className="w-full h-full object-cover opacity-30"
+            fill
+            sizes="100vw"
+            className="object-cover opacity-30"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/80 to-transparent" />
@@ -191,9 +194,11 @@ function AwardDetailCard({ award, onClose }: { award: Award; onClose: () => void
           <div className="relative">
             <div className="w-48 h-48 rounded-full overflow-hidden ring-4 ring-gold-500/50 glow-gold">
               {award.winner.image ? (
-                <img
+                <Image
                   src={award.winner.image}
                   alt={award.winner.name}
+                  width={192}
+                  height={192}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -295,9 +300,11 @@ function TopScorersLeaderboard({ legends }: { legends: Legend[] }) {
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="w-12 h-12 rounded-full overflow-hidden bg-night-500 flex-shrink-0">
                 {scorer.legend.image ? (
-                  <img
+                  <Image
                     src={scorer.legend.image}
                     alt={scorer.legend.name}
+                    width={48}
+                    height={48}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -431,9 +438,11 @@ function BestXIFormation({ legends }: { legends: Legend[] }) {
                 {/* Player Photo */}
                 <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden ring-2 ring-gold-500/50 group-hover:ring-gold-400 transition-all bg-night-700">
                   {player.image ? (
-                    <img
+                    <Image
                       src={player.image}
                       alt={player.name}
+                      width={64}
+                      height={64}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -507,9 +516,11 @@ function InducteeSpotlight({ legend, isActive }: { legend: Legend; isActive: boo
           <div className="relative">
             <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden">
               {legend.image ? (
-                <img
+                <Image
                   src={legend.image}
                   alt={legend.name}
+                  width={160}
+                  height={160}
                   className="w-full h-full object-cover"
                 />
               ) : (

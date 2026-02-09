@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -36,9 +37,19 @@ export default function HeroSection() {
       >
         {/* Hero Background Image - Maracanã Stadium */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(/stadium/maracana.jpg)' }}
-        />
+          className="absolute inset-0"
+          role="img"
+          aria-label="Maracanã Stadium"
+        >
+          <Image
+            src="/stadium/maracana.jpg"
+            alt="Maracanã Stadium aerial view"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-night-900/80 via-night-900/50 to-night-900 z-10" />

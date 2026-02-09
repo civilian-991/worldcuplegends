@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
@@ -230,10 +231,12 @@ function SingleComment({
           {/* Avatar */}
           <div className="flex-shrink-0">
             {comment.userAvatar ? (
-              <img
+              <Image
                 src={comment.userAvatar}
                 alt={comment.userName}
-                className="w-10 h-10 rounded-full object-cover ring-2 ring-gold-500/20"
+                width={40}
+                height={40}
+                className="rounded-full object-cover ring-2 ring-gold-500/20"
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold-500/30 to-gold-600/30 flex items-center justify-center text-gold-400 font-bold text-sm ring-2 ring-gold-500/20">

@@ -9,8 +9,14 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-# Crawl delay for politeness (in seconds)
-Crawl-delay: 1
+# Block authenticated and transactional pages
+Disallow: /*/account/
+Disallow: /*/cart
+Disallow: /*/checkout
+Disallow: /*/login
+Disallow: /*/register
+Disallow: /*/forgot-password
+Disallow: /*/track-order
 
 # Sitemap location
 Sitemap: https://wlc.world/sitemap.xml

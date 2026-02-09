@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Link } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
@@ -85,11 +86,12 @@ export default function NewsContent() {
                       {/* Image */}
                       <div className="relative lg:w-2/3 h-64 lg:h-[500px] overflow-hidden">
                         {featuredArticle.image && (
-                          <img
+                          <Image
                             src={featuredArticle.image}
                             alt={featuredArticle.title}
-                            className="absolute inset-0 w-full h-full object-cover"
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 66vw"
+                            className="object-cover"
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-br from-gold-600/30 to-night-800 -z-10" />
@@ -164,11 +166,12 @@ export default function NewsContent() {
                     {/* Image */}
                     <div className="relative h-48 overflow-hidden rounded-2xl mb-4">
                       {article.image && (
-                        <img
+                        <Image
                           src={article.image}
                           alt={article.title}
-                          className="absolute inset-0 w-full h-full object-cover"
-                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover"
                         />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-br from-gold-600/20 to-night-800 -z-10" />

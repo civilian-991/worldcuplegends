@@ -55,16 +55,18 @@ export default function ContactContent() {
               <form className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-white/50 text-sm mb-2">{t('form.firstName')}</label>
+                    <label htmlFor="contact-first-name" className="block text-white/50 text-sm mb-2">{t('form.firstName')}</label>
                     <input
+                      id="contact-first-name"
                       type="text"
                       className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
                       placeholder={t('form.firstNamePlaceholder')}
                     />
                   </div>
                   <div>
-                    <label className="block text-white/50 text-sm mb-2">{t('form.lastName')}</label>
+                    <label htmlFor="contact-last-name" className="block text-white/50 text-sm mb-2">{t('form.lastName')}</label>
                     <input
+                      id="contact-last-name"
                       type="text"
                       className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
                       placeholder={t('form.lastNamePlaceholder')}
@@ -73,8 +75,9 @@ export default function ContactContent() {
                 </div>
 
                 <div>
-                  <label className="block text-white/50 text-sm mb-2">{t('form.email')}</label>
+                  <label htmlFor="contact-email" className="block text-white/50 text-sm mb-2">{t('form.email')}</label>
                   <input
+                    id="contact-email"
                     type="email"
                     className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors"
                     placeholder={t('form.emailPlaceholder')}
@@ -82,8 +85,8 @@ export default function ContactContent() {
                 </div>
 
                 <div>
-                  <label className="block text-white/50 text-sm mb-2">{t('form.subject')}</label>
-                  <select className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer">
+                  <label htmlFor="contact-subject" className="block text-white/50 text-sm mb-2">{t('form.subject')}</label>
+                  <select id="contact-subject" className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white focus:outline-none focus:border-gold-500/50 transition-colors cursor-pointer">
                     <option value="">{t('form.selectTopic')}</option>
                     <option value="tickets">{t('form.ticketsBooking')}</option>
                     <option value="media">{t('form.mediaPress')}</option>
@@ -94,8 +97,9 @@ export default function ContactContent() {
                 </div>
 
                 <div>
-                  <label className="block text-white/50 text-sm mb-2">{t('form.message')}</label>
+                  <label htmlFor="contact-message" className="block text-white/50 text-sm mb-2">{t('form.message')}</label>
                   <textarea
+                    id="contact-message"
                     rows={5}
                     className="w-full px-4 py-3 bg-night-600 border border-gold-500/20 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-gold-500/50 transition-colors resize-none"
                     placeholder={t('form.messagePlaceholder')}

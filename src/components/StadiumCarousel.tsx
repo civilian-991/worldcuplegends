@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import Flag from '@/components/Flag';
 import { Link } from '@/i18n/navigation';
@@ -80,13 +81,16 @@ export default function StadiumCarousel() {
           transition={{ duration: 1.2 }}
           className="absolute inset-0 z-0"
         >
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url('${activeStadium.image}')`,
-              backgroundPosition: 'center 30%',
-            }}
-          />
+          <div className="absolute inset-0">
+            <Image
+              src={activeStadium.image}
+              alt={activeStadium.fullName}
+              fill
+              sizes="100vw"
+              priority
+              className="object-cover object-[center_30%]"
+            />
+          </div>
           {/* Dramatic overlay gradients */}
           <div className="absolute inset-0 bg-gradient-to-b from-night-900/80 via-night-900/20 to-night-900" />
           <div className="absolute inset-0 bg-gradient-to-r from-night-900/60 via-transparent to-night-900/60" />

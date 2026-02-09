@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import VideoPlayer, { VideoCard, type VideoData } from './VideoPlayer';
 
@@ -542,9 +543,11 @@ export function VideoGalleryCompact({
           >
             {/* Thumbnail */}
             <div className="relative w-24 h-16 rounded-lg overflow-hidden flex-shrink-0">
-              <img
+              <Image
                 src={video.thumbnail || `https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
                 alt={video.title}
+                width={96}
+                height={64}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-night-900/50 flex items-center justify-center">

@@ -278,6 +278,9 @@ export default function TeamsContent() {
             <div className="absolute inset-0 bg-night-900/90 backdrop-blur-xl" />
 
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="team-modal-title"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -294,6 +297,7 @@ export default function TeamsContent() {
                 {/* Close Button */}
                 <button
                   onClick={() => setSelectedTeam(null)}
+                  aria-label="Close team details"
                   className="absolute top-6 right-6 w-10 h-10 rounded-full bg-night-600 flex items-center justify-center text-white/50 hover:text-white transition-colors"
                 >
                   ✕
@@ -304,6 +308,7 @@ export default function TeamsContent() {
                   <Flag countryCode={selectedTeam.countryCode} size="xl" className="w-20 h-14" />
                   <div>
                     <h2
+                      id="team-modal-title"
                       className="text-4xl font-bold text-white"
                       style={{ fontFamily: 'var(--font-display)' }}
                     >

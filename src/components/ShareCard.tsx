@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Legend, Match } from '@/lib/api';
 import Flag from '@/components/Flag';
@@ -76,17 +77,21 @@ function OGPreviewCard({
       {/* Image Preview */}
       <div className="relative h-48 bg-gradient-to-br from-gold-500/20 to-night-800 overflow-hidden">
         {image ? (
-          <img
+          <Image
             src={image}
             alt={title}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 448px"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <img
+            <Image
               src="/wlc-text-logo.png"
               alt="WLC"
-              className="w-32 opacity-50"
+              width={128}
+              height={32}
+              className="opacity-50"
             />
           </div>
         )}
@@ -302,10 +307,12 @@ function LegendCard({
           {/* Right - Image */}
           <div className="w-48 h-64 relative rounded-xl overflow-hidden">
             {legend.image ? (
-              <img
+              <Image
                 src={legend.image}
                 alt={legend.name}
-                className="absolute inset-0 w-full h-full object-cover object-top"
+                fill
+                sizes="192px"
+                className="object-cover object-top"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center bg-night-700">
@@ -384,10 +391,12 @@ function ProductCard({
       {/* Product Image */}
       <div className="relative h-64 bg-gradient-to-br from-gold-500/20 to-night-800 overflow-hidden">
         {product.image ? (
-          <img
+          <Image
             src={product.image}
             alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 448px"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">

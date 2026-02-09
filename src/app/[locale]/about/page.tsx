@@ -1,34 +1,47 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import AboutContent from './AboutContent';
 
 const siteUrl = 'https://wlc.world';
 
-export const metadata: Metadata = {
-  title: 'About - World Legends Cup 2026',
-  description: 'Learn about the World Legends Cup 2026 - a historic football tournament bringing together the greatest legends of the game in Brazil. Discover our mission, values, and the people behind the event.',
-  openGraph: {
-    title: 'About - World Legends Cup 2026',
-    description: 'Learn about the World Legends Cup 2026 - a historic football tournament bringing together the greatest legends of the game in Brazil. Discover our mission, values, and the people behind the event.',
-    url: `${siteUrl}/about`,
-    siteName: 'World Legends Cup',
-    images: [
-      {
-        url: `${siteUrl}/og-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'About - World Legends Cup 2026',
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const isEn = locale === 'en';
+  const path = '/about';
+  const title = isEn ? 'About the Tournament - World Legends Cup 2026' : 'Sobre o Torneio - Copa das Lendas 2026';
+  const description = isEn
+    ? 'Learn about the mission, values, and team behind the World Legends Cup 2026 football legends event.'
+    : 'Saiba mais sobre a missão, valores e equipe por trás da Copa das Lendas 2026.';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}${path}`,
+      languages: {
+        en: `${siteUrl}/en${path}`,
+        'pt-BR': `${siteUrl}/br${path}`,
+        'x-default': `${siteUrl}/en${path}`,
       },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'About - World Legends Cup 2026',
-    description: 'Learn about the World Legends Cup 2026 - a historic football tournament bringing together the greatest legends of the game in Brazil. Discover our mission, values, and the people behind the event.',
-    images: [`${siteUrl}/og-image.png`],
-  },
-};
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/${locale}${path}`,
+      siteName: 'World Legends Cup',
+      images: [{ url: `${siteUrl}/og-image.png`, width: 1200, height: 630, alt: 'World Legends Cup 2026' }],
+      locale: isEn ? 'en_US' : 'pt_BR',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [`${siteUrl}/og-image.png`],
+    },
+  };
+}
 
 export default function AboutPage() {
   return <AboutContent />;

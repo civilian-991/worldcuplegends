@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Link, usePathname } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -41,16 +42,19 @@ export default function Navigation() {
           isScrolled ? 'glass py-3' : 'py-6 bg-transparent'
         }`}
       >
-        <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <nav aria-label="Main navigation" className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="group">
             <motion.div
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
-              <img
+              <Image
                 src="/wlc-text-logo.png"
                 alt="World Legends Cup"
+                width={192}
+                height={48}
+                priority
                 className="h-10 md:h-12 w-auto"
               />
             </motion.div>
@@ -115,6 +119,8 @@ export default function Navigation() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="w-10 h-10 flex flex-col items-center justify-center gap-1.5"
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
             >
             <motion.span
               animate={isMobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
@@ -144,6 +150,7 @@ export default function Navigation() {
           >
             <div className="absolute inset-0 bg-night-900/95 backdrop-blur-xl" />
             <motion.nav
+              aria-label="Mobile navigation"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
