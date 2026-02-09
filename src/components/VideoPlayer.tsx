@@ -6,10 +6,11 @@ import { motion, AnimatePresence, useInView } from 'framer-motion';
 
 export interface VideoData {
   id: string;
-  type: 'youtube' | 'vimeo';
+  type: 'youtube' | 'vimeo' | 'local';
   title: string;
   description?: string;
   thumbnail?: string;
+  src?: string;
   duration?: string;
   legend?: string;
   team?: string;
@@ -60,7 +61,7 @@ export default function VideoPlayer({
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const thumbnail = video.thumbnail ||
-    (video.type === 'youtube' ? getYouTubeThumbnail(video.id) : getVimeoThumbnail(video.id));
+    (video.type === 'youtube' ? getYouTubeThumbnail(video.id) : video.type === 'vimeo' ? getVimeoThumbnail(video.id) : '');
 
   // YouTube privacy-enhanced mode with minimal branding
   // - youtube-nocookie.com: Privacy-enhanced mode, no tracking cookies
@@ -185,18 +186,33 @@ export default function VideoPlayer({
           {/* Video Embed */}
           {isPlaying && (
             <div className="absolute inset-0">
-              <motion.iframe
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                src={embedUrl}
-                title={video.title}
-                className="absolute inset-0 w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-              {/* Overlay to hide YouTube header (title/channel) */}
-              <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-night-900 via-night-900/80 to-transparent pointer-events-none z-10" />
+              {video.type === 'local' && video.src ? (
+                <motion.video
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                  src={video.src}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  controls
+                  autoPlay
+                  playsInline
+                />
+              ) : (
+                <>
+                  <motion.iframe
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    src={embedUrl}
+                    title={video.title}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  {/* Overlay to hide YouTube header (title/channel) */}
+                  <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-night-900 via-night-900/80 to-transparent pointer-events-none z-10" />
+                </>
+              )}
             </div>
           )}
 
@@ -385,7 +401,7 @@ export function VideoCard({
   const isInView = useInView(cardRef, { once: true, amount: 0.2 });
 
   const thumbnail = video.thumbnail ||
-    (video.type === 'youtube' ? getYouTubeThumbnail(video.id, 'hq') : getVimeoThumbnail(video.id));
+    (video.type === 'youtube' ? getYouTubeThumbnail(video.id, 'hq') : video.type === 'vimeo' ? getVimeoThumbnail(video.id) : '');
 
   return (
     <motion.div

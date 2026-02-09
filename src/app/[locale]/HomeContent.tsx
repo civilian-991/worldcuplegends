@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import HeroSection from '@/components/HeroSection';
 import VideoPlayer from '@/components/VideoPlayer';
@@ -15,11 +15,14 @@ import LegendMarquee from '@/components/LegendMarquee';
 
 export default function HomeContent() {
   const t = useTranslations('home');
+  const locale = useLocale();
 
-  // Promo video data
+  // Promo video data — locale-aware self-hosted aftermovie
+  const videoSrc = locale === 'br' ? '/videos/aftermovie-br.mp4' : '/videos/aftermovie-en.mp4';
   const promoVideo = {
-    id: 'YvQKopMBvsg',
-    type: 'youtube' as const,
+    id: 'aftermovie',
+    type: 'local' as const,
+    src: videoSrc,
     title: t('promoVideo.videoTitle'),
     description: t('promoVideo.description'),
   };
