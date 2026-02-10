@@ -24,7 +24,7 @@ export default function HomeContent() {
     id: 'aftermovie',
     type: 'local' as const,
     src: videoSrc,
-    thumbnail: `${storageBase}/aftermovie-poster.jpg`,
+    thumbnail: '/og-image.png',
     title: t('promoVideo.videoTitle'),
     description: t('promoVideo.description'),
   };
