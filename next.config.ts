@@ -53,6 +53,8 @@ const securityHeaders = [
       "form-action 'self'",
       // Restrict base URL manipulation
       "base-uri 'self'",
+      // Allow self-hosted video/audio playback
+      "media-src 'self'",
       // Block all plugins/objects (Flash, Java, etc.)
       "object-src 'none'",
       // Allow YouTube iframes for video embeds
