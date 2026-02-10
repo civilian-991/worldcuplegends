@@ -17,13 +17,14 @@ export default function HomeContent() {
   const t = useTranslations('home');
   const locale = useLocale();
 
-  // Promo video data — locale-aware self-hosted aftermovie
-  const videoSrc = locale === 'br' ? '/videos/aftermovie-br.mp4' : '/videos/aftermovie-en.mp4';
+  // Promo video data — locale-aware aftermovie hosted on Supabase Storage
+  const storageBase = 'https://upfraliejktotrlwkgfi.supabase.co/storage/v1/object/public/videos';
+  const videoSrc = locale === 'br' ? `${storageBase}/aftermovie-br.mp4` : `${storageBase}/aftermovie-en.mp4`;
   const promoVideo = {
     id: 'aftermovie',
     type: 'local' as const,
     src: videoSrc,
-    thumbnail: '/videos/aftermovie-poster.jpg',
+    thumbnail: `${storageBase}/aftermovie-poster.jpg`,
     title: t('promoVideo.videoTitle'),
     description: t('promoVideo.description'),
   };

@@ -53,8 +53,8 @@ const securityHeaders = [
       "form-action 'self'",
       // Restrict base URL manipulation
       "base-uri 'self'",
-      // Allow self-hosted video/audio playback
-      "media-src 'self'",
+      // Allow video/audio from self and Supabase Storage
+      "media-src 'self' https://*.supabase.co",
       // Block all plugins/objects (Flash, Java, etc.)
       "object-src 'none'",
       // Allow YouTube iframes for video embeds
