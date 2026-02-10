@@ -161,7 +161,7 @@ export default function VideoPlayer({
           </AnimatePresence>
 
           {/* Thumbnail with Blur Placeholder */}
-          {!isPlaying && (
+          {!isPlaying && thumbnail && (
             <motion.div
               initial={{ scale: 1.1, filter: 'blur(20px)' }}
               animate={{ scale: 1, filter: 'blur(0px)' }}
@@ -192,7 +192,7 @@ export default function VideoPlayer({
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                   src={video.src}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full"
                   controls
                   autoPlay
                   playsInline
