@@ -7,6 +7,7 @@
     "schedule": "Calendário",
     "shop": "Loja",
     "news": "Notícias",
+    "gallery": "Galeria",
     "partners": "Parceiros",
     "getTickets": "Comprar Ingressos",
     "worldLegends": "World Legends",
@@ -324,6 +325,28 @@
       "title": "COLEÇÃO SIGNATURE LEGENDS",
       "description": "Produtos exclusivos com designs assinados por Pelé, Maradona, Zidane, Messi e outras lendas do futebol.",
       "shopButton": "Ver Coleção Signature"
+    }
+  },
+  "gallery": {
+    "preTitle": "Mídia",
+    "pageTitle": "GALERIA",
+    "pageTitleHighlight": "",
+    "heroDescription": "Fotos, vídeos e destaques da Copa das Lendas 2026.",
+    "instagram": {
+      "preTitle": "Instagram",
+      "title": "SIGA",
+      "titleHighlight": "AS LENDAS",
+      "followUs": "Siga-nos no Instagram",
+      "followDescription": "Fique por dentro das últimas fotos, bastidores e atualizações da Copa das Lendas."
+    },
+    "uploaded": {
+      "preTitle": "Galeria de Fotos",
+      "title": "MOMENTOS",
+      "titleHighlight": "CAPTURADOS",
+      "allCategories": "Todos",
+      "loadMore": "Carregar Mais",
+      "emptyTitle": "Em Breve",
+      "emptyDescription": "Fotos da galeria estarão disponíveis aqui em breve. Fique ligado!"
     }
   },
   "faq": {

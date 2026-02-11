@@ -42,11 +42,11 @@ const securityHeaders = [
       // Styles: self + unsafe-inline needed for styled components and inline styles
       "style-src 'self' 'unsafe-inline'",
       // Images: allow self, data (for base64), blob (for canvas), and trusted CDNs/news sources
-      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com https://*.glbimg.com https://img.youtube.com https://i.ytimg.com",
+      "img-src 'self' data: blob: https://*.supabase.co https://flagcdn.com https://*.com.br https://*.globo.com https://*.glbimg.com https://img.youtube.com https://i.ytimg.com https://*.cdninstagram.com https://*.fbcdn.net",
       // Fonts: self and data URIs for embedded fonts
       "font-src 'self' data:",
       // API connections: self and Supabase
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://graph.instagram.com",
       // Prevent embedding in iframes (clickjacking protection)
       "frame-ancestors 'none'",
       // Restrict form submissions to same origin
@@ -126,6 +126,17 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: '*.glbimg.com',
+        pathname: '/**',
+      },
+      // Instagram CDN images
+      {
+        protocol: 'https',
+        hostname: '*.cdninstagram.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.fbcdn.net',
         pathname: '/**',
       },
     ],

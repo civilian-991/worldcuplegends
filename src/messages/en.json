@@ -7,6 +7,7 @@
     "schedule": "Schedule",
     "shop": "Shop",
     "news": "News",
+    "gallery": "Gallery",
     "partners": "Partners",
     "getTickets": "Get Tickets",
     "worldLegends": "World Legends",
@@ -324,6 +325,28 @@
       "title": "LEGENDS SIGNATURE COLLECTION",
       "description": "Exclusive merchandise featuring signature designs from Pelé, Maradona, Zidane, Messi, and more football legends.",
       "shopButton": "Shop Signature Collection"
+    }
+  },
+  "gallery": {
+    "preTitle": "Media",
+    "pageTitle": "GALLERY",
+    "pageTitleHighlight": "",
+    "heroDescription": "Photos, videos, and highlights from the World Legends Cup 2026.",
+    "instagram": {
+      "preTitle": "Instagram",
+      "title": "FOLLOW",
+      "titleHighlight": "THE LEGENDS",
+      "followUs": "Follow Us on Instagram",
+      "followDescription": "Stay up to date with the latest photos, behind-the-scenes content, and updates from the World Legends Cup."
+    },
+    "uploaded": {
+      "preTitle": "Photo Gallery",
+      "title": "CAPTURED",
+      "titleHighlight": "MOMENTS",
+      "allCategories": "All",
+      "loadMore": "Load More",
+      "emptyTitle": "Coming Soon",
+      "emptyDescription": "Gallery photos will be available here soon. Stay tuned!"
     }
   },
   "faq": {
