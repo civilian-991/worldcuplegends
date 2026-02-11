@@ -21,7 +21,7 @@ export default function Navigation() {
     { href: '/venues', label: t('venues') },
     { href: '/schedule', label: t('schedule') },
     { href: '/news', label: t('news') },
-    { href: '/gallery', label: t('gallery') },
+    // { href: '/gallery', label: t('gallery') },
     { href: '/partners', label: t('partners') },
   ];
 
