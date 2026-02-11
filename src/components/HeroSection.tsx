@@ -15,7 +15,13 @@ export default function HeroSection() {
     offset: ['start start', 'end start'],
   });
 
-  const words = ['LEGENDS', 'GLORY', 'PASSION', 'HISTORY', 'LEGACY'];
+  const heroWords = [
+    { word: 'LEGENDS', subtitle: 'NEVER DIE' },
+    { word: 'GLORY', subtitle: 'NEVER DIES' },
+    { word: 'PASSION', subtitle: 'NEVER DIES' },
+    { word: 'HISTORY', subtitle: 'NEVER DIES' },
+    { word: 'LEGACY', subtitle: 'NEVER DIES' },
+  ];
 
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -23,10 +29,10 @@ export default function HeroSection() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentWord((prev) => (prev + 1) % words.length);
+      setCurrentWord((prev) => (prev + 1) % heroWords.length);
     }, 2500);
     return () => clearInterval(interval);
-  }, [words.length]);
+  }, [heroWords.length]);
 
   return (
     <section ref={containerRef} className="relative h-screen overflow-hidden">
@@ -71,11 +77,11 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none"
+            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none pr-[0.05em]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             <span className="text-gradient-gold">
-              {words[currentWord].split('').map((char, i) => (
+              {heroWords[currentWord].word.split('').map((char, i) => (
                 <motion.span
                   key={`${currentWord}-${i}`}
                   initial={{ opacity: 0, y: 50 }}
@@ -90,13 +96,14 @@ export default function HeroSection() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            key={`subtitle-${currentWord}`}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
             className="text-3xl md:text-5xl text-white/90 mt-4"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            {t('neverDie')}
+            {heroWords[currentWord].subtitle}
           </motion.p>
         </div>
 
