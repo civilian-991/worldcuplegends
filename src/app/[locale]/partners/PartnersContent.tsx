@@ -9,6 +9,8 @@ const partners = [
   { name: 'Van Wagner', logo: '/sponsors/van-wagner.png', tier: 'Official Partner' },
   { name: 'Partner', logo: '/sponsors/sponsor-4.png', tier: 'Official Partner' },
   { name: 'Partner', logo: '/sponsors/sponsor-5.png', tier: 'Official Partner' },
+  { name: 'All American Licensing', logo: '/sponsors/all-american-licensing.png', tier: 'Official Partner' },
+  { name: 'Sport Five', logo: '/sponsors/sport-five.png', tier: 'Official Partner' },
 ];
 
 export default function PartnersContent() {
