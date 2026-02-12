@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getMatches, type Match } from '@/lib/api';
+import FlippingFlag from '@/components/FlippingFlag';
 
 export default function UpcomingMatches() {
   const t = useTranslations('sections.matches');
@@ -106,13 +107,13 @@ export default function UpcomingMatches() {
                         </span>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                            <span className="text-white/30">?</span>
+                            <FlippingFlag size="sm" />
                           </div>
                           <span className="text-white/50 font-medium">TBA</span>
                           <span className="text-white/30 mx-2">vs</span>
                           <span className="text-white/50 font-medium">TBA</span>
                           <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                            <span className="text-white/30">?</span>
+                            <FlippingFlag size="sm" />
                           </div>
                         </div>
                       </div>
@@ -169,7 +170,7 @@ export default function UpcomingMatches() {
                     <div className="flex items-center justify-center gap-6 mb-6">
                       <div className="text-center">
                         <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
-                          <span className="text-white/30 text-2xl">?</span>
+                          <FlippingFlag size="lg" />
                         </div>
                         <p className="text-white/50 text-sm">TBA</p>
                       </div>
@@ -183,7 +184,7 @@ export default function UpcomingMatches() {
 
                       <div className="text-center">
                         <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
-                          <span className="text-white/30 text-2xl">?</span>
+                          <FlippingFlag size="lg" />
                         </div>
                         <p className="text-white/50 text-sm">TBA</p>
                       </div>
