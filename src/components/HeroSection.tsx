@@ -15,13 +15,7 @@ export default function HeroSection() {
     offset: ['start start', 'end start'],
   });
 
-  const heroWords = [
-    { word: 'LEGENDS', subtitle: 'NEVER DIE' },
-    { word: 'GLORY', subtitle: 'NEVER DIES' },
-    { word: 'PASSION', subtitle: 'NEVER DIES' },
-    { word: 'HISTORY', subtitle: 'NEVER DIES' },
-    { word: 'LEGACY', subtitle: 'NEVER DIES' },
-  ];
+  const heroWords = ['LEGENDS', 'GLORY', 'PASSION', 'HISTORY', 'LEGACY'];
 
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -77,11 +71,11 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none pr-[0.05em]"
+            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-[0.85] py-[0.1em]"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             <span className="text-gradient-gold">
-              {heroWords[currentWord].word.split('').map((char, i) => (
+              {heroWords[currentWord].split('').map((char, i) => (
                 <motion.span
                   key={`${currentWord}-${i}`}
                   initial={{ opacity: 0, y: 50 }}
@@ -94,17 +88,6 @@ export default function HeroSection() {
               ))}
             </span>
           </motion.h1>
-
-          <motion.p
-            key={`subtitle-${currentWord}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="text-3xl md:text-5xl text-white/90 mt-4"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            {heroWords[currentWord].subtitle}
-          </motion.p>
         </div>
 
         {/* CTA Buttons */}
