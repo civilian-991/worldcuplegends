@@ -81,7 +81,7 @@ export default function HeroSection() {
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="inline-block text-gradient-gold px-[0.1em] py-[0.25em] -mx-[0.1em] -my-[0.25em]"
+                  className="inline-block text-gradient-gold px-[0.1em] py-[0.25em] -mx-[0.06em] -my-[0.25em]"
                 >
                   {char}
                 </motion.span>
