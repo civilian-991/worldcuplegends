@@ -71,7 +71,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-[0.85] py-[0.1em]"
+            className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none"
             style={{ fontFamily: 'var(--font-display)' }}
           >
             <span className="text-gradient-gold">
@@ -81,7 +81,7 @@ export default function HeroSection() {
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="inline-block"
+                  className="inline-block py-[0.15em]"
                 >
                   {char}
                 </motion.span>
