@@ -1,7 +1,89 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Flag from '@/components/Flag';
+
+const NATION_CODES = ['BR', 'DE', 'AR', 'FR', 'IT', 'NL', 'ES', 'GB'];
+const FLIP_INTERVAL = 2000;
+const FLIP_DURATION = 500;
+
+function FlippingFlag({ size }: { size: 'sm' | 'lg' }) {
+  const [rotation, setRotation] = useState(0);
+  const [frontFlag, setFrontFlag] = useState(0);
+  const [backFlag, setBackFlag] = useState(1);
+  const nextFlagRef = useRef(2);
+  const initializedRef = useRef(false);
+
+  useEffect(() => {
+    if (!initializedRef.current) {
+      const startIdx = Math.floor(Math.random() * NATION_CODES.length);
+      setFrontFlag(startIdx);
+      setBackFlag((startIdx + 1) % NATION_CODES.length);
+      nextFlagRef.current = (startIdx + 2) % NATION_CODES.length;
+      initializedRef.current = true;
+    }
+
+    const delay = Math.random() * FLIP_INTERVAL;
+    let intervalId: ReturnType<typeof setInterval>;
+
+    const timeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        setRotation(prev => {
+          const next = prev + 180;
+          // After flip animation, update the now-hidden face for the next flip
+          setTimeout(() => {
+            if ((next / 180) % 2 === 1) {
+              setFrontFlag(nextFlagRef.current);
+            } else {
+              setBackFlag(nextFlagRef.current);
+            }
+            nextFlagRef.current = (nextFlagRef.current + 1) % NATION_CODES.length;
+          }, FLIP_DURATION);
+          return next;
+        });
+      }, FLIP_INTERVAL);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, []);
+
+  const flagSize = size === 'lg' ? 'xl' : 'md';
+  const containerClass = size === 'lg'
+    ? 'w-12 h-12 md:w-14 md:h-14'
+    : 'w-8 h-8';
+
+  return (
+    <div className={`${containerClass} relative`} style={{ perspective: '400px' }}>
+      <div
+        className="w-full h-full relative"
+        style={{
+          transformStyle: 'preserve-3d',
+          transition: `transform ${FLIP_DURATION}ms ease-in-out`,
+          transform: `rotateY(${rotation}deg)`,
+        }}
+      >
+        {/* Front face */}
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ backfaceVisibility: 'hidden' }}
+        >
+          <Flag countryCode={NATION_CODES[frontFlag]} size={flagSize} />
+        </div>
+        {/* Back face */}
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+        >
+          <Flag countryCode={NATION_CODES[backFlag]} size={flagSize} />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Placeholder matches - teams TBA
 const matches = [
@@ -110,7 +192,7 @@ export default function ScheduleContent() {
               <div className="flex items-center justify-center gap-6 md:gap-12 mb-8">
                 <div className="text-center">
                   <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
-                    <span className="text-white/30 text-3xl">?</span>
+                    <FlippingFlag size="lg" />
                   </div>
                   <p className="text-white/50 text-sm">TBA</p>
                 </div>
@@ -126,7 +208,7 @@ export default function ScheduleContent() {
 
                 <div className="text-center">
                   <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
-                    <span className="text-white/30 text-3xl">?</span>
+                    <FlippingFlag size="lg" />
                   </div>
                   <p className="text-white/50 text-sm">TBA</p>
                 </div>
@@ -201,7 +283,7 @@ export default function ScheduleContent() {
                       <div className="flex-1 flex items-center justify-end gap-3">
                         <p className="text-white/50 font-medium">TBA</p>
                         <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                          <span className="text-white/30 text-lg">?</span>
+                          <FlippingFlag size="sm" />
                         </div>
                       </div>
 
@@ -214,7 +296,7 @@ export default function ScheduleContent() {
 
                       <div className="flex-1 flex items-center gap-3">
                         <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                          <span className="text-white/30 text-lg">?</span>
+                          <FlippingFlag size="sm" />
                         </div>
                         <p className="text-white/50 font-medium">TBA</p>
                       </div>
