@@ -74,14 +74,14 @@ export default function HeroSection() {
             className="text-7xl md:text-9xl lg:text-[12rem] font-bold tracking-tight leading-none"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            <span className="text-gradient-gold">
+            <span>
               {heroWords[currentWord].split('').map((char, i) => (
                 <motion.span
                   key={`${currentWord}-${i}`}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="inline-block py-[0.15em]"
+                  className="inline-block text-gradient-gold"
                 >
                   {char}
                 </motion.span>
