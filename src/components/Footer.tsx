@@ -127,13 +127,13 @@ export default function Footer() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="relative h-8 md:h-10 w-24 md:w-32 opacity-60 hover:opacity-100 transition-opacity duration-300"
+                className="relative h-10 md:h-14 w-32 md:w-44 opacity-60 hover:opacity-100 transition-opacity duration-300"
               >
                 <Image
                   src={sponsor.logo}
                   alt={sponsor.name === 'Sponsor' ? '' : sponsor.name}
                   fill
-                  sizes="(max-width: 768px) 96px, 128px"
+                  sizes="(max-width: 768px) 128px, 176px"
                   className="object-contain"
                   {...(sponsor.name === 'Sponsor' ? { 'aria-hidden': true as unknown as boolean } : {})}
                 />

@@ -71,13 +71,13 @@ export default function PartnersContent() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group"
               >
-                <div className="glass rounded-2xl p-8 h-40 flex items-center justify-center group-hover:bg-gold-500/5 transition-all duration-300 group-hover:border-gold-500/30">
+                <div className="glass rounded-2xl p-8 h-48 flex items-center justify-center group-hover:bg-gold-500/5 transition-all duration-300 group-hover:border-gold-500/30">
                   <Image
                     src={partner.logo}
                     alt={partner.name === 'Partner' ? '' : partner.name}
-                    width={160}
-                    height={80}
-                    className="max-h-20 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                    width={220}
+                    height={110}
+                    className="max-h-28 max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
                     aria-hidden={partner.name === 'Partner' ? true : undefined}
                   />
                 </div>
@@ -100,9 +100,9 @@ export default function PartnersContent() {
                 key={index}
                 src={partner.logo}
                 alt={partner.name === 'Partner' ? '' : partner.name}
-                width={120}
-                height={48}
-                className="h-12 w-auto object-contain opacity-50 flex-shrink-0"
+                width={180}
+                height={72}
+                className="h-16 w-auto object-contain opacity-50 flex-shrink-0"
                 aria-hidden={partner.name === 'Partner' ? true : undefined}
               />
             ))}
