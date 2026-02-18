@@ -75,14 +75,12 @@ export default function AboutContent() {
   ];
 
   const values = [
-    { icon: '🦁', title: t('values.pride.title'), description: t('values.pride.description') },
-    { icon: '🎉', title: t('values.enjoyment.title'), description: t('values.enjoyment.description') },
-    { icon: '🎯', title: t('values.control.title'), description: t('values.control.description') },
-    { icon: '💪', title: t('values.resilience.title'), description: t('values.resilience.description') },
-    { icon: '🔥', title: t('values.selfConfidence.title'), description: t('values.selfConfidence.description') },
-    { icon: '⚡', title: t('values.discipline.title'), description: t('values.discipline.description') },
-    { icon: '🤝', title: t('values.collaboration.title'), description: t('values.collaboration.description') },
-    { icon: '🏅', title: t('values.respect.title'), description: t('values.respect.description') },
+    { icon: '🌍', title: t('values.unity.title'), description: t('values.unity.description') },
+    { icon: '🏛️', title: t('values.legacy.title'), description: t('values.legacy.description') },
+    { icon: '⭐', title: t('values.excellence.title'), description: t('values.excellence.description') },
+    { icon: '🔥', title: t('values.passion.title'), description: t('values.passion.description') },
+    { icon: '🤝', title: t('values.respect.title'), description: t('values.respect.description') },
+    { icon: '💡', title: t('values.inspiration.title'), description: t('values.inspiration.description') },
   ];
 
   const timeline = [
@@ -94,14 +92,14 @@ export default function AboutContent() {
 
   // 8 Values of Legends Football for CUFA School of Life
   const unicefValues = [
-    { icon: TeamworkIcon, key: 'teamwork' },
-    { icon: RespectIcon, key: 'respect' },
-    { icon: DedicationIcon, key: 'dedication' },
-    { icon: FairPlayIcon, key: 'fairPlay' },
-    { icon: CourageIcon, key: 'courage' },
+    { icon: CourageIcon, key: 'pride' },
+    { icon: RespectIcon, key: 'enjoyment' },
+    { icon: DedicationIcon, key: 'control' },
+    { icon: PerseveranceIcon, key: 'resilience' },
+    { icon: TeamworkIcon, key: 'selfConfidence' },
     { icon: DisciplineIcon, key: 'discipline' },
-    { icon: PerseveranceIcon, key: 'perseverance' },
-    { icon: UnityValueIcon, key: 'unity' },
+    { icon: UnityValueIcon, key: 'collaboration' },
+    { icon: FairPlayIcon, key: 'respect' },
   ];
 
   // Program elements
@@ -217,7 +215,7 @@ export default function AboutContent() {
             <p className="text-white/50">{t('values.subtitle')}</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {values.map((value, index) => (
               <motion.div
                 key={value.title}

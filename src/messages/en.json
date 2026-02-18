@@ -122,37 +122,29 @@
     "values": {
       "title": "OUR VALUES",
       "subtitle": "The principles that guide everything we do",
-      "pride": {
-        "title": "Pride",
-        "description": "Wearing the badge with honor, representing nations and the legacy of football's greatest moments."
+      "unity": {
+        "title": "Unity",
+        "description": "Bringing together legends from every corner of the world to celebrate the beautiful game."
       },
-      "enjoyment": {
-        "title": "Enjoyment",
-        "description": "Celebrating the joy and passion that football brings to players and fans around the world."
+      "legacy": {
+        "title": "Legacy",
+        "description": "Preserving and honoring the achievements of footballs greatest icons for future generations."
       },
-      "control": {
-        "title": "Control",
-        "description": "Mastering every touch, every decision—demonstrating the composure that defines true legends."
+      "excellence": {
+        "title": "Excellence",
+        "description": "Showcasing the highest standards of football artistry and sportsmanship."
       },
-      "resilience": {
-        "title": "Resilience",
-        "description": "Rising above challenges with determination, proving that legends never give up."
-      },
-      "selfConfidence": {
-        "title": "Self-Confidence",
-        "description": "Believing in greatness and inspiring others to reach their full potential on and off the pitch."
-      },
-      "discipline": {
-        "title": "Discipline",
-        "description": "Committing to excellence through dedication, preparation, and unwavering focus."
-      },
-      "collaboration": {
-        "title": "Collaboration",
-        "description": "Uniting legends from every corner of the world to create something extraordinary together."
+      "passion": {
+        "title": "Passion",
+        "description": "Igniting the love for football that connects billions of fans worldwide."
       },
       "respect": {
         "title": "Respect",
-        "description": "Honoring the game, the opponents, and the fans who make football the world's greatest sport."
+        "description": "Honoring the dedication and sacrifice of players who gave everything to the sport."
+      },
+      "inspiration": {
+        "title": "Inspiration",
+        "description": "Motivating the next generation of footballers through the stories of legends."
       }
     },
     "journey": {
@@ -214,37 +206,37 @@
       "valuesTitle": "THE 8 VALUES OF LEGENDS FOOTBALL",
       "valuesSubtitle": "Core principles that guide our youth development programs",
       "legendsValues": {
-        "teamwork": {
-          "title": "Teamwork",
-          "description": "Working together towards common goals"
+        "pride": {
+          "title": "Pride",
+          "description": "Wearing the badge with honor and passion"
         },
-        "respect": {
-          "title": "Respect",
-          "description": "Treating others with dignity and honor"
+        "enjoyment": {
+          "title": "Enjoyment",
+          "description": "Celebrating the joy football brings to all"
         },
-        "dedication": {
-          "title": "Dedication",
-          "description": "Committing fully to excellence"
+        "control": {
+          "title": "Control",
+          "description": "Mastering composure in every moment"
         },
-        "fairPlay": {
-          "title": "Fair Play",
-          "description": "Competing with integrity and honor"
+        "resilience": {
+          "title": "Resilience",
+          "description": "Rising above every challenge with determination"
         },
-        "courage": {
-          "title": "Courage",
-          "description": "Facing challenges with bravery"
+        "selfConfidence": {
+          "title": "Self-Confidence",
+          "description": "Believing in greatness and inspiring others"
         },
         "discipline": {
           "title": "Discipline",
-          "description": "Maintaining focus and commitment"
+          "description": "Committing to excellence through dedication"
         },
-        "perseverance": {
-          "title": "Perseverance",
-          "description": "Never giving up on your dreams"
+        "collaboration": {
+          "title": "Collaboration",
+          "description": "Uniting together to create something extraordinary"
         },
-        "unity": {
-          "title": "Unity",
-          "description": "Standing together as one team"
+        "respect": {
+          "title": "Respect",
+          "description": "Honoring the game and everyone in it"
         }
       },
       "programTitle": "PROGRAM ELEMENTS",
