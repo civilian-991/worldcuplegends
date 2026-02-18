@@ -198,18 +198,18 @@
     },
     "unicef": {
       "preTitle": "Social Impact",
-      "title": "UNICEF",
+      "title": "CUFA",
       "titleHighlight": "SCHOOL OF LIFE",
-      "description": "Through our global partnership with UNICEF, we are committed to supporting Brazil's long-term social and economic development, using the power of football to inspire and educate the next generation.",
+      "description": "Through our partnership with CUFA (Central Única das Favelas), we are committed to supporting Brazil's long-term social and economic development, using the power of football to inspire and educate the next generation.",
       "partnership": {
-        "title": "Partnership with UNICEF",
-        "subtitle": "Global Partnership",
-        "description": "The World Legends Cup has formed a strategic partnership with UNICEF to support Brazil's long-term social and economic development. Together, we leverage the universal appeal of football to create meaningful change in communities across the nation.",
+        "title": "Partnership with CUFA",
+        "subtitle": "Community Partnership",
+        "description": "The World Legends Cup has formed a strategic partnership with CUFA (Central Única das Favelas) to support Brazil's long-term social and economic development. Together, we leverage the universal appeal of football to create meaningful change in favela communities across the nation.",
         "tag1": "Education",
         "tag2": "Youth Development",
         "tag3": "Community Impact",
-        "impactTitle": "Global Impact",
-        "impactDescription": "Empowering children and communities through football and education programs across Brazil"
+        "impactTitle": "Community Impact",
+        "impactDescription": "Empowering children and communities through football and education programs across Brazil's favelas"
       },
       "valuesTitle": "THE 8 VALUES OF LEGENDS FOOTBALL",
       "valuesSubtitle": "Core principles that guide our youth development programs",
@@ -260,11 +260,11 @@
         },
         "galaAuction": {
           "title": "Gala Auction",
-          "description": "Exclusive auction events featuring unique memorabilia, with all proceeds benefiting UNICEF programs in Brazil"
+          "description": "Exclusive auction events featuring unique memorabilia, with all proceeds benefiting CUFA programs in Brazil"
         },
         "manOfMatch": {
           "title": "Man of the Match Donations",
-          "description": "Every Man of the Match award triggers a donation to UNICEF, directly supporting children's education and welfare"
+          "description": "Every Man of the Match award triggers a donation to CUFA, directly supporting children's education and welfare"
         }
       }
     }

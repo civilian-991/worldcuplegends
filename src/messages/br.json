@@ -198,18 +198,18 @@
     },
     "unicef": {
       "preTitle": "Impacto Social",
-      "title": "UNICEF",
+      "title": "CUFA",
       "titleHighlight": "ESCOLA DA VIDA",
-      "description": "Através de nossa parceria global com a UNICEF, estamos comprometidos em apoiar o desenvolvimento social e econômico de longo prazo do Brasil, usando o poder do futebol para inspirar e educar a próxima geração.",
+      "description": "Através de nossa parceria com a CUFA (Central Única das Favelas), estamos comprometidos em apoiar o desenvolvimento social e econômico de longo prazo do Brasil, usando o poder do futebol para inspirar e educar a próxima geração.",
       "partnership": {
-        "title": "Parceria com a UNICEF",
-        "subtitle": "Parceria Global",
-        "description": "A World Legends Cup formou uma parceria estratégica com a UNICEF para apoiar o desenvolvimento social e econômico de longo prazo do Brasil. Juntos, aproveitamos o apelo universal do futebol para criar mudanças significativas nas comunidades em todo o país.",
+        "title": "Parceria com a CUFA",
+        "subtitle": "Parceria Comunitária",
+        "description": "A World Legends Cup formou uma parceria estratégica com a CUFA (Central Única das Favelas) para apoiar o desenvolvimento social e econômico de longo prazo do Brasil. Juntos, aproveitamos o apelo universal do futebol para criar mudanças significativas nas comunidades de favelas em todo o país.",
         "tag1": "Educação",
         "tag2": "Desenvolvimento Juvenil",
         "tag3": "Impacto Comunitário",
-        "impactTitle": "Impacto Global",
-        "impactDescription": "Empoderando crianças e comunidades através de programas de futebol e educação em todo o Brasil"
+        "impactTitle": "Impacto Comunitário",
+        "impactDescription": "Empoderando crianças e comunidades através de programas de futebol e educação nas favelas do Brasil"
       },
       "valuesTitle": "OS 8 VALORES DO FUTEBOL LENDÁRIO",
       "valuesSubtitle": "Princípios fundamentais que guiam nossos programas de desenvolvimento juvenil",
@@ -260,11 +260,11 @@
         },
         "galaAuction": {
           "title": "Leilão de Gala",
-          "description": "Eventos exclusivos de leilão com memorabilia única, com toda a arrecadação beneficiando programas da UNICEF no Brasil"
+          "description": "Eventos exclusivos de leilão com memorabilia única, com toda a arrecadação beneficiando programas da CUFA no Brasil"
         },
         "manOfMatch": {
           "title": "Doações Craque do Jogo",
-          "description": "Cada prêmio de Craque do Jogo gera uma doação para a UNICEF, apoiando diretamente a educação e bem-estar das crianças"
+          "description": "Cada prêmio de Craque do Jogo gera uma doação para a CUFA, apoiando diretamente a educação e bem-estar das crianças"
         }
       }
     }

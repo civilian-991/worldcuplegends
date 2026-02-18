@@ -92,7 +92,7 @@ export default function AboutContent() {
     { year: '2026', event: t('journey.2026') },
   ];
 
-  // 8 Values of Legends Football for UNICEF School of Life
+  // 8 Values of Legends Football for CUFA School of Life
   const unicefValues = [
     { icon: TeamworkIcon, key: 'teamwork' },
     { icon: RespectIcon, key: 'respect' },
@@ -238,9 +238,9 @@ export default function AboutContent() {
         </div>
       </section>
 
-      {/* UNICEF School of Life Section */}
+      {/* CUFA School of Life Section */}
       <section className="py-24 px-6 bg-night-800 relative overflow-hidden">
-        {/* UNICEF Blue accent glow */}
+        {/* Accent glow */}
         <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#00AEEF]/10 rounded-full blur-[200px] hidden md:block" />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-gold-400/10 rounded-full blur-[150px] hidden md:block" />
 
@@ -287,7 +287,9 @@ export default function AboutContent() {
                         className="text-2xl font-bold text-white"
                         style={{ fontFamily: 'var(--font-display)' }}
                       >
-                        {t('unicef.partnership.title')}
+                        <a href="https://cufa.org.br/" target="_blank" rel="noopener noreferrer" className="hover:text-[#00AEEF] transition-colors">
+                          {t('unicef.partnership.title')}
+                        </a>
                       </h3>
                       <p className="text-[#00AEEF]">{t('unicef.partnership.subtitle')}</p>
                     </div>
