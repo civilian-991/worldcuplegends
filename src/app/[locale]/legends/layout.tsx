@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Script from 'next/script';
 
 // Site URL for canonical and structured data
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://wlc.world';
@@ -150,7 +151,8 @@ export default function LegendsLayout({
 }) {
   return (
     <>
-      <script
+      <Script
+        id="legends-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(jsonLdData),

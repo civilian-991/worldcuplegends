@@ -10,6 +10,8 @@ import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
 import CartSidebar from "@/components/CartSidebar";
 import SessionTimeoutWarning from "@/components/SessionTimeoutWarning";
+import SplashScreen from "@/components/SplashScreen";
+import PageTransition from "@/components/PageTransition";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
@@ -73,6 +75,8 @@ export default async function LocaleLayout({
                 <RecentlyViewedProvider>
                   <PollProvider>
                     <ToastProvider>
+                      <SplashScreen />
+                      <PageTransition />
                       <CustomCursor />
                       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-9999 focus:bg-gold-500 focus:text-black focus:px-4 focus:py-2 focus:rounded">
                         Skip to main content

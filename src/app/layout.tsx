@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 const siteUrl = 'https://wlc.world';
 const siteName = 'World Legends Cup';
@@ -122,7 +123,8 @@ export default function RootLayout({
 }>) {
   return (
     <>
-      <script
+      <Script
+        id="root-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
