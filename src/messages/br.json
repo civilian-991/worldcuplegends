@@ -122,29 +122,37 @@
     "values": {
       "title": "NOSSOS VALORES",
       "subtitle": "Os princípios que guiam tudo o que fazemos",
-      "unity": {
-        "title": "União",
-        "description": "Reunindo lendas de todos os cantos do mundo para celebrar o belo jogo."
+      "pride": {
+        "title": "Orgulho",
+        "description": "Vestindo o escudo com honra, representando nações e o legado dos maiores momentos do futebol."
       },
-      "legacy": {
-        "title": "Legado",
-        "description": "Preservando e honrando as conquistas dos maiores ícones do futebol para as futuras gerações."
+      "enjoyment": {
+        "title": "Prazer",
+        "description": "Celebrando a alegria e a paixão que o futebol traz para jogadores e torcedores ao redor do mundo."
       },
-      "excellence": {
-        "title": "Excelência",
-        "description": "Demonstrando os mais altos padrões de arte e esportividade no futebol."
+      "control": {
+        "title": "Controle",
+        "description": "Dominando cada toque, cada decisão—demonstrando a compostura que define as verdadeiras lendas."
       },
-      "passion": {
-        "title": "Paixão",
-        "description": "Acendendo o amor pelo futebol que conecta bilhões de fãs pelo mundo."
+      "resilience": {
+        "title": "Resiliência",
+        "description": "Superando desafios com determinação, provando que lendas nunca desistem."
+      },
+      "selfConfidence": {
+        "title": "Autoconfiança",
+        "description": "Acreditando na grandeza e inspirando outros a alcançar seu potencial máximo dentro e fora de campo."
+      },
+      "discipline": {
+        "title": "Disciplina",
+        "description": "Comprometendo-se com a excelência através de dedicação, preparação e foco inabalável."
+      },
+      "collaboration": {
+        "title": "Colaboração",
+        "description": "Unindo lendas de todos os cantos do mundo para criar algo extraordinário juntos."
       },
       "respect": {
         "title": "Respeito",
-        "description": "Honrando a dedicação e sacrifício dos jogadores que deram tudo pelo esporte."
-      },
-      "inspiration": {
-        "title": "Inspiração",
-        "description": "Motivando a próxima geração de jogadores através das histórias das lendas."
+        "description": "Honrando o jogo, os adversários e os torcedores que fazem do futebol o maior esporte do mundo."
       }
     },
     "journey": {

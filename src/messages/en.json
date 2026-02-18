@@ -122,29 +122,37 @@
     "values": {
       "title": "OUR VALUES",
       "subtitle": "The principles that guide everything we do",
-      "unity": {
-        "title": "Unity",
-        "description": "Bringing together legends from every corner of the world to celebrate the beautiful game."
+      "pride": {
+        "title": "Pride",
+        "description": "Wearing the badge with honor, representing nations and the legacy of football's greatest moments."
       },
-      "legacy": {
-        "title": "Legacy",
-        "description": "Preserving and honoring the achievements of footballs greatest icons for future generations."
+      "enjoyment": {
+        "title": "Enjoyment",
+        "description": "Celebrating the joy and passion that football brings to players and fans around the world."
       },
-      "excellence": {
-        "title": "Excellence",
-        "description": "Showcasing the highest standards of football artistry and sportsmanship."
+      "control": {
+        "title": "Control",
+        "description": "Mastering every touch, every decision—demonstrating the composure that defines true legends."
       },
-      "passion": {
-        "title": "Passion",
-        "description": "Igniting the love for football that connects billions of fans worldwide."
+      "resilience": {
+        "title": "Resilience",
+        "description": "Rising above challenges with determination, proving that legends never give up."
+      },
+      "selfConfidence": {
+        "title": "Self-Confidence",
+        "description": "Believing in greatness and inspiring others to reach their full potential on and off the pitch."
+      },
+      "discipline": {
+        "title": "Discipline",
+        "description": "Committing to excellence through dedication, preparation, and unwavering focus."
+      },
+      "collaboration": {
+        "title": "Collaboration",
+        "description": "Uniting legends from every corner of the world to create something extraordinary together."
       },
       "respect": {
         "title": "Respect",
-        "description": "Honoring the dedication and sacrifice of players who gave everything to the sport."
-      },
-      "inspiration": {
-        "title": "Inspiration",
-        "description": "Motivating the next generation of footballers through the stories of legends."
+        "description": "Honoring the game, the opponents, and the fans who make football the world's greatest sport."
       }
     },
     "journey": {
