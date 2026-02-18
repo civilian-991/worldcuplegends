@@ -5,6 +5,63 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import Flag from '@/components/Flag';
 
+// SVG Icons for Our Values
+const UnityIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M2 12h20" />
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+  </svg>
+);
+
+const LegacyIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 21h18" />
+    <path d="M5 21V7l7-4 7 4v14" />
+    <path d="M9 21v-6h6v6" />
+    <path d="M10 10h4" />
+  </svg>
+);
+
+const ExcellenceIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7" />
+    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7" />
+    <path d="M4 22h16" />
+    <path d="M10 22V2h4v20" />
+    <path d="M7 9h10l-1 6H8z" />
+    <path d="M7 15l-1 7" />
+    <path d="M17 15l1 7" />
+  </svg>
+);
+
+const PassionIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 21C8 17 2 13 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 22 13 16 17 12 21z" />
+  </svg>
+);
+
+const RespectValueIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    <path d="M12 8v4" />
+    <path d="M12 16h.01" />
+  </svg>
+);
+
+const InspirationIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 18h6" />
+    <path d="M10 22h4" />
+    <path d="M12 2v1" />
+    <path d="M4.93 4.93l.71.71" />
+    <path d="M19.07 4.93l-.71.71" />
+    <path d="M2 12h1" />
+    <path d="M21 12h1" />
+    <path d="M15 12a3 3 0 1 1-6 0c0-2 1.5-3 3-5 1.5 2 3 3 3 5z" />
+  </svg>
+);
+
 // SVG Icons for the 8 Values of Legends Football
 const TeamworkIcon = () => (
   <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -75,12 +132,12 @@ export default function AboutContent() {
   ];
 
   const values = [
-    { icon: '🌍', title: t('values.unity.title'), description: t('values.unity.description') },
-    { icon: '🏛️', title: t('values.legacy.title'), description: t('values.legacy.description') },
-    { icon: '⭐', title: t('values.excellence.title'), description: t('values.excellence.description') },
-    { icon: '🔥', title: t('values.passion.title'), description: t('values.passion.description') },
-    { icon: '🤝', title: t('values.respect.title'), description: t('values.respect.description') },
-    { icon: '💡', title: t('values.inspiration.title'), description: t('values.inspiration.description') },
+    { icon: UnityIcon, title: t('values.unity.title'), description: t('values.unity.description') },
+    { icon: LegacyIcon, title: t('values.legacy.title'), description: t('values.legacy.description') },
+    { icon: ExcellenceIcon, title: t('values.excellence.title'), description: t('values.excellence.description') },
+    { icon: PassionIcon, title: t('values.passion.title'), description: t('values.passion.description') },
+    { icon: RespectValueIcon, title: t('values.respect.title'), description: t('values.respect.description') },
+    { icon: InspirationIcon, title: t('values.inspiration.title'), description: t('values.inspiration.description') },
   ];
 
   const timeline = [
@@ -225,7 +282,9 @@ export default function AboutContent() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="glass rounded-2xl p-8 text-center group hover:bg-gold-500/5 transition-colors"
               >
-                <span className="text-5xl block mb-4">{value.icon}</span>
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400 group-hover:bg-gold-500/20 group-hover:text-gold-300 transition-all duration-300">
+                  <value.icon />
+                </div>
                 <h3 className="text-white font-bold text-xl mb-3 group-hover:text-gold-400 transition-colors">
                   {value.title}
                 </h3>
