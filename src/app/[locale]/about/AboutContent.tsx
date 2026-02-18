@@ -62,6 +62,44 @@ const InspirationIcon = () => (
   </svg>
 );
 
+// SVG Icons for CUFA Program Elements
+const CalendarIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2" />
+    <path d="M16 2v4" />
+    <path d="M8 2v4" />
+    <path d="M3 10h18" />
+    <path d="M8 14h.01" />
+    <path d="M12 14h.01" />
+    <path d="M16 14h.01" />
+    <path d="M8 18h.01" />
+    <path d="M12 18h.01" />
+  </svg>
+);
+
+const SchoolIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+    <path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5" />
+  </svg>
+);
+
+const AuctionIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+  </svg>
+);
+
+const FootballIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 2l3 7h-6z" />
+    <path d="M22 12l-7 3v-6z" />
+    <path d="M12 22l-3-7h6z" />
+    <path d="M2 12l7-3v6z" />
+  </svg>
+);
+
 // SVG Icons for the 8 Values of Legends Football
 const TeamworkIcon = () => (
   <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -161,10 +199,10 @@ export default function AboutContent() {
 
   // Program elements
   const programElements = [
-    { key: 'yearRound', icon: '📅' },
-    { key: 'schoolVisits', icon: '🏫' },
-    { key: 'galaAuction', icon: '🎭' },
-    { key: 'manOfMatch', icon: '⚽' },
+    { key: 'yearRound', icon: CalendarIcon },
+    { key: 'schoolVisits', icon: SchoolIcon },
+    { key: 'galaAuction', icon: AuctionIcon },
+    { key: 'manOfMatch', icon: FootballIcon },
   ];
 
   return (
@@ -336,8 +374,14 @@ export default function AboutContent() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div>
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 rounded-2xl bg-[#00AEEF]/10 border border-[#00AEEF]/30 flex items-center justify-center">
-                      <span className="text-3xl">🤝</span>
+                    <div className="w-16 h-16 rounded-2xl bg-[#00AEEF]/10 border border-[#00AEEF]/30 flex items-center justify-center text-[#00AEEF]">
+                      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 17a4 4 0 0 0 8 0" />
+                        <path d="M5 17a4 4 0 0 1 8 0" />
+                        <path d="M7 7l5 5 5-5" />
+                        <path d="M2 11l5-5 3 3" />
+                        <path d="M22 11l-5-5-3 3" />
+                      </svg>
                     </div>
                     <div>
                       <h3
@@ -368,8 +412,12 @@ export default function AboutContent() {
                 </div>
                 <div className="relative">
                   <div className="glass rounded-2xl p-8 text-center border border-gold-500/20">
-                    <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00AEEF] to-[#0088cc] flex items-center justify-center">
-                      <span className="text-4xl">🌍</span>
+                    <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#00AEEF] to-[#0088cc] flex items-center justify-center text-white">
+                      <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M2 12h20" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                      </svg>
                     </div>
                     <h4
                       className="text-xl font-bold text-gold-400 mb-2"
@@ -465,8 +513,8 @@ export default function AboutContent() {
               >
                 <div className="glass rounded-2xl p-6 border border-white/5 group-hover:border-gold-500/30 transition-all duration-500 h-full">
                   <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-gold-500/20 transition-colors">
-                      <span className="text-2xl">{element.icon}</span>
+                    <div className="w-14 h-14 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-gold-500/20 transition-colors text-gold-400">
+                      <element.icon />
                     </div>
                     <div>
                       <h4 className="text-white font-bold text-lg mb-2 group-hover:text-gold-400 transition-colors">
