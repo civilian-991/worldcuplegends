@@ -287,7 +287,7 @@ export default function AboutContent() {
                         className="text-2xl font-bold text-white"
                         style={{ fontFamily: 'var(--font-display)' }}
                       >
-                        <a href="https://cufa.org.br/" target="_blank" rel="noopener noreferrer" className="hover:text-[#00AEEF] transition-colors">
+                        <a href="https://cufaglobal.org/" target="_blank" rel="noopener noreferrer" className="hover:text-[#00AEEF] transition-colors">
                           {t('unicef.partnership.title')}
                         </a>
                       </h3>
