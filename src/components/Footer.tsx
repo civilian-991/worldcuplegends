@@ -36,15 +36,15 @@ const socialLinks = [
 ];
 
 const sponsors = [
-  { name: 'Red Sea Global', logo: '/sponsors/red-sea-global.png' },
-  { name: 'Sponsor', logo: '/sponsors/sponsor-2.png' },
-  { name: 'Van Wagner', logo: '/sponsors/van-wagner.png' },
-  { name: 'Sponsor', logo: '/sponsors/sponsor-4.png' },
-  { name: 'Sponsor', logo: '/sponsors/sponsor-5.png' },
-  { name: 'All American Licensing', logo: '/sponsors/all-american-licensing.png' },
-  { name: 'Sport Five', logo: '/sponsors/sport-five.png' },
-  { name: 'Branca', logo: '/sponsors/branca.png' },
-  { name: 'Semco', logo: '/sponsors/semco.png' },
+  { name: 'Red Sea Global', logo: '/sponsors/red-sea-global.png', url: '' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-2.png', url: '' },
+  { name: 'Van Wagner', logo: '/sponsors/van-wagner.png', url: '' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-4.png', url: '' },
+  { name: 'Sponsor', logo: '/sponsors/sponsor-5.png', url: '' },
+  { name: 'All American Licensing', logo: '/sponsors/all-american-licensing.png', url: '' },
+  { name: 'Sport Five', logo: '/sponsors/sport-five.png', url: '' },
+  { name: 'Branca', logo: '/sponsors/branca.png', url: '' },
+  { name: 'Semco', logo: '/sponsors/semco.png', url: '' },
 ];
 
 // Accordion component for mobile link sections
@@ -117,32 +117,48 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-night-800 border-t border-gold-500/10 overflow-hidden">
-      {/* Sponsors Section */}
-      <div className="bg-night-900/50 py-8 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-center text-white/40 text-xs tracking-[0.3em] uppercase mb-6">
-            Official Partners
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            {sponsors.map((sponsor, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="relative h-10 md:h-14 w-32 md:w-44 opacity-60 hover:opacity-100 transition-opacity duration-300"
-              >
-                <Image
-                  src={sponsor.logo}
-                  alt={sponsor.name === 'Sponsor' ? '' : sponsor.name}
-                  fill
-                  sizes="(max-width: 768px) 128px, 176px"
-                  className="object-contain"
-                  {...(sponsor.name === 'Sponsor' ? { 'aria-hidden': true as unknown as boolean } : {})}
-                />
-              </motion.div>
-            ))}
+      {/* Sponsors Marquee */}
+      <div className="bg-night-900/50 py-8 border-b border-white/5 overflow-hidden">
+        <p className="text-center text-white/40 text-xs tracking-[0.3em] uppercase mb-6">
+          Official Partners
+        </p>
+        <div
+          className="group relative"
+          onMouseEnter={(e) => {
+            const tracks = e.currentTarget.querySelectorAll<HTMLElement>('[data-marquee]');
+            tracks.forEach(el => { el.style.animationPlayState = 'paused'; });
+          }}
+          onMouseLeave={(e) => {
+            const tracks = e.currentTarget.querySelectorAll<HTMLElement>('[data-marquee]');
+            tracks.forEach(el => { el.style.animationPlayState = 'running'; });
+          }}
+        >
+          <div
+            data-marquee
+            className="flex gap-12 items-center w-max animate-marquee"
+          >
+            {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((sponsor, index) => {
+              const logoEl = (
+                <div key={index} className="relative h-10 md:h-12 w-28 md:w-36 flex-shrink-0 opacity-50 hover:opacity-100 transition-opacity duration-300">
+                  <Image
+                    src={sponsor.logo}
+                    alt={sponsor.name === 'Sponsor' ? '' : sponsor.name}
+                    fill
+                    sizes="144px"
+                    className="object-contain"
+                    {...(sponsor.name === 'Sponsor' ? { 'aria-hidden': true as unknown as boolean } : {})}
+                  />
+                </div>
+              );
+              if (sponsor.url) {
+                return (
+                  <a key={index} href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                    {logoEl}
+                  </a>
+                );
+              }
+              return logoEl;
+            })}
           </div>
         </div>
       </div>
