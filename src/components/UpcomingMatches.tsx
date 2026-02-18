@@ -157,13 +157,13 @@ export default function UpcomingMatches() {
                   <div className="glass rounded-2xl p-8 border-gold-500/20 glow-gold h-[calc(100%-60px)] flex flex-col justify-center">
                     {/* Trophy */}
                     <div className="text-center mb-6">
-                      <motion.span
+                      <motion.div
                         animate={{ scale: [1, 1.1, 1] }}
                         transition={{ duration: 2, repeat: Infinity }}
-                        className="text-6xl inline-block"
+                        className="inline-block"
                       >
-                        🏆
-                      </motion.span>
+                        <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-16 w-auto mx-auto" />
+                      </motion.div>
                     </div>
 
                     {/* Teams */}

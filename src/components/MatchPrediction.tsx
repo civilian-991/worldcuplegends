@@ -412,7 +412,7 @@ export default function MatchPrediction({ match, onPredictionSubmit }: MatchPred
                 className="inline-block mb-4"
               >
                 {match.homeCountryCode === 'TBD' ? (
-                  <span className="text-6xl">🏆</span>
+                  <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-16 w-auto" />
                 ) : (
                   <Flag countryCode={match.homeCountryCode} size="xl" className="w-16 h-12" />
                 )}
@@ -450,7 +450,7 @@ export default function MatchPrediction({ match, onPredictionSubmit }: MatchPred
                 className="inline-block mb-4"
               >
                 {match.awayCountryCode === 'TBD' ? (
-                  <span className="text-6xl">🏆</span>
+                  <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-16 w-auto" />
                 ) : (
                   <Flag countryCode={match.awayCountryCode} size="xl" className="w-16 h-12" />
                 )}

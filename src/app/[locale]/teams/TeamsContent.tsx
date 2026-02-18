@@ -121,7 +121,7 @@ export default function TeamsContent() {
           {/* World Cup Winners Showcase */}
           <div className="mb-16">
             <div className="flex items-center gap-4 mb-8">
-              <span className="text-4xl">🏆</span>
+              <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-10 w-auto" />
               <h2
                 className="text-3xl font-bold text-white"
                 style={{ fontFamily: 'var(--font-display)' }}
@@ -155,7 +155,7 @@ export default function TeamsContent() {
                     </h3>
                     <div className="flex justify-center gap-1 mt-2">
                       {Array.from({ length: team.worldCups }).map((_, i) => (
-                        <span key={i} className="text-gold-400 text-sm">🏆</span>
+                        <img key={i} src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-4 w-auto" />
                       ))}
                     </div>
                     <p className="text-gold-400 text-sm mt-1">{team.worldCups} titles</p>
@@ -213,7 +213,7 @@ export default function TeamsContent() {
                     {/* World Cups */}
                     <div className="mb-6">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-gold-400">🏆</span>
+                        <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-5 w-auto" />
                         <span className="text-white/50 text-sm">World Cup Titles</span>
                       </div>
                       {team.worldCups > 0 ? (
@@ -361,7 +361,7 @@ export default function TeamsContent() {
                           key={year}
                           className="px-4 py-2 bg-gold-500/20 text-gold-400 rounded-full flex items-center gap-2"
                         >
-                          🏆 {year}
+                          <img src="/legends-cup.png" alt="" className="h-4 w-auto inline-block" /> {year}
                         </span>
                       ))}
                     </div>

@@ -454,7 +454,7 @@ export default function PredictionLeaderboard() {
         {/* Empty state */}
         {leaderboard.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-5xl mb-4">🏆</div>
+            <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-12 w-auto mx-auto mb-4" />
             <h4 className="text-lg font-bold text-white mb-2">No Rankings Yet</h4>
             <p className="text-white/60 text-sm">Be the first to make predictions!</p>
           </div>

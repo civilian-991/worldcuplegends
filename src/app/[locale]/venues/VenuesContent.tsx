@@ -446,7 +446,7 @@ export default function VenuesContent() {
             >
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 rounded-full bg-gold-500/20 flex items-center justify-center">
-                  <span className="text-2xl">🏆</span>
+                  <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-7 w-auto" />
                 </div>
                 <div>
                   <p className="text-gold-400 text-xs tracking-wider uppercase">Stage 2</p>

@@ -184,7 +184,7 @@ export default function TeamCarousel() {
                   <div className="flex items-center gap-3 mb-6">
                     <div className="flex -space-x-1">
                       {Array.from({ length: Math.min(team.worldCups, 5) }).map((_, i) => (
-                        <span key={i} className="text-gold-400 text-xl">🏆</span>
+                        <img key={i} src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-5 w-auto" />
                       ))}
                     </div>
                     <span className="text-gold-400 font-bold text-lg" style={{ fontFamily: 'var(--font-display)' }}>

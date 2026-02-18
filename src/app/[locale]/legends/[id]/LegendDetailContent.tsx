@@ -207,7 +207,7 @@ export default function LegendDetailContent() {
                   <p className="text-white/40 text-sm uppercase tracking-wider mb-3">World Cup Titles</p>
                   <div className="flex gap-2">
                     {Array.from({ length: legend.worldCups }).map((_, i) => (
-                      <span key={i} className="text-3xl">🏆</span>
+                      <img key={i} src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-8 w-auto" />
                     ))}
                   </div>
                 </div>

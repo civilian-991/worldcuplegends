@@ -718,8 +718,8 @@ export default function HallOfFame() {
               className="inline-block mb-6"
             >
               <div className="relative">
-                <div className="text-8xl">🏆</div>
-                <div className="absolute inset-0 animate-ping opacity-30 text-8xl">🏆</div>
+                <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-24 w-auto mx-auto" />
+                <img src="/legends-cup.png" alt="" aria-hidden="true" className="absolute inset-0 h-24 w-auto mx-auto animate-ping opacity-30" />
               </div>
             </motion.div>
 

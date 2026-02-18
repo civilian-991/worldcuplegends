@@ -104,7 +104,7 @@ export default function ScheduleContent() {
             <div className="relative p-8 md:p-12">
               {/* Trophy Icon */}
               <div className="text-center mb-8">
-                <span className="text-6xl md:text-8xl">🏆</span>
+                <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-20 md:h-28 w-auto mx-auto" />
               </div>
 
               {/* Teams */}

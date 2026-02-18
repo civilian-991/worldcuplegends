@@ -209,7 +209,7 @@ export default function ShopContent() {
       <section className="py-24 px-6 bg-gradient-to-r from-gold-600/20 to-gold-500/10">
         <div className="max-w-7xl mx-auto">
           <div className="glass rounded-3xl p-12 text-center">
-            <span className="text-6xl block mb-6">🏆</span>
+            <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-16 w-auto mx-auto mb-6" />
             <h2
               className="text-4xl font-bold text-white mb-4"
               style={{ fontFamily: 'var(--font-display)' }}
