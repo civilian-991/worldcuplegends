@@ -1,10 +1,27 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+
+// Generate stable particle configs once
+function generateParticles(count: number) {
+  const particles = [];
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      id: i,
+      left: `${(i * 3.33) % 100}%`,
+      size: 3 + (i % 5),
+      duration: 5 + (i % 7),
+      delay: (i * 0.5) % 8,
+      opacity: 0.5 + ((i % 4) * 0.13),
+      drift: ((i % 7) - 3) * 15,
+    });
+  }
+  return particles;
+}
 
 export default function HeroSection() {
   const t = useTranslations('home');
@@ -16,6 +33,7 @@ export default function HeroSection() {
   });
 
   const heroWords = ['LEGENDS', 'GLORY', 'PASSION', 'HISTORY', 'LEGACY'];
+  const particles = useMemo(() => generateParticles(30), []);
 
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -59,6 +77,42 @@ export default function HeroSection() {
       {/* Stadium Lights Effect */}
       <div className="hidden md:block absolute top-0 left-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[150px] stadium-light" />
       <div className="hidden md:block absolute top-0 right-1/4 w-96 h-96 bg-gold-400/10 rounded-full blur-[150px] stadium-light" style={{ animationDelay: '2s' }} />
+
+      {/* ===== PITCH LINES ===== */}
+      <div className="absolute inset-0 z-[11] pointer-events-none hidden md:flex items-center justify-center" aria-hidden="true">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, delay: 1 }}
+        >
+          {/* Center circle */}
+          <div className="w-[400px] h-[400px] lg:w-[500px] lg:h-[500px] rounded-full border border-gold-500/15 pitch-line-glow" />
+          {/* Center dot */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gold-500/20" />
+          {/* Halfway line */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[0.5px] w-[800px] lg:w-[1000px] h-px bg-gradient-to-r from-transparent via-gold-500/15 to-transparent" />
+        </motion.div>
+      </div>
+
+      {/* ===== RISING GOLDEN PARTICLES ===== */}
+      <div className="absolute inset-0 z-[13] pointer-events-none overflow-hidden" aria-hidden="true">
+        {particles.map((p) => (
+          <div
+            key={p.id}
+            className="hero-particle"
+            style={{
+              left: p.left,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              opacity: 0,
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
+              '--particle-drift': `${p.drift}px`,
+              '--particle-opacity': p.opacity,
+            } as React.CSSProperties}
+          />
+        ))}
+      </div>
 
       {/* Content */}
       <motion.div

@@ -673,3 +673,46 @@ textarea:focus {
 .trophy-glow {
   animation: trophy-glow 1.2s ease-in-out infinite;
 }
+
+/* ===== Hero Rising Golden Particles ===== */
+@keyframes hero-particle-rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--particle-opacity, 0.5);
+  }
+  90% {
+    opacity: var(--particle-opacity, 0.5);
+  }
+  100% {
+    transform: translateY(-100vh) translateX(var(--particle-drift, 0px));
+    opacity: 0;
+  }
+}
+
+.hero-particle {
+  position: absolute;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 1), rgba(212, 175, 55, 0.5));
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.6), 0 0 16px rgba(212, 175, 55, 0.3);
+  animation: hero-particle-rise linear infinite;
+}
+
+/* ===== Pitch Line Subtle Glow ===== */
+@keyframes pitch-line-pulse {
+  0%, 100% {
+    border-color: rgba(212, 175, 55, 0.07);
+    box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+  }
+  50% {
+    border-color: rgba(212, 175, 55, 0.12);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.03);
+  }
+}
+
+.pitch-line-glow {
+  animation: pitch-line-pulse 6s ease-in-out infinite;
+}
