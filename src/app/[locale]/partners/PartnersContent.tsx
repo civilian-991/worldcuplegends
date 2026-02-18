@@ -11,6 +11,8 @@ const partners = [
   { name: 'Partner', logo: '/sponsors/sponsor-5.png', tier: 'Official Partner' },
   { name: 'All American Licensing', logo: '/sponsors/all-american-licensing.png', tier: 'Official Partner' },
   { name: 'Sport Five', logo: '/sponsors/sport-five.png', tier: 'Official Partner' },
+  { name: 'Branca', logo: '/sponsors/branca.png', tier: 'Official Partner' },
+  { name: 'Semco', logo: '/sponsors/semco.png', tier: 'Official Partner' },
 ];
 
 export default function PartnersContent() {

@@ -43,6 +43,8 @@ const sponsors = [
   { name: 'Sponsor', logo: '/sponsors/sponsor-5.png' },
   { name: 'All American Licensing', logo: '/sponsors/all-american-licensing.png' },
   { name: 'Sport Five', logo: '/sponsors/sport-five.png' },
+  { name: 'Branca', logo: '/sponsors/branca.png' },
+  { name: 'Semco', logo: '/sponsors/semco.png' },
 ];
 
 // Accordion component for mobile link sections
