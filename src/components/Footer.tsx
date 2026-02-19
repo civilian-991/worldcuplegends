@@ -44,7 +44,6 @@ const sponsors = [
   { name: 'All American Licensing', logo: '/sponsors/all-american-licensing.png', url: '' },
   { name: 'Sport Five', logo: '/sponsors/sport-five.png', url: '' },
   { name: 'Branca', logo: '/sponsors/branca.png', url: '' },
-  { name: 'Semco', logo: '/sponsors/semco.png', url: '' },
 ];
 
 // Accordion component for mobile link sections
