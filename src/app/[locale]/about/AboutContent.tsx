@@ -267,25 +267,14 @@ export default function AboutContent() {
               transition={{ duration: 0.6 }}
               className="relative"
             >
-              <div className="glass rounded-3xl p-8 glow-gold">
-                <div className="text-center">
-                  <Image
-                    src="/wlc-logo-vertical.png"
-                    alt="World Legends Cup"
-                    width={128}
-                    height={128}
-                    className="mx-auto mb-6"
-                  />
-                  <h3
-                    className="text-3xl font-bold text-gold-400 mb-4"
-                    style={{ fontFamily: 'var(--font-display)' }}
-                  >
-                    {t('mission.slogan')}
-                  </h3>
-                  <p className="text-white/60">
-                    {t('mission.sloganSubtitle')}
-                  </p>
-                </div>
+              <div className="rounded-3xl overflow-hidden glow-gold">
+                <Image
+                  src="/wlc-our-mission.png"
+                  alt="World Legends Cup team"
+                  width={600}
+                  height={450}
+                  className="w-full h-auto object-cover rounded-3xl"
+                />
               </div>
             </motion.div>
           </div>
