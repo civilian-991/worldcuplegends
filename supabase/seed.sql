@@ -60,7 +60,7 @@ INSERT INTO legends (name, short_name, country, country_code, position, era, goa
 ('Johan Cruyff', 'Cruyff', 'Netherlands', 'NL', 'Forward', '1970s-1980s', 33, 30, 48, 0, '/legends/cruyff.png', 'Netherlands', 14, 9.5),
 ('Michel Platini', 'Platini', 'France', 'FR', 'Attacking Midfielder', '1980s', 41, 28, 72, 0, '/legends/platini.png', 'France', 10, 9.3),
 ('Roberto Baggio', 'Baggio', 'Italy', 'IT', 'Forward', '1990s-2000s', 27, 12, 56, 0, '/legends/baggio.png', 'Italy', 10, 9.2),
-('Paolo Maldini', 'Maldini', 'Italy', 'IT', 'Defender', '1980s-2000s', 7, 15, 126, 0, '/legends/maldini.png', 'Italy', 3, 9.4),
+('Marcel Desailly', 'Desailly', 'France', 'FR', 'Defender', '1990s-2000s', 3, 1, 116, 1, '/legends/desailly.png', 'France', 8, 9.3),
 ('Gerd Müller', 'Müller', 'Germany', 'DE', 'Forward', '1970s', 68, 12, 62, 1, '/legends/muller.png', 'Germany', 13, 9.3);
 
 -- ============================================

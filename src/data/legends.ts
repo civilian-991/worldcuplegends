@@ -172,20 +172,20 @@ export const legends: Legend[] = [
   },
   {
     id: 10,
-    name: "Paolo Maldini",
-    shortName: "MAL",
-    country: "Italy",
-    countryCode: "IT",
+    name: "Marcel Desailly",
+    shortName: "DES",
+    country: "France",
+    countryCode: "FR",
     position: "Defender",
     era: "90s-00s",
-    goals: 7,
-    assists: 14,
-    appearances: 126,
-    worldCups: 0,
-    image: "/legends/maldini.png",
-    team: "Italy",
-    jerseyNumber: 3,
-    rating: 94
+    goals: 3,
+    assists: 1,
+    appearances: 116,
+    worldCups: 1,
+    image: "/legends/desailly.png",
+    team: "France",
+    jerseyNumber: 8,
+    rating: 93
   },
   {
     id: 11,
@@ -295,7 +295,7 @@ export const teams: Team[] = [
     confederation: "UEFA",
     rating: 94,
     color: "#008C45",
-    legends: ["Paolo Maldini", "Roberto Baggio", "Franco Baresi", "Fabio Cannavaro"]
+    legends: ["Gianluca Zambrotta", "Roberto Baggio", "Franco Baresi", "Fabio Cannavaro"]
   },
   {
     id: 6,

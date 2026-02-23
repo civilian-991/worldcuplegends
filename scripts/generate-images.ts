@@ -192,9 +192,9 @@ const images: ImageSpec[] = [
     prompt: 'Professional sports portrait, Italian football artist with iconic ponytail hairstyle, HEAD TO WAIST shot showing full torso, wearing Italy azzurri blue jersey with number 10, artistic soulful expression, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
-    filename: 'maldini.png',
+    filename: 'desailly.png',
     folder: 'legends',
-    prompt: 'Professional sports portrait, Italian football defender legend with classic good looks, HEAD TO WAIST shot showing full torso, wearing Italy blue jersey with number 3, strong dignified stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+    prompt: 'Professional sports portrait, French football defender Marcel Desailly, powerful Black player with shaved head, HEAD TO WAIST shot showing full torso, wearing France blue jersey with number 8, strong commanding stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'muller.png',
@@ -345,14 +345,14 @@ const images: ImageSpec[] = [
     prompt: 'Professional sports portrait, Argentine football legend Gabriel Batistuta with long dark hair, HEAD TO WAIST shot showing full torso, wearing Argentina blue and white vertical striped jersey, intense passionate expression, arms at sides confident coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
-    filename: 'vieira.png',
+    filename: 'desailly.png',
     folder: 'coaches',
-    prompt: 'Professional sports portrait, French football legend Patrick Vieira, tall athletic Black player with bald head, HEAD TO WAIST shot showing full torso, wearing France blue national team jersey, commanding authoritative coaching presence, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+    prompt: 'Professional sports portrait, French football legend Marcel Desailly, powerful Black player with shaved head, HEAD TO WAIST shot showing full torso, wearing France blue national team jersey, commanding authoritative coaching presence, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
-    filename: 'maldini.png',
+    filename: 'zambrotta.png',
     folder: 'coaches',
-    prompt: 'Professional sports portrait, Italian football legend Paolo Maldini, elegant defender with classic Italian good looks and gray-streaked hair, HEAD TO WAIST shot showing full torso, wearing Italy azzurri blue jersey with number 3, dignified sophisticated coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
+    prompt: 'Professional sports portrait, Italian football legend Gianluca Zambrotta, athletic defender with short dark hair, HEAD TO WAIST shot showing full torso, wearing Italy azzurri blue jersey, determined focused coaching stance, clean dark gradient studio background, dramatic rim lighting, F1 driver portrait style, 4k quality, jersey clearly visible'
   },
   {
     filename: 'abdullah.png',
