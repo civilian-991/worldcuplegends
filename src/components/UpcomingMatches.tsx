@@ -1,15 +1,13 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getMatches, type Match } from '@/lib/api';
-import FlippingFlag from '@/components/FlippingFlag';
+import FlippingFlagPair from '@/components/FlippingFlag';
 
-/** A match row with two flags that never show the same country */
 function MatchRow({ match, index }: { match: Match; index: number }) {
-  const excludeRef = useRef<Record<string, string>>({});
   return (
     <motion.div
       key={match.id}
@@ -27,17 +25,21 @@ function MatchRow({ match, index }: { match: Match; index: number }) {
           >
             #{index + 1}
           </span>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-              <FlippingFlag size="sm" excludeRef={excludeRef} pairId="home" />
-            </div>
-            <span className="text-white/50 font-medium">TBA</span>
-            <span className="text-white/30 mx-2">vs</span>
-            <span className="text-white/50 font-medium">TBA</span>
-            <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-              <FlippingFlag size="sm" excludeRef={excludeRef} pairId="away" />
-            </div>
-          </div>
+          <FlippingFlagPair size="sm">
+            {(home, away) => (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                  {home}
+                </div>
+                <span className="text-white/50 font-medium">TBA</span>
+                <span className="text-white/30 mx-2">vs</span>
+                <span className="text-white/50 font-medium">TBA</span>
+                <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                  {away}
+                </div>
+              </div>
+            )}
+          </FlippingFlagPair>
         </div>
         <div className="text-right">
           <p className="text-white/30 text-xs">Date TBA</p>
@@ -47,32 +49,34 @@ function MatchRow({ match, index }: { match: Match; index: number }) {
   );
 }
 
-/** The Final card with two paired flags */
 function FinalCard() {
-  const excludeRef = useRef<Record<string, string>>({});
   return (
-    <div className="flex items-center justify-center gap-6 mb-6">
-      <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
-          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="home" />
-        </div>
-        <p className="text-white/50 text-sm">TBA</p>
-      </div>
+    <FlippingFlagPair size="lg">
+      {(home, away) => (
+        <div className="flex items-center justify-center gap-6 mb-6">
+          <div className="text-center">
+            <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
+              {home}
+            </div>
+            <p className="text-white/50 text-sm">TBA</p>
+          </div>
 
-      <span
-        className="text-3xl font-bold text-gold-400"
-        style={{ fontFamily: 'var(--font-display)' }}
-      >
-        VS
-      </span>
+          <span
+            className="text-3xl font-bold text-gold-400"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            VS
+          </span>
 
-      <div className="text-center">
-        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
-          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="away" />
+          <div className="text-center">
+            <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
+              {away}
+            </div>
+            <p className="text-white/50 text-sm">TBA</p>
+          </div>
         </div>
-        <p className="text-white/50 text-sm">TBA</p>
-      </div>
-    </div>
+      )}
+    </FlippingFlagPair>
   );
 }
 
@@ -90,7 +94,6 @@ export default function UpcomingMatches() {
     fetchMatches();
   }, []);
 
-  // Separate final from other matches
   const finalMatch = matches.find(m => m.stage === 'The Final');
   const journeyMatches = matches.filter(m => m.stage !== 'The Final').slice(0, 3);
 
@@ -139,7 +142,7 @@ export default function UpcomingMatches() {
 
         {/* Tournament Structure */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* The Journey - Matches 1-6 */}
+          {/* The Journey */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -161,7 +164,6 @@ export default function UpcomingMatches() {
                   <MatchRow key={match.id} match={match} index={index} />
                 ))}
 
-                {/* Show more indicator */}
                 {matches.filter(m => m.stage !== 'The Final').length > 3 && (
                   <div className="text-center pt-2">
                     <span className="text-white/40 text-sm">
@@ -192,7 +194,6 @@ export default function UpcomingMatches() {
                   </div>
 
                   <div className="glass rounded-2xl p-8 border-gold-500/20 glow-gold h-[calc(100%-60px)] flex flex-col justify-center">
-                    {/* Trophy */}
                     <div className="text-center mb-6">
                       <motion.div
                         animate={{ scale: [1, 1.1, 1] }}
@@ -203,10 +204,8 @@ export default function UpcomingMatches() {
                       </motion.div>
                     </div>
 
-                    {/* Teams */}
                     <FinalCard />
 
-                    {/* Info */}
                     <div className="text-center">
                       <p className="text-gold-400/70 text-sm mb-1">Where Champions Are Crowned</p>
                       <p className="text-white/30 text-xs">Date & Time TBA</p>

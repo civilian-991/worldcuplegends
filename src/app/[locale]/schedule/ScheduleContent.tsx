@@ -1,9 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Flag from '@/components/Flag';
-import FlippingFlag from '@/components/FlippingFlag';
+import FlippingFlagPair from '@/components/FlippingFlag';
 
 // Placeholder matches - teams TBA
 const matches = [
@@ -16,37 +15,39 @@ const matches = [
 ];
 
 function ScheduleFinalFlags() {
-  const excludeRef = useRef<Record<string, string>>({});
   return (
-    <div className="flex items-center justify-center gap-6 md:gap-12 mb-8">
-      <div className="text-center">
-        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
-          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="home" />
-        </div>
-        <p className="text-white/50 text-sm">TBA</p>
-      </div>
+    <FlippingFlagPair size="lg">
+      {(home, away) => (
+        <div className="flex items-center justify-center gap-6 md:gap-12 mb-8">
+          <div className="text-center">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
+              {home}
+            </div>
+            <p className="text-white/50 text-sm">TBA</p>
+          </div>
 
-      <div className="flex flex-col items-center">
-        <span
-          className="text-3xl md:text-4xl font-bold text-gold-400"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          VS
-        </span>
-      </div>
+          <div className="flex flex-col items-center">
+            <span
+              className="text-3xl md:text-4xl font-bold text-gold-400"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              VS
+            </span>
+          </div>
 
-      <div className="text-center">
-        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
-          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="away" />
+          <div className="text-center">
+            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
+              {away}
+            </div>
+            <p className="text-white/50 text-sm">TBA</p>
+          </div>
         </div>
-        <p className="text-white/50 text-sm">TBA</p>
-      </div>
-    </div>
+      )}
+    </FlippingFlagPair>
   );
 }
 
 function ScheduleMatchRow({ matchNumber, index }: { matchNumber: number; index: number }) {
-  const excludeRef = useRef<Record<string, string>>({});
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -68,28 +69,32 @@ function ScheduleMatchRow({ matchNumber, index }: { matchNumber: number; index: 
             </span>
           </div>
 
-          <div className="flex-1 flex items-center justify-center gap-6 md:gap-12">
-            <div className="flex-1 flex items-center justify-end gap-3">
-              <p className="text-white/50 font-medium">TBA</p>
-              <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                <FlippingFlag size="sm" excludeRef={excludeRef} pairId="home" />
-              </div>
-            </div>
+          <FlippingFlagPair size="sm">
+            {(home, away) => (
+              <div className="flex-1 flex items-center justify-center gap-6 md:gap-12">
+                <div className="flex-1 flex items-center justify-end gap-3">
+                  <p className="text-white/50 font-medium">TBA</p>
+                  <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                    {home}
+                  </div>
+                </div>
 
-            <span
-              className="text-white/30 text-lg font-bold"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              VS
-            </span>
+                <span
+                  className="text-white/30 text-lg font-bold"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  VS
+                </span>
 
-            <div className="flex-1 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                <FlippingFlag size="sm" excludeRef={excludeRef} pairId="away" />
+                <div className="flex-1 flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                    {away}
+                  </div>
+                  <p className="text-white/50 font-medium">TBA</p>
+                </div>
               </div>
-              <p className="text-white/50 font-medium">TBA</p>
-            </div>
-          </div>
+            )}
+          </FlippingFlagPair>
 
           <div className="md:w-32 flex-shrink-0 text-center md:text-right">
             <p className="text-white/40 text-sm">Date TBA</p>
@@ -187,19 +192,15 @@ export default function ScheduleContent() {
             transition={{ delay: 0.2 }}
             className="relative rounded-2xl overflow-hidden border-2 border-gold-500/30 glow-gold"
           >
-            {/* Background */}
             <div className="absolute inset-0 bg-gradient-to-br from-gold-500/10 via-night-800 to-night-900" />
 
             <div className="relative p-8 md:p-12">
-              {/* Trophy Icon */}
               <div className="text-center mb-8">
                 <img src="/legends-cup.png" alt="World Legends Cup Trophy" className="h-20 md:h-28 w-auto mx-auto" />
               </div>
 
-              {/* Teams */}
               <ScheduleFinalFlags />
 
-              {/* Match Details */}
               <div className="flex flex-wrap justify-center gap-4 text-center">
                 <div className="px-6 py-3 glass rounded-full">
                   <p className="text-white/40 text-xs uppercase tracking-wider mb-1">Venue</p>
