@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import Flag from '@/components/Flag';
 import FlippingFlag from '@/components/FlippingFlag';
@@ -13,6 +14,94 @@ const matches = [
   { id: 5, matchNumber: 5, venue: 'Estádio Nilton Santos', date: 'TBA', time: 'TBA' },
   { id: 6, matchNumber: 6, venue: 'Estádio Nilton Santos', date: 'TBA', time: 'TBA' },
 ];
+
+function ScheduleFinalFlags() {
+  const excludeRef = useRef<Record<string, string>>({});
+  return (
+    <div className="flex items-center justify-center gap-6 md:gap-12 mb-8">
+      <div className="text-center">
+        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
+          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="home" />
+        </div>
+        <p className="text-white/50 text-sm">TBA</p>
+      </div>
+
+      <div className="flex flex-col items-center">
+        <span
+          className="text-3xl md:text-4xl font-bold text-gold-400"
+          style={{ fontFamily: 'var(--font-display)' }}
+        >
+          VS
+        </span>
+      </div>
+
+      <div className="text-center">
+        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
+          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="away" />
+        </div>
+        <p className="text-white/50 text-sm">TBA</p>
+      </div>
+    </div>
+  );
+}
+
+function ScheduleMatchRow({ matchNumber, index }: { matchNumber: number; index: number }) {
+  const excludeRef = useRef<Record<string, string>>({});
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative rounded-xl glass group cursor-pointer card-hover overflow-hidden"
+    >
+      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-green-600" />
+
+      <div className="p-6 md:p-8 pl-8">
+        <div className="flex flex-col md:flex-row md:items-center gap-6">
+          <div className="md:w-24 flex-shrink-0">
+            <span
+              className="text-4xl font-bold text-green-400/50"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              #{matchNumber}
+            </span>
+          </div>
+
+          <div className="flex-1 flex items-center justify-center gap-6 md:gap-12">
+            <div className="flex-1 flex items-center justify-end gap-3">
+              <p className="text-white/50 font-medium">TBA</p>
+              <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                <FlippingFlag size="sm" excludeRef={excludeRef} pairId="home" />
+              </div>
+            </div>
+
+            <span
+              className="text-white/30 text-lg font-bold"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              VS
+            </span>
+
+            <div className="flex-1 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+                <FlippingFlag size="sm" excludeRef={excludeRef} pairId="away" />
+              </div>
+              <p className="text-white/50 font-medium">TBA</p>
+            </div>
+          </div>
+
+          <div className="md:w-32 flex-shrink-0 text-center md:text-right">
+            <p className="text-white/40 text-sm">Date TBA</p>
+            <p className="text-gold-400/70 text-sm font-semibold">Time TBA</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+    </motion.div>
+  );
+}
 
 export default function ScheduleContent() {
   return (
@@ -108,30 +197,7 @@ export default function ScheduleContent() {
               </div>
 
               {/* Teams */}
-              <div className="flex items-center justify-center gap-6 md:gap-12 mb-8">
-                <div className="text-center">
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
-                    <FlippingFlag size="lg" />
-                  </div>
-                  <p className="text-white/50 text-sm">TBA</p>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <span
-                    className="text-3xl md:text-4xl font-bold text-gold-400"
-                    style={{ fontFamily: 'var(--font-display)' }}
-                  >
-                    VS
-                  </span>
-                </div>
-
-                <div className="text-center">
-                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-night-700 border-2 border-white/10 flex items-center justify-center mb-3">
-                    <FlippingFlag size="lg" />
-                  </div>
-                  <p className="text-white/50 text-sm">TBA</p>
-                </div>
-              </div>
+              <ScheduleFinalFlags />
 
               {/* Match Details */}
               <div className="flex flex-wrap justify-center gap-4 text-center">
@@ -174,64 +240,7 @@ export default function ScheduleContent() {
 
           <div className="space-y-4">
             {matches.map((match, index) => (
-              <motion.div
-                key={match.id}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative rounded-xl glass group cursor-pointer card-hover overflow-hidden"
-              >
-                {/* Green accent for journey matches */}
-                <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-green-500 to-green-600" />
-
-                <div className="p-6 md:p-8 pl-8">
-                  <div className="flex flex-col md:flex-row md:items-center gap-6">
-                    {/* Match Number */}
-                    <div className="md:w-24 flex-shrink-0">
-                      <span
-                        className="text-4xl font-bold text-green-400/50"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        #{match.matchNumber}
-                      </span>
-                    </div>
-
-                    {/* Teams */}
-                    <div className="flex-1 flex items-center justify-center gap-6 md:gap-12">
-                      <div className="flex-1 flex items-center justify-end gap-3">
-                        <p className="text-white/50 font-medium">TBA</p>
-                        <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                          <FlippingFlag size="sm" />
-                        </div>
-                      </div>
-
-                      <span
-                        className="text-white/30 text-lg font-bold"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        VS
-                      </span>
-
-                      <div className="flex-1 flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                          <FlippingFlag size="sm" />
-                        </div>
-                        <p className="text-white/50 font-medium">TBA</p>
-                      </div>
-                    </div>
-
-                    {/* Date/Time */}
-                    <div className="md:w-32 flex-shrink-0 text-center md:text-right">
-                      <p className="text-white/40 text-sm">Date TBA</p>
-                      <p className="text-gold-400/70 text-sm font-semibold">Time TBA</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Hover Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-              </motion.div>
+              <ScheduleMatchRow key={match.id} matchNumber={match.matchNumber} index={index} />
             ))}
           </div>
         </div>

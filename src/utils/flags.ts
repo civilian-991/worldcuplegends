@@ -13,6 +13,8 @@ export const countryCodeToFlag: Record<string, string> = {
   PT: 'pt',
   ES: 'es',
   GB: 'gb-eng', // England specifically
+  NG: 'ng',
+  SA: 'sa',
   US: 'us',
   MX: 'mx',
   CA: 'ca',

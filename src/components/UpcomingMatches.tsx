@@ -1,11 +1,80 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getMatches, type Match } from '@/lib/api';
 import FlippingFlag from '@/components/FlippingFlag';
+
+/** A match row with two flags that never show the same country */
+function MatchRow({ match, index }: { match: Match; index: number }) {
+  const excludeRef = useRef<Record<string, string>>({});
+  return (
+    <motion.div
+      key={match.id}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="glass rounded-xl p-4 group hover:border-green-500/30 transition-colors"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <span
+            className="text-2xl font-bold text-green-400/50"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            #{index + 1}
+          </span>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+              <FlippingFlag size="sm" excludeRef={excludeRef} pairId="home" />
+            </div>
+            <span className="text-white/50 font-medium">TBA</span>
+            <span className="text-white/30 mx-2">vs</span>
+            <span className="text-white/50 font-medium">TBA</span>
+            <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
+              <FlippingFlag size="sm" excludeRef={excludeRef} pairId="away" />
+            </div>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-white/30 text-xs">Date TBA</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/** The Final card with two paired flags */
+function FinalCard() {
+  const excludeRef = useRef<Record<string, string>>({});
+  return (
+    <div className="flex items-center justify-center gap-6 mb-6">
+      <div className="text-center">
+        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
+          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="home" />
+        </div>
+        <p className="text-white/50 text-sm">TBA</p>
+      </div>
+
+      <span
+        className="text-3xl font-bold text-gold-400"
+        style={{ fontFamily: 'var(--font-display)' }}
+      >
+        VS
+      </span>
+
+      <div className="text-center">
+        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
+          <FlippingFlag size="lg" excludeRef={excludeRef} pairId="away" />
+        </div>
+        <p className="text-white/50 text-sm">TBA</p>
+      </div>
+    </div>
+  );
+}
 
 export default function UpcomingMatches() {
   const t = useTranslations('sections.matches');
@@ -89,39 +158,7 @@ export default function UpcomingMatches() {
 
               <div className="space-y-3">
                 {journeyMatches.map((match, index) => (
-                  <motion.div
-                    key={match.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="glass rounded-xl p-4 group hover:border-green-500/30 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <span
-                          className="text-2xl font-bold text-green-400/50"
-                          style={{ fontFamily: 'var(--font-display)' }}
-                        >
-                          #{index + 1}
-                        </span>
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                            <FlippingFlag size="sm" />
-                          </div>
-                          <span className="text-white/50 font-medium">TBA</span>
-                          <span className="text-white/30 mx-2">vs</span>
-                          <span className="text-white/50 font-medium">TBA</span>
-                          <div className="w-10 h-10 rounded-full bg-night-600 border border-white/10 flex items-center justify-center">
-                            <FlippingFlag size="sm" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white/30 text-xs">Date TBA</p>
-                      </div>
-                    </div>
-                  </motion.div>
+                  <MatchRow key={match.id} match={match} index={index} />
                 ))}
 
                 {/* Show more indicator */}
@@ -167,28 +204,7 @@ export default function UpcomingMatches() {
                     </div>
 
                     {/* Teams */}
-                    <div className="flex items-center justify-center gap-6 mb-6">
-                      <div className="text-center">
-                        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
-                          <FlippingFlag size="lg" />
-                        </div>
-                        <p className="text-white/50 text-sm">TBA</p>
-                      </div>
-
-                      <span
-                        className="text-3xl font-bold text-gold-400"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        VS
-                      </span>
-
-                      <div className="text-center">
-                        <div className="w-16 h-16 rounded-full bg-night-600 border-2 border-gold-500/30 flex items-center justify-center mb-2">
-                          <FlippingFlag size="lg" />
-                        </div>
-                        <p className="text-white/50 text-sm">TBA</p>
-                      </div>
-                    </div>
+                    <FinalCard />
 
                     {/* Info */}
                     <div className="text-center">
