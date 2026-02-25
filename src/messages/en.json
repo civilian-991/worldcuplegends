@@ -99,12 +99,18 @@
     "pageTitle": "LEGENDS",
     "year": "2026",
     "pageSubtitle": "Meet the greatest footballers competing in the World Legends Cup 2026",
+    "categoryPlayers": "Players",
+    "categoryCaptains": "Captains",
+    "categoryCoaches": "Coaches",
     "searchPlaceholder": "Search legends...",
     "allEras": "All Eras",
     "noResults": "No legends found matching your criteria.",
+    "noCaptains": "No captains available",
     "clearFilters": "Clear filters",
     "loadMore": "Load More",
-    "showingCount": "Showing {count} of {total} legends"
+    "showingCount": "Showing {count} of {total} legends",
+    "coachBadge": "Head Coach",
+    "coachesTagline": "LEGENDS LEADING LEGENDS"
   },
   "about": {
     "preTitle": "Our Story",

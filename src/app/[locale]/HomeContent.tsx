@@ -9,7 +9,6 @@ import StadiumCarousel from '@/components/StadiumCarousel';
 import GlobalReach from '@/components/GlobalReach';
 import UpcomingMatches from '@/components/UpcomingMatches';
 import TeamCarousel from '@/components/TeamCarousel';
-import LegendaryCoaches from '@/components/LegendaryCoaches';
 import NewsSection from '@/components/NewsSection';
 import LegendMarquee from '@/components/LegendMarquee';
 
@@ -147,7 +146,6 @@ export default function HomeContent() {
 
       <UpcomingMatches />
       <TeamCarousel />
-      <LegendaryCoaches />
       <NewsSection />
 
       {/* CTA Section */}

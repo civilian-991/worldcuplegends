@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
@@ -9,47 +9,86 @@ import { type Legend } from '@/lib/api';
 import { Link } from '@/i18n/navigation';
 import Flag from '@/components/Flag';
 
+interface Team {
+  id: number;
+  name: string;
+  countryCode: string;
+  coach: string;
+  coachImage: string;
+  captain: string;
+  color: string;
+}
+
+type Category = 'players' | 'captains' | 'coaches';
+
 const eras = ['All Eras', '1980s-1990s', '1990s-2000s', '2000s', '2000s-2010s'];
 const LEGENDS_PER_PAGE = 12;
 
-// SWR fetcher function
-const fetcher = async (url: string): Promise<Legend[]> => {
+// SWR fetcher functions
+const legendsFetcher = async (url: string): Promise<Legend[]> => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+  return response.json();
+};
+
+const teamsFetcher = async (url: string): Promise<Team[]> => {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`HTTP error: ${response.status}`);
   }
   const data = await response.json();
-  if (data.length === 0) {
-    console.warn('No legends returned from API');
-  }
-  return data;
+  return data.filter((team: Team) => team.coach);
 };
 
 export default function LegendsContent() {
   const t = useTranslations('legends');
+  const [category, setCategory] = useState<Category>('players');
   const [selectedEra, setSelectedEra] = useState('All Eras');
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(LEGENDS_PER_PAGE);
 
-  // Use SWR for data fetching with caching
-  const { data: legends = [], error, isLoading } = useSWR<Legend[]>(
+  // Fetch legends
+  const { data: legends = [], error: legendsError, isLoading: legendsLoading } = useSWR<Legend[]>(
     '/api/legends',
-    fetcher,
-    {
-      revalidateOnFocus: false, // Don't refetch when tab regains focus
-      dedupingInterval: 60000, // Dedupe requests within 1 minute
-    }
+    legendsFetcher,
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
   );
 
+  // Fetch teams (for coaches)
+  const { data: teams = [], error: teamsError, isLoading: teamsLoading } = useSWR<Team[]>(
+    '/api/teams',
+    teamsFetcher,
+    { revalidateOnFocus: false, dedupingInterval: 60000 }
+  );
+
+  const isLoading = category === 'coaches' ? teamsLoading : legendsLoading;
+  const error = category === 'coaches' ? teamsError : legendsError;
+
+  // Filter legends based on category, era, and search
   const filteredLegends = useMemo(() => {
     return legends.filter((legend) => {
+      // Category filter
+      if (category === 'captains' && !legend.isCaptain) return false;
+
       const matchesEra = selectedEra === 'All Eras' || legend.era === selectedEra;
       const matchesSearch =
         legend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         legend.country.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesEra && matchesSearch;
     });
-  }, [legends, selectedEra, searchQuery]);
+  }, [legends, category, selectedEra, searchQuery]);
+
+  // Filter coaches based on search
+  const filteredCoaches = useMemo(() => {
+    if (!searchQuery) return teams;
+    return teams.filter(
+      (team) =>
+        team.coach.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        team.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [teams, searchQuery]);
 
   // Sort legends by rating (highest first)
   const sortedLegends = useMemo(() => {
@@ -64,7 +103,7 @@ export default function LegendsContent() {
   // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(LEGENDS_PER_PAGE);
-  }, [selectedEra, searchQuery]);
+  }, [selectedEra, searchQuery, category]);
 
   // Check if there are more legends to load
   const hasMoreLegends = visibleCount < sortedLegends.length;
@@ -73,6 +112,12 @@ export default function LegendsContent() {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + LEGENDS_PER_PAGE);
   };
+
+  const categories: { key: Category; label: string }[] = [
+    { key: 'players', label: t('categoryPlayers') },
+    { key: 'captains', label: t('categoryCaptains') },
+    { key: 'coaches', label: t('categoryCoaches') },
+  ];
 
   return (
     <div className="min-h-screen bg-night-700">
@@ -97,9 +142,26 @@ export default function LegendsContent() {
         </div>
       </section>
 
-      {/* Filters */}
+      {/* Category Tabs + Filters */}
       <section className="sticky top-20 z-30 py-4 px-6 bg-night-700/95 backdrop-blur-sm border-b border-white/5">
         <div className="max-w-7xl mx-auto">
+          {/* Category Tabs */}
+          <div className="flex gap-1 mb-4 bg-night-800 rounded-lg p-1 w-fit">
+            {categories.map((cat) => (
+              <button
+                key={cat.key}
+                onClick={() => setCategory(cat.key)}
+                className={`px-5 py-2 rounded-md text-sm font-semibold transition-all ${
+                  category === cat.key
+                    ? 'bg-gold-500 text-night-900 shadow-lg shadow-gold-500/20'
+                    : 'text-white/50 hover:text-white hover:bg-night-600'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
             {/* Search */}
             <div className="relative w-full md:w-72">
@@ -121,23 +183,25 @@ export default function LegendsContent() {
               </svg>
             </div>
 
-            {/* Era Filter */}
-            <div className="flex flex-wrap gap-2 justify-center">
-              {eras.map((era) => (
-                <button
-                  key={era}
-                  onClick={() => setSelectedEra(era)}
-                  aria-pressed={selectedEra === era}
-                  className={`px-4 py-1.5 rounded text-sm font-medium transition-all ${
-                    selectedEra === era
-                      ? 'bg-gold-500 text-night-900'
-                      : 'bg-night-600 text-white/60 hover:bg-night-500 hover:text-white'
-                  }`}
-                >
-                  {era === 'All Eras' ? t('allEras') : era}
-                </button>
-              ))}
-            </div>
+            {/* Era Filter - only for players and captains */}
+            {category !== 'coaches' && (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {eras.map((era) => (
+                  <button
+                    key={era}
+                    onClick={() => setSelectedEra(era)}
+                    aria-pressed={selectedEra === era}
+                    className={`px-4 py-1.5 rounded text-sm font-medium transition-all ${
+                      selectedEra === era
+                        ? 'bg-gold-500 text-night-900'
+                        : 'bg-night-600 text-white/60 hover:bg-night-500 hover:text-white'
+                    }`}
+                  >
+                    {era === 'All Eras' ? t('allEras') : era}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -148,19 +212,78 @@ export default function LegendsContent() {
           <div className="max-w-7xl mx-auto">
             <div
               role="status"
-              aria-label="Loading legends"
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              aria-label="Loading"
+              className={`grid gap-4 ${category === 'coaches' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-2'}`}
             >
-              {Array.from({ length: 8 }).map((_, index) => (
-                <SkeletonCard key={index} />
+              {Array.from({ length: category === 'coaches' ? 8 : 8 }).map((_, index) => (
+                category === 'coaches' ? <CoachSkeletonCard key={index} /> : <SkeletonCard key={index} />
               ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* Legends Grid - F1 Style */}
-      {!isLoading && (
+      {/* Coaches Grid */}
+      {!isLoading && category === 'coaches' && (
+        <section className="py-8 px-6">
+          <div className="max-w-7xl mx-auto" aria-live="polite">
+            {filteredCoaches.length > 0 && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                {filteredCoaches.map((team, index) => (
+                  <CoachCard key={team.id} team={team} index={index} />
+                ))}
+              </div>
+            )}
+
+            {/* Coaches tagline */}
+            {filteredCoaches.length > 0 && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-center text-white/40 text-sm mt-12 tracking-widest uppercase"
+              >
+                {t('coachesTagline')}
+              </motion.p>
+            )}
+
+            {teamsError && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <p className="text-red-400 text-xl mb-4">Failed to load coaches.</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="text-gold-500 hover:text-gold-400 transition-colors"
+                >
+                  Retry
+                </button>
+              </motion.div>
+            )}
+
+            {!teamsError && filteredCoaches.length === 0 && teams.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <p className="text-white/50 text-xl">{t('noResults')}</p>
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="mt-4 text-gold-500 hover:text-gold-400 transition-colors"
+                >
+                  {t('clearFilters')}
+                </button>
+              </motion.div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Players / Captains Grid - F1 Style */}
+      {!isLoading && category !== 'coaches' && (
         <section className="py-8 px-6">
           <div className="max-w-7xl mx-auto" aria-live="polite">
             <motion.div
@@ -169,7 +292,7 @@ export default function LegendsContent() {
             >
               <AnimatePresence mode="popLayout">
                 {visibleLegends.map((legend, index) => (
-                  <LegendCard key={legend.id} legend={legend} index={index} />
+                  <LegendCard key={legend.id} legend={legend} index={index} showCaptainBadge={category === 'captains'} />
                 ))}
               </AnimatePresence>
             </motion.div>
@@ -232,7 +355,9 @@ export default function LegendsContent() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center py-20"
               >
-                <p className="text-white/50 text-xl mb-2">No legends available</p>
+                <p className="text-white/50 text-xl mb-2">
+                  {category === 'captains' ? t('noCaptains') : 'No legends available'}
+                </p>
                 <p className="text-white/30 text-sm">Database connection may not be configured.</p>
               </motion.div>
             )}
@@ -263,7 +388,92 @@ export default function LegendsContent() {
   );
 }
 
-function LegendCard({ legend, index }: { legend: Legend; index: number }) {
+// Coach card component matching the home page style
+function CoachCard({ team, index }: { team: Team; index: number }) {
+  const t = useTranslations('legends');
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="group relative"
+    >
+      <div
+        className="relative h-[280px] md:h-[340px] rounded-2xl overflow-hidden"
+        style={{
+          background: `linear-gradient(135deg, ${team.color}40 0%, ${team.color}10 50%, transparent 100%)`,
+        }}
+      >
+        <div className="absolute inset-0 flex items-end justify-center">
+          {team.coachImage ? (
+            <Image
+              src={team.coachImage}
+              alt={team.coach}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="object-contain object-bottom transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span
+                className="text-[120px] font-black text-white/5"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {team.coach.charAt(0)}
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/30 via-40% to-transparent" />
+
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+          <div className="mb-2">
+            <Flag countryCode={team.countryCode} size="md" />
+          </div>
+          <h3
+            className="text-xl md:text-2xl font-bold text-white group-hover:text-gold-400 transition-colors"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            {team.coach}
+          </h3>
+          <p className="text-white/50 text-sm">{team.name}</p>
+          <div className="mt-2">
+            <span className="inline-block px-2 py-1 bg-gold-500/20 border border-gold-500/30 rounded text-gold-400 text-xs font-semibold uppercase tracking-wider">
+              {t('coachBadge')}
+            </span>
+          </div>
+        </div>
+
+        <div
+          className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-gold-500/30 transition-colors"
+          style={{ boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.05)' }}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
+// Skeleton for coach cards
+function CoachSkeletonCard() {
+  return (
+    <div
+      className="relative h-[280px] md:h-[340px] rounded-2xl overflow-hidden animate-pulse"
+      style={{ background: 'linear-gradient(135deg, #1f2937 0%, #111827 100%)' }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-t from-night-900 via-night-900/30 via-40% to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+        <div className="h-5 w-8 bg-night-800/50 rounded mb-2" />
+        <div className="h-7 w-28 bg-night-800/50 rounded mb-2" />
+        <div className="h-4 w-20 bg-night-800/50 rounded mb-2" />
+        <div className="h-6 w-24 bg-night-800/30 rounded mt-2" />
+      </div>
+    </div>
+  );
+}
+
+function LegendCard({ legend, index, showCaptainBadge = false }: { legend: Legend; index: number; showCaptainBadge?: boolean }) {
   // Team colors based on country - more vibrant like F1
   const teamColors: Record<string, { bg: string; accent: string }> = {
     BR: { bg: 'linear-gradient(135deg, #1a472a 0%, #0d2818 100%)', accent: '#009c3b' }, // Brazil green
@@ -311,6 +521,11 @@ function LegendCard({ legend, index }: { legend: Legend; index: number }) {
                   {lastName}
                 </h3>
                 <p className="text-white/50 text-sm mt-1">{legend.team || legend.country}</p>
+                {showCaptainBadge && legend.isCaptain && (
+                  <span className="inline-block mt-2 px-2 py-0.5 bg-gold-500/20 border border-gold-500/30 rounded text-gold-400 text-xs font-semibold uppercase tracking-wider">
+                    Captain
+                  </span>
+                )}
               </div>
 
               {/* Jersey Number */}

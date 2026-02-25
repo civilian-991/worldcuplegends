@@ -99,12 +99,18 @@
     "pageTitle": "LENDAS",
     "year": "2026",
     "pageSubtitle": "Conheça os maiores jogadores de futebol competindo na World Legends Cup 2026",
+    "categoryPlayers": "Jogadores",
+    "categoryCaptains": "Capitães",
+    "categoryCoaches": "Técnicos",
     "searchPlaceholder": "Buscar lendas...",
     "allEras": "Todas as Épocas",
     "noResults": "Nenhuma lenda encontrada com os critérios selecionados.",
+    "noCaptains": "Nenhum capitão disponível",
     "clearFilters": "Limpar filtros",
     "loadMore": "Carregar Mais",
-    "showingCount": "Mostrando {count} de {total} lendas"
+    "showingCount": "Mostrando {count} de {total} lendas",
+    "coachBadge": "Técnico",
+    "coachesTagline": "LENDAS LIDERANDO LENDAS"
   },
   "about": {
     "preTitle": "Nossa História",
